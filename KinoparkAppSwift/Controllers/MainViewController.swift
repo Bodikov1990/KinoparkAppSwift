@@ -7,20 +7,30 @@
 
 import UIKit
 
-class MainVC: UIViewController {
+protocol MainViewControllerDelegate: AnyObject {
+    func didTapSideMenu()
+}
+
+class MainViewController: UIViewController {
+    
+    weak var delegate: MainViewControllerDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = .systemBlue
         setupNavBar()
         addLogoToNav()
     }
-    
+}
+
+
+// MARK: - Setup Navigation Bar
+extension MainViewController {
     private func setupNavBar() {
         if #available(iOS 13.0, *) {
             let navBarAppearence = UINavigationBarAppearance()
             navBarAppearence.configureWithOpaqueBackground()
-            navigationItem.rightBarButtonItem = UIBarButtonItem(
+            navigationItem.leftBarButtonItem = UIBarButtonItem(
                 image: UIImage(systemName: "line.3.horizontal"),
                 style: .plain,
                 target: self,
@@ -39,7 +49,7 @@ class MainVC: UIViewController {
     }
     
     @objc private func sideMenu(){
-        
+        delegate?.didTapSideMenu()
     }
     
     private func addLogoToNav() {
