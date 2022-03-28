@@ -20,8 +20,8 @@ class ContainerViewController: UIViewController {
     var visualEffectView: UIVisualEffectView!
     
     let sideMenuWidth: CGFloat = 300
-    let sideMenuHandleAreaWidth: CGFloat = 20
-    let duratioForAnimation = 0.9
+    let sideMenuHandleAreaWidth: CGFloat = 0
+    let duratioForAnimation = 0.5
     
     var menuVisible = false
     var nextState: MenuState {
@@ -33,7 +33,7 @@ class ContainerViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .red
+        
         mainVC.delegate = self
         
         setupMenu()
@@ -51,7 +51,7 @@ class ContainerViewController: UIViewController {
         
         visualEffectView = UIVisualEffectView()
         visualEffectView.frame = self.view.frame
-        navVC?.view.addSubview(visualEffectView)
+        mainVC.view.addSubview(visualEffectView)
         
         
         sideMenuVC = SideMenuViewController()
@@ -92,7 +92,7 @@ class ContainerViewController: UIViewController {
     
     private func animateTransitionIfNeed(state: MenuState, duration: TimeInterval) {
         if runningAnimations.isEmpty {
-            let frameAnimator = UIViewPropertyAnimator(duration: duration, dampingRatio: 1) {
+            let frameAnimator = UIViewPropertyAnimator(duration: duration, dampingRatio: 0.9) {
                 switch state {
                 case .expanded:
                     self.sideMenuVC.view.frame.origin.x = self.view.frame.width - self.sideMenuWidth
@@ -168,7 +168,6 @@ class ContainerViewController: UIViewController {
 
 extension ContainerViewController: MainViewControllerDelegate {
     func didTapSideMenu() {
-        print("tap")
         animateTransitionIfNeed(state: nextState, duration: duratioForAnimation)
     }
 }

@@ -9,6 +9,7 @@ import UIKit
 
 class SideMenuViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
+
     enum MenuOptions: String, CaseIterable {
         case city = "Город"
         case language = "Язык"
@@ -28,11 +29,14 @@ class SideMenuViewController: UIViewController, UITableViewDelegate, UITableView
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         view.addSubview(tableView)
         
         tableView.delegate = self
         tableView.dataSource = self
     }
+    
+    
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()

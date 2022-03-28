@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1208125F27F244B100C9E241 /* MoviesCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1208125E27F244B100C9E241 /* MoviesCollectionViewCell.swift */; };
 		12328E4B27EF274C005BB074 /* SideMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12328E4A27EF274C005BB074 /* SideMenuViewController.swift */; };
 		12328E4D27EF2E1E005BB074 /* ContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12328E4C27EF2E1E005BB074 /* ContainerViewController.swift */; };
 		1265180327E9D689004027E0 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1265180227E9D689004027E0 /* MainViewController.swift */; };
@@ -19,6 +20,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1208125E27F244B100C9E241 /* MoviesCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviesCollectionViewCell.swift; sourceTree = "<group>"; };
 		12328E4A27EF274C005BB074 /* SideMenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuViewController.swift; sourceTree = "<group>"; };
 		12328E4C27EF2E1E005BB074 /* ContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerViewController.swift; sourceTree = "<group>"; };
 		1265180227E9D689004027E0 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
@@ -43,6 +45,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1208125D27F2448000C9E241 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				1208125E27F244B100C9E241 /* MoviesCollectionViewCell.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		120ED79B27E79345006E041D /* Storyboards */ = {
 			isa = PBXGroup;
 			children = (
@@ -74,6 +84,7 @@
 				129B2E1427E788450066D52E /* Models */,
 				120ED79B27E79345006E041D /* Storyboards */,
 				129B2E1227E787120066D52E /* Controllers */,
+				1208125D27F2448000C9E241 /* Views */,
 				129B2E1127E786980066D52E /* SupportFiles */,
 				129B2E0527E785690066D52E /* Assets.xcassets */,
 			);
@@ -189,6 +200,7 @@
 				129B2E0127E785650066D52E /* CitiesVC.swift in Sources */,
 				1265180327E9D689004027E0 /* MainViewController.swift in Sources */,
 				12328E4D27EF2E1E005BB074 /* ContainerViewController.swift in Sources */,
+				1208125F27F244B100C9E241 /* MoviesCollectionViewCell.swift in Sources */,
 				129B2DFD27E785650066D52E /* AppDelegate.swift in Sources */,
 				129B2E1927E78ED50066D52E /* NetworkManager.swift in Sources */,
 				12328E4B27EF274C005BB074 /* SideMenuViewController.swift in Sources */,
@@ -331,6 +343,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = J8Z93HAU9N;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = KinoparkAppSwift/SupportFiles/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -359,6 +372,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = J8Z93HAU9N;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = KinoparkAppSwift/SupportFiles/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
