@@ -9,18 +9,7 @@ import UIKit
 
 class MoviesCollectionViewCell: UICollectionViewCell {
     
-    private var movieName: UILabel!
+    var movieName: UILabel!
     
-    
-//    var car: Car? {
-//            didSet{
-//                updateViews()
-//            }
-//        }
-//
-//        private func updateViews() {
-//            guard let car = car else {return}
-//            carImage.image = car.image
-//            nameLabel.text = car.name
-//        }
+
 }

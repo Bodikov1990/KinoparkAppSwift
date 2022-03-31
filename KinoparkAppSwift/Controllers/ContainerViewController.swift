@@ -33,26 +33,27 @@ class ContainerViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        view.backgroundColor = .systemRed
         mainVC.delegate = self
         
         setupMenu()
+        
     }
     
     private func setupNavVC() {
         let navVC = UINavigationController(rootViewController: mainVC)
-        self.addChild(navVC)
-        self.view.addSubview(navVC.view)
+        addChild(navVC)
+        view.addSubview(navVC.view)
     }
     
     private func setupMenu() {
-        
         setupNavVC()
         
         visualEffectView = UIVisualEffectView()
-        visualEffectView.frame = self.view.frame
-        mainVC.view.addSubview(visualEffectView)
+        visualEffectView.isHidden = true
         
+        visualEffectView.frame = self.view.frame
+        self.view.addSubview(visualEffectView)
         
         sideMenuVC = SideMenuViewController()
         self.addChild(sideMenuVC)
@@ -90,9 +91,10 @@ class ContainerViewController: UIViewController {
         }
     }
     
+    
     private func animateTransitionIfNeed(state: MenuState, duration: TimeInterval) {
         if runningAnimations.isEmpty {
-            let frameAnimator = UIViewPropertyAnimator(duration: duration, dampingRatio: 0.9) {
+            let frameAnimator = UIViewPropertyAnimator(duration: duration, dampingRatio: 0.8) {
                 switch state {
                 case .expanded:
                     self.sideMenuVC.view.frame.origin.x = self.view.frame.width - self.sideMenuWidth
@@ -121,18 +123,24 @@ class ContainerViewController: UIViewController {
             cornerRaduisAnimator.startAnimation()
             runningAnimations.append(cornerRaduisAnimator)
             
+            
             let blurAnimator = UIViewPropertyAnimator(duration: duration, dampingRatio: 1) {
                 switch state {
                 case .expanded:
                     if #available(iOS 13.0, *) {
                         self.visualEffectView.effect = UIBlurEffect(style: .systemChromeMaterial)
+                        self.visualEffectView.isHidden.toggle()
                     } else {
-                        self.visualEffectView.effect = UIBlurEffect(style: .dark)
+                        self.visualEffectView.effect = UIBlurEffect(style: .light)
                     }
                 case .collapsed:
                     self.visualEffectView.effect = nil
+                    DispatchQueue.main.asyncAfter(deadline: .now()+duration) {
+                        self.visualEffectView.isHidden.toggle()
+                    }
                 }
             }
+
             
             blurAnimator.startAnimation()
             runningAnimations.append(blurAnimator)
@@ -149,6 +157,7 @@ class ContainerViewController: UIViewController {
             animator.pauseAnimation()
             animationProgressWhenInterupted = animator.fractionComplete
         }
+        
     }
     
     private func updateInteractiveTransition(fractionCompleted: CGFloat) {
@@ -161,9 +170,9 @@ class ContainerViewController: UIViewController {
         for animator in runningAnimations {
             animator.continueAnimation(withTimingParameters: nil, durationFactor: 0)
         }
+        
     }
     
-
 }
 
 extension ContainerViewController: MainViewControllerDelegate {
