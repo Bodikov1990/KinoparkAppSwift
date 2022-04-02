@@ -14,12 +14,13 @@ class ContainerViewController: UIViewController {
         case collapsed
     }
     
-    var navVC: UINavigationController?
+    
     let mainVC = MainViewController()
+    let citites = CitiesVC()
     var sideMenuVC: SideMenuViewController!
     var visualEffectView: UIVisualEffectView!
     
-    let sideMenuWidth: CGFloat = 300
+    let sideMenuWidth: CGFloat = 350
     let sideMenuHandleAreaWidth: CGFloat = 0
     let duratioForAnimation = 0.5
     
@@ -33,21 +34,32 @@ class ContainerViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemRed
+        view.backgroundColor = .white
+        
         mainVC.delegate = self
         
         setupMenu()
-        
+
     }
     
-    private func setupNavVC() {
-        let navVC = UINavigationController(rootViewController: mainVC)
-        addChild(navVC)
-        view.addSubview(navVC.view)
+    
+    private func generateNavController(rootViewcontroller: UIViewController, title: String, image: String, navBarIsHidden: Bool) -> UIViewController {
+        let navigationVC = UINavigationController(rootViewController: rootViewcontroller)
+        navigationVC.tabBarItem.title = title
+        navigationVC.tabBarItem.image = UIImage(named: image)
+        navigationVC.navigationBar.isHidden = navBarIsHidden
+        return navigationVC
     }
     
     private func setupMenu() {
-        setupNavVC()
+     
+        let tabBarVC = UITabBarController()
+        tabBarVC.viewControllers = [
+            generateNavController(rootViewcontroller: mainVC, title: "Главная", image: "list.and.film", navBarIsHidden: false),
+            generateNavController(rootViewcontroller: citites, title: "Фильмы", image: "film", navBarIsHidden: false)
+        ]
+        addChild(tabBarVC)
+        view.addSubview(tabBarVC.view)
         
         visualEffectView = UIVisualEffectView()
         visualEffectView.isHidden = true
@@ -56,8 +68,8 @@ class ContainerViewController: UIViewController {
         self.view.addSubview(visualEffectView)
         
         sideMenuVC = SideMenuViewController()
-        self.addChild(sideMenuVC)
-        self.view.addSubview(sideMenuVC.view)
+        addChild(sideMenuVC)
+        view.addSubview(sideMenuVC.view)
         sideMenuVC.view.frame = CGRect(x: self.view.frame.width - sideMenuHandleAreaWidth, y: 0, width: sideMenuWidth, height: self.view.bounds.height)
         
         sideMenuVC.view.clipsToBounds = true
@@ -66,7 +78,6 @@ class ContainerViewController: UIViewController {
         sideMenuVC.view.addGestureRecognizer(panGestureRecognizier)
         
     }
-    
     
     @objc private func handleSideMenuPanGesture(recognizier: UIPanGestureRecognizer) {
         switch recognizier.state {
@@ -132,6 +143,7 @@ class ContainerViewController: UIViewController {
                         self.visualEffectView.isHidden.toggle()
                     } else {
                         self.visualEffectView.effect = UIBlurEffect(style: .light)
+                        self.visualEffectView.isHidden.toggle()
                     }
                 case .collapsed:
                     self.visualEffectView.effect = nil
@@ -141,7 +153,6 @@ class ContainerViewController: UIViewController {
                 }
             }
 
-            
             blurAnimator.startAnimation()
             runningAnimations.append(blurAnimator)
         }

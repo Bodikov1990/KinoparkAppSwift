@@ -22,7 +22,6 @@ class CitiesVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         tableView.delegate = self
         tableView.dataSource = self
         
-        addLogoToNav()
         showCities()
     }
     
@@ -44,7 +43,6 @@ class CitiesVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
             cell.contentConfiguration = content
             return cell
         } else {
-            // Fallback on earlier versions
             let city = cityList[indexPath.row]
             
             cell.textLabel?.text = city.name
@@ -54,24 +52,6 @@ class CitiesVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         return cell
     }
     
-    private func addLogoToNav() {
-        if let navController = navigationController {
-            let imageLogo = UIImage(named: "kinopark")
-            
-            let widthNav = navController.navigationBar.frame.width
-            let heightNav = navController.navigationBar.frame.height
-            
-            let widthForView = widthNav * 0.4
-            
-            let logoContainer = UIView(frame: CGRect(x: 0, y: 0, width: widthForView, height: heightNav))
-            let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: widthForView, height: heightNav))
-            imageView.image = imageLogo
-            imageView.contentMode = .scaleAspectFit
-            logoContainer.addSubview(imageView)
-            
-            navigationItem.titleView = logoContainer
-        }
-    }
     
     private func showCities() {
         NetworkManager.shared.fetch(dataType: CityList.self, from: currentUrl, convertFromSnakeCase: true) { result in

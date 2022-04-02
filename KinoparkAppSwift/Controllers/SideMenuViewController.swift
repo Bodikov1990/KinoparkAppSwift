@@ -17,8 +17,6 @@ class SideMenuViewController: UIViewController, UITableViewDelegate, UITableView
         case rules = "Пользовательское соглашение"
         case confidence = "Политика конфиденциальности"
         case contacts = "Связаться с нами"
-        case empty1 = ""
-        case darkMode = "Перейти в темный режим"
     }
     
     let tableView: UITableView = {
@@ -51,6 +49,7 @@ class SideMenuViewController: UIViewController, UITableViewDelegate, UITableView
         let cell = tableView.dequeueReusableCell(withIdentifier: "menu", for: indexPath)
         
         cell.textLabel?.text = MenuOptions.allCases[indexPath.row].rawValue
+
         
         return cell
     }

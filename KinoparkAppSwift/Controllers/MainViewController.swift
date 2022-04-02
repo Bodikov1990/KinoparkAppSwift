@@ -9,6 +9,7 @@ import UIKit
 
 protocol MainViewControllerDelegate: AnyObject {
     func didTapSideMenu()
+    
 }
 
 class MainViewController: UIViewController {
@@ -16,19 +17,21 @@ class MainViewController: UIViewController {
     weak var delegate: MainViewControllerDelegate?
     
     
-    private var movies = ["I go School", "Kino", "Morbius"]
+    private var movies = ["I go School", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5"]
+    
+    var collectionView: UICollectionView!
     
     private var cinemasSortView: UIView = {
         let view = UIView()
-        view.backgroundColor = .red
+        view.backgroundColor = .systemBlue
         view.layer.cornerRadius = 10
         return view
     }()
     
     private lazy var cinemasSortButton: UIButton = {
         let button = UIButton()
-        button.frame = CGRect(x: 150, y: 150, width: 150, height: 30)
-        button.setTitle("Looong Test Button", for: .normal)
+        button.frame = CGRect(x: 15, y: 15, width: 150, height: 30)
+        button.setTitle("Kinopark 7 Aktobe", for: .normal)
         button.setTitleColor(UIColor.black, for: .normal)
         button.addTarget(self, action: #selector(sortCinemas), for: .touchUpInside)
         
@@ -37,15 +40,14 @@ class MainViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .vertical
-        
+
         
         if #available(iOS 13.0, *) {
-            view.backgroundColor = .systemBlue
+            view.backgroundColor = .systemBackground
         } else {
             view.backgroundColor = .white
         }
+        setCollectionView()
         setupNavBar()
         addLogoToNav()
         setConstraints()
@@ -54,31 +56,55 @@ class MainViewController: UIViewController {
     @objc private func sortCinemas() {
         print("tap")
     }
+    
+    private func setCollectionView() {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .vertical
+        collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
+        collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        
+        
+        if #available(iOS 13.0, *) {
+            collectionView.backgroundColor = .systemBackground
+        } else {
+            collectionView.backgroundColor = .white
+        }
+        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "movies")
+        
+        collectionView.delegate = self
+        collectionView.dataSource = self
+    }
     private func setConstraints() {
-
-
-        view.addSubview(cinemasSortView)
         cinemasSortView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(cinemasSortView)
 
         NSLayoutConstraint.activate([
-            cinemasSortView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
-            cinemasSortView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            cinemasSortView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            cinemasSortView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
+            cinemasSortView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
+            cinemasSortView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
             cinemasSortView.heightAnchor.constraint(equalToConstant: 40)
         ])
-
-
-        view.addSubview(cinemasSortButton)
+        
+        
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(collectionView)
+        
+        NSLayoutConstraint.activate([
+            collectionView.topAnchor.constraint(equalTo: cinemasSortView.safeAreaLayoutGuide.bottomAnchor, constant: 10),
+            collectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
+            collectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
+            collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+        ])
+        
+        cinemasSortView.addSubview(cinemasSortButton)
         cinemasSortButton.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
-            cinemasSortButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            cinemasSortButton.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+            cinemasSortButton.centerXAnchor.constraint(equalTo: cinemasSortView.centerXAnchor),
+            cinemasSortButton.centerYAnchor.constraint(equalTo: cinemasSortView.centerYAnchor)
         ])
 
     }
-    
-    
 }
 
 extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSource  {
@@ -91,39 +117,27 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "movies", for: indexPath)
         
         cell.contentView.backgroundColor = .red
+        cell.isHidden = false
         
+//        if movies[indexPath.item] == "" {
+//            cell.isHidden = true
+//        }
         
         return cell
     }
-    
-    
 }
 
 // MARK: - Setup Navigation Bar
 extension MainViewController {
     
     private func setupNavBar() {
-        if #available(iOS 13.0, *) {
-            let navBarAppearence = UINavigationBarAppearance()
-            navBarAppearence.configureWithOpaqueBackground()
-            navBarAppearence.backgroundColor = .green
-            navigationItem.leftBarButtonItem = UIBarButtonItem(
-                image: UIImage(systemName: "line.3.horizontal"),
-                style: .plain,
-                target: self,
-                action: #selector(sideMenu)
-            )
-            navigationController?.navigationBar.standardAppearance = navBarAppearence
-        } else {
             navigationItem.rightBarButtonItem = UIBarButtonItem(
                 image: UIImage(named: "line.3.horizontal"),
                 style: .plain,
                 target: self,
                 action: #selector(sideMenu)
             )
-        }
         
-        navigationController?.navigationBar.tintColor = .black
     }
     
     @objc private func sideMenu(){
@@ -146,6 +160,7 @@ extension MainViewController {
             logoContainer.addSubview(imageView)
             
             navigationItem.titleView = logoContainer
+            
         }
     }
 }
