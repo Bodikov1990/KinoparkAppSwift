@@ -7,9 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1208125F27F244B100C9E241 /* MoviesCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1208125E27F244B100C9E241 /* MoviesCollectionViewCell.swift */; };
+		122F7F86280B14E6008A9329 /* TestModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 122F7F85280B14E6008A9329 /* TestModel.swift */; };
 		12328E4B27EF274C005BB074 /* SideMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12328E4A27EF274C005BB074 /* SideMenuViewController.swift */; };
 		12328E4D27EF2E1E005BB074 /* ContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12328E4C27EF2E1E005BB074 /* ContainerViewController.swift */; };
+		123682722809EDB600CE851F /* MovieListTBVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 123682712809EDB500CE851F /* MovieListTBVCell.swift */; };
+		126348822808A0C200484AC0 /* StorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 126348812808A0C200484AC0 /* StorageManager.swift */; };
 		1265180327E9D689004027E0 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1265180227E9D689004027E0 /* MainViewController.swift */; };
 		129B2DFD27E785650066D52E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 129B2DFC27E785650066D52E /* AppDelegate.swift */; };
 		129B2E0127E785650066D52E /* CitiesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 129B2E0027E785650066D52E /* CitiesVC.swift */; };
@@ -20,9 +22,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		1208125E27F244B100C9E241 /* MoviesCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviesCollectionViewCell.swift; sourceTree = "<group>"; };
+		122F7F85280B14E6008A9329 /* TestModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestModel.swift; sourceTree = "<group>"; };
 		12328E4A27EF274C005BB074 /* SideMenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuViewController.swift; sourceTree = "<group>"; };
 		12328E4C27EF2E1E005BB074 /* ContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerViewController.swift; sourceTree = "<group>"; };
+		123682712809EDB500CE851F /* MovieListTBVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieListTBVCell.swift; sourceTree = "<group>"; };
+		126348812808A0C200484AC0 /* StorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageManager.swift; sourceTree = "<group>"; };
 		1265180227E9D689004027E0 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		129B2DF927E785650066D52E /* KinoparkAppSwift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KinoparkAppSwift.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		129B2DFC27E785650066D52E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -48,7 +52,7 @@
 		1208125D27F2448000C9E241 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				1208125E27F244B100C9E241 /* MoviesCollectionViewCell.swift */,
+				123682712809EDB500CE851F /* MovieListTBVCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -115,6 +119,7 @@
 			isa = PBXGroup;
 			children = (
 				129B2E1527E788660066D52E /* CityList.swift */,
+				122F7F85280B14E6008A9329 /* TestModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -123,6 +128,7 @@
 			isa = PBXGroup;
 			children = (
 				129B2E1827E78ED50066D52E /* NetworkManager.swift */,
+				126348812808A0C200484AC0 /* StorageManager.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -200,11 +206,13 @@
 				129B2E0127E785650066D52E /* CitiesVC.swift in Sources */,
 				1265180327E9D689004027E0 /* MainViewController.swift in Sources */,
 				12328E4D27EF2E1E005BB074 /* ContainerViewController.swift in Sources */,
-				1208125F27F244B100C9E241 /* MoviesCollectionViewCell.swift in Sources */,
 				129B2DFD27E785650066D52E /* AppDelegate.swift in Sources */,
 				129B2E1927E78ED50066D52E /* NetworkManager.swift in Sources */,
+				126348822808A0C200484AC0 /* StorageManager.swift in Sources */,
 				12328E4B27EF274C005BB074 /* SideMenuViewController.swift in Sources */,
+				122F7F86280B14E6008A9329 /* TestModel.swift in Sources */,
 				129B2E1627E788660066D52E /* CityList.swift in Sources */,
+				123682722809EDB600CE851F /* MovieListTBVCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

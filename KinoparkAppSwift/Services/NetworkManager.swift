@@ -13,9 +13,9 @@ enum NetworkError: Error {
     case decodingError
 }
 
-
 class NetworkManager {
     static var shared = NetworkManager()
+    let startingUrl = "http://afisha.api.kinopark.kz/api/city?page=1&per_page=15&sort=sort_order:asc&dial_timeout=5s&request_timeout=5s&retries=0"
     private init() {}
     
     func fetchImage(from url: String?, completion: @escaping(Result<Data, NetworkError>) -> Void) {

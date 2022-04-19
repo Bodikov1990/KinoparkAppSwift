@@ -9,9 +9,8 @@ import UIKit
 
 class CitiesVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
-    let currentUrl = "http://test.afisha.api.kinopark.kz/api/city?page=1&per_page=15&sort=sort_order:asc&dial_timeout=5s&request_timeout=5s&retries=0"
-    
-    private var cityList: [Datum] = []
+    private var cityList: [CityData] = []
+    private let startingUrl = NetworkManager.shared.startingUrl
     
     let tableView = UITableView()
     override func viewDidLoad() {
@@ -40,26 +39,25 @@ class CitiesVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
             let city = cityList[indexPath.row]
             var content = cell.defaultContentConfiguration()
             content.text = city.name
+            
             cell.contentConfiguration = content
             return cell
         } else {
             let city = cityList[indexPath.row]
             
             cell.textLabel?.text = city.name
-            cell.detailTextLabel?.text = city.code
         }
         
         return cell
     }
     
-    
     private func showCities() {
-        NetworkManager.shared.fetch(dataType: CityList.self, from: currentUrl, convertFromSnakeCase: true) { result in
+        NetworkManager.shared.fetch(dataType: CityList.self, from: startingUrl, convertFromSnakeCase: true) { result in
             switch result {
             case .success(let cities):
-                print(cities)
                 self.cityList = cities.data ?? []
                 self.tableView.reloadData()
+                print(cities)
             case .failure(let error):
                 print(error)
             }

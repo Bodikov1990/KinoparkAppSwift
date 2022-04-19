@@ -9,7 +9,7 @@ import UIKit
 
 class SideMenuViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
-
+    
     enum MenuOptions: String, CaseIterable {
         case city = "Город"
         case language = "Язык"
@@ -34,8 +34,6 @@ class SideMenuViewController: UIViewController, UITableViewDelegate, UITableView
         tableView.dataSource = self
     }
     
-    
-    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         tableView.frame = CGRect(x: 0, y: 0, width: view.bounds.size.width, height: view.bounds.size.height)
@@ -44,12 +42,11 @@ class SideMenuViewController: UIViewController, UITableViewDelegate, UITableView
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         MenuOptions.allCases.count
     }
-
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "menu", for: indexPath)
         
         cell.textLabel?.text = MenuOptions.allCases[indexPath.row].rawValue
-
         
         return cell
     }

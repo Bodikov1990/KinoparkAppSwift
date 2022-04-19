@@ -9,17 +9,19 @@ import UIKit
 
 protocol MainViewControllerDelegate: AnyObject {
     func didTapSideMenu()
-    
 }
 
 class MainViewController: UIViewController {
     
-    weak var delegate: MainViewControllerDelegate?
+    var delegate: MainViewControllerDelegate?
     
+    private let mainTableView: UITableView = {
+        let tableView = UITableView()
+        tableView.register(MovieListTBVCell.self, forCellReuseIdentifier: MovieListTBVCell.identifier)
+        return tableView
+    }()
     
-    private var movies = ["I go School", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5", "", "Morbius", "", "", "5"]
-    
-    var collectionView: UICollectionView!
+    let headerView = UIView()
     
     private var cinemasSortView: UIView = {
         let view = UIView()
@@ -30,114 +32,228 @@ class MainViewController: UIViewController {
     
     private lazy var cinemasSortButton: UIButton = {
         let button = UIButton()
-        button.frame = CGRect(x: 15, y: 15, width: 150, height: 30)
         button.setTitle("Kinopark 7 Aktobe", for: .normal)
+        button.setTitleColor(UIColor.systemGray, for: .normal)
+        button.addTarget(self, action: #selector(sortCinemas), for: .touchUpInside)
+        
+        return button
+    }()
+    
+    private lazy var filterButton: UIButton = {
+        let button = UIButton()
+        button.setBackgroundImage(UIImage(named: "slider.horizontal.3"), for: .normal)
         button.setTitleColor(UIColor.black, for: .normal)
         button.addTarget(self, action: #selector(sortCinemas), for: .touchUpInside)
         
         return button
     }()
     
+    private let collectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "movieItem")
+        collectionView.showsHorizontalScrollIndicator = false
+        return collectionView
+    }()
+    
+    private var movies: [TestModel] = [
+        TestModel(
+            image: "600x900",
+            name: "Миссия невыполнимых: Последствия",
+            testModel2: [
+                TestModel2(text: "Миссия невыполнимых: Последствия"),
+
+            ]),
+        TestModel(
+            image: "600x900",
+            name: "Миссия невыполнимых: Последствия",
+            testModel2: [
+                TestModel2(text: "Миссия невыполнимых: Последствия"),
+                TestModel2(text: "Миссия невыполнимых: Последствия"),
+
+            ]),
+        TestModel(
+            image: "600x900",
+            name: "Миссия невыполнимых: Последствия",
+            testModel2: [
+                TestModel2(text: "Миссия невыполнимых: Племя изгоев"),
+                TestModel2(text: "Миссия невыполнимых: Племя изгоев"),
+                TestModel2(text: "Миссия невыполнимых: Племя изгоев"),
+            ]),
+        TestModel(
+            image: "600x900",
+            name: "Миссия невыполнимых: Последствия",
+            testModel2: [
+                TestModel2(text: "Миссия невыполнимых: Последствия"),
+                TestModel2(text: "Миссия невыполнимых: Последствия"),
+                TestModel2(text: "Миссия невыполнимых: Последствия"),
+                TestModel2(text: "Миссия невыполнимых: Последствия"),
+                TestModel2(text: "Миссия невыполнимых: Последствия"),
+            ]),
+        TestModel(
+            image: "600x900",
+            name: "Миссия невыполнимых: Последствия",
+            testModel2: [
+                TestModel2(text: "Миссия невыполнимых: Последствия"),
+                TestModel2(text: "Миссия невыполнимых: Последствия"),
+                TestModel2(text: "Миссия невыполнимых: Последствия"),
+                TestModel2(text: "Миссия невыполнимых: Последствия"),
+                TestModel2(text: "Миссия невыполнимых: Последствия"),
+                TestModel2(text: "Миссия невыполнимых: Последствия"),
+            ]),
+        TestModel(
+            image: "600x900",
+            name: "Миссия невыполнимых: Последствия",
+            testModel2: [
+                TestModel2(text: "Миссия невыполнимых: Последствия"),
+                TestModel2(text: "Миссия невыполнимых: Последствия"),
+                TestModel2(text: "Миссия невыполнимых: Последствия"),
+                TestModel2(text: "Миссия невыполнимых: Последствия"),
+                TestModel2(text: "Миссия невыполнимых: Последствия"),
+                TestModel2(text: "Миссия невыполнимых: Последствия"),
+                TestModel2(text: "Миссия невыполнимых: Последствия"),
+            ]),
+        TestModel(
+            image: "600x900",
+            name: "Миссия невыполнимых: Последствия",
+            testModel2: [
+                TestModel2(text: "Миссия невыполнимых: Последствия"),
+                TestModel2(text: "Миссия невыполнимых: Последствия"),
+                TestModel2(text: "Миссия невыполнимых: Последствия"),
+                TestModel2(text: "Миссия невыполнимых: Последствия"),
+                TestModel2(text: "Миссия невыполнимых: Последствия"),
+                TestModel2(text: "Миссия невыполнимых: Последствия"),
+                TestModel2(text: "Миссия невыполнимых: Последствия"),
+                TestModel2(text: "Миссия невыполнимых: Последствия"),
+            ]),
+        TestModel(
+            image: "600x900",
+            name: "Миссия невыполнимых: Последствия",
+            testModel2: [
+                TestModel2(text: "Миссия невыполнимых: Последствия"),
+                TestModel2(text: "Миссия невыполнимых: Последствия"),
+                TestModel2(text: "Миссия невыполнимых: Последствия"),
+                TestModel2(text: "Миссия невыполнимых: Последствия"),
+                TestModel2(text: "Миссия невыполнимых: Последствия"),
+                TestModel2(text: "Миссия невыполнимых: Последствия"),
+                TestModel2(text: "Миссия невыполнимых: Последствия"),
+                TestModel2(text: "Миссия невыполнимых: Последствия"),
+                TestModel2(text: "Миссия невыполнимых: Последствия"),
+            ]),
+        TestModel(
+            image: "600x900",
+            name: "Миссия невыполнимых: Последствия",
+            testModel2: [
+                TestModel2(text: "Миссия невыполнимых: Последствия"),
+                TestModel2(text: "Миссия невыполнимых: Последствия"),
+                TestModel2(text: "Миссия невыполнимых: Последствия"),
+                TestModel2(text: "Миссия невыполнимых: Последствия"),
+                TestModel2(text: "Миссия невыполнимых: Последствия"),
+                TestModel2(text: "Миссия невыполнимых: Последствия"),
+                TestModel2(text: "Миссия невыполнимых: Последствия"),
+                TestModel2(text: "Миссия невыполнимых: Последствия"),
+                TestModel2(text: "Миссия невыполнимых: Последствия"),
+                TestModel2(text: "Миссия невыполнимых: Последствия"),
+            ])
+    ]
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        
         if #available(iOS 13.0, *) {
             view.backgroundColor = .systemBackground
         } else {
             view.backgroundColor = .white
         }
-        setCollectionView()
         setupNavBar()
         addLogoToNav()
+        
+        mainTableView.tableHeaderView = headerView
+        view.addSubview(mainTableView)
+        mainTableView.delegate = self
+        mainTableView.dataSource = self
+        
+        mainTableView.estimatedRowHeight = 200
+        mainTableView.rowHeight = UITableView.automaticDimension
+        
+        collectionView.dataSource = self
+        collectionView.delegate = self
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        mainTableView.frame = view.bounds
+        headerView.frame = CGRect(x: 0, y: 0, width: view.frame.size.width, height: 110)
+        cinemasSortView.frame = CGRect(x: 0, y: 0, width: view.frame.size.width, height: 40)
+        cinemasSortButton.frame = CGRect(x: 0, y: 0, width: cinemasSortView.frame.size.width / 2, height: cinemasSortView.frame.size.height)
+        collectionView.frame = CGRect(x: 0, y: 0, width: view.frame.size.width, height: 30)
         setConstraints()
     }
+    
     
     @objc private func sortCinemas() {
         print("tap")
     }
-    
-    private func setCollectionView() {
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .vertical
-        collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
-        collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        
-        
-        if #available(iOS 13.0, *) {
-            collectionView.backgroundColor = .systemBackground
-        } else {
-            collectionView.backgroundColor = .white
-        }
-        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "movies")
-        
-        collectionView.delegate = self
-        collectionView.dataSource = self
-    }
-    private func setConstraints() {
-        cinemasSortView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(cinemasSortView)
-
-        NSLayoutConstraint.activate([
-            cinemasSortView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
-            cinemasSortView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
-            cinemasSortView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
-            cinemasSortView.heightAnchor.constraint(equalToConstant: 40)
-        ])
-        
-        
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(collectionView)
-        
-        NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalTo: cinemasSortView.safeAreaLayoutGuide.bottomAnchor, constant: 10),
-            collectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
-            collectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
-            collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
-        ])
-        
-        cinemasSortView.addSubview(cinemasSortButton)
-        cinemasSortButton.translatesAutoresizingMaskIntoConstraints = false
-
-        NSLayoutConstraint.activate([
-            cinemasSortButton.centerXAnchor.constraint(equalTo: cinemasSortView.centerXAnchor),
-            cinemasSortButton.centerYAnchor.constraint(equalTo: cinemasSortView.centerYAnchor)
-        ])
-
-    }
 }
 
-extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSource  {
-    
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+// MARK: - Setup TableView
+extension MainViewController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         movies.count
     }
     
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "movies", for: indexPath)
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: MovieListTBVCell.identifier, for: indexPath) as! MovieListTBVCell
+        let movies = movies[indexPath.row]
         
-        cell.contentView.backgroundColor = .red
-        cell.isHidden = false
+        cell.configure(movies: movies)
+        cell.frame = tableView.bounds
+        cell.layoutIfNeeded()
+        cell.collectionView.reloadData()
+        let tableContenSize = cell.collectionView.collectionViewLayout.collectionViewContentSize.height
         
-//        if movies[indexPath.item] == "" {
-//            cell.isHidden = true
-//        }
+        cell.collectionView.heightAnchor.constraint(greaterThanOrEqualToConstant: tableContenSize).isActive = true
         
         return cell
     }
+    
+    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+        print("\(movies.indices[indexPath.row])")
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableView.automaticDimension
+    }
 }
 
-// MARK: - Setup Navigation Bar
+// MARK: - Setup CollectionView
+extension MainViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        7
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "movieItem", for: indexPath)
+        cell.contentView.backgroundColor = .red
+        
+        return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        CGSize(width: 60, height: 30)
+    }
+}
+
+// MARK: - Setup Nav Controller and Contraints
 extension MainViewController {
     
     private func setupNavBar() {
-            navigationItem.rightBarButtonItem = UIBarButtonItem(
-                image: UIImage(named: "line.3.horizontal"),
-                style: .plain,
-                target: self,
-                action: #selector(sideMenu)
-            )
-        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(
+            image: UIImage(named: "line.3.horizontal"),
+            style: .plain,
+            target: self,
+            action: #selector(sideMenu)
+        )
     }
     
     @objc private func sideMenu(){
@@ -162,5 +278,43 @@ extension MainViewController {
             navigationItem.titleView = logoContainer
             
         }
+    }
+    
+    private func setConstraints() {
+        headerView.addSubview(cinemasSortView)
+        cinemasSortView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            cinemasSortView.topAnchor.constraint(equalTo: headerView.topAnchor, constant: 10),
+            cinemasSortView.leftAnchor.constraint(equalTo: headerView.leftAnchor, constant: 10),
+            cinemasSortView.rightAnchor.constraint(equalTo: headerView.rightAnchor, constant: -10),
+            cinemasSortView.heightAnchor.constraint(equalToConstant: 40)
+        ])
+        
+        cinemasSortView.addSubview(cinemasSortButton)
+        cinemasSortButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            cinemasSortButton.leftAnchor.constraint(equalTo: cinemasSortView.leftAnchor, constant: 10),
+            cinemasSortButton.centerYAnchor.constraint(equalTo: cinemasSortView.centerYAnchor)
+        ])
+        
+        cinemasSortView.addSubview(filterButton)
+        filterButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            filterButton.rightAnchor.constraint(equalTo: cinemasSortView.rightAnchor, constant: -10),
+            filterButton.centerYAnchor.constraint(equalTo: cinemasSortView.centerYAnchor)
+        ])
+        
+        headerView.addSubview(collectionView)
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            collectionView.topAnchor.constraint(equalTo: cinemasSortView.bottomAnchor),
+            collectionView.leftAnchor.constraint(equalTo: headerView.leftAnchor, constant: 10),
+            collectionView.rightAnchor.constraint(equalTo: headerView.rightAnchor, constant: -10),
+            collectionView.bottomAnchor.constraint(equalTo: headerView.bottomAnchor)
+        ])
+        
     }
 }

@@ -12,11 +12,11 @@ struct CityList: Decodable {
     let currPageURL: String?
     let nextPageURL, prevPageURL: String?
     let urlParams: URLParams?
-    let data: [Datum]?
+    let data: [CityData]?
 }
 
 // MARK: - Datum
-struct Datum: Decodable {
+struct CityData: Decodable {
     let uuid, name, code, datumDescription: String?
     let sortOrder: Int?
     let location: String?

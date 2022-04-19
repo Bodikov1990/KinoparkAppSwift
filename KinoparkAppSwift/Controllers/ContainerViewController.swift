@@ -14,7 +14,6 @@ class ContainerViewController: UIViewController {
         case collapsed
     }
     
-    
     let mainVC = MainViewController()
     let citites = CitiesVC()
     var sideMenuVC: SideMenuViewController!
@@ -34,14 +33,11 @@ class ContainerViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
-        
         mainVC.delegate = self
         
+        
         setupMenu()
-
     }
-    
     
     private func generateNavController(rootViewcontroller: UIViewController, title: String, image: String, navBarIsHidden: Bool) -> UIViewController {
         let navigationVC = UINavigationController(rootViewController: rootViewcontroller)
@@ -52,7 +48,7 @@ class ContainerViewController: UIViewController {
     }
     
     private func setupMenu() {
-     
+
         let tabBarVC = UITabBarController()
         tabBarVC.viewControllers = [
             generateNavController(rootViewcontroller: mainVC, title: "Главная", image: "list.and.film", navBarIsHidden: false),
@@ -102,7 +98,6 @@ class ContainerViewController: UIViewController {
         }
     }
     
-    
     private func animateTransitionIfNeed(state: MenuState, duration: TimeInterval) {
         if runningAnimations.isEmpty {
             let frameAnimator = UIViewPropertyAnimator(duration: duration, dampingRatio: 0.8) {
@@ -134,7 +129,6 @@ class ContainerViewController: UIViewController {
             cornerRaduisAnimator.startAnimation()
             runningAnimations.append(cornerRaduisAnimator)
             
-            
             let blurAnimator = UIViewPropertyAnimator(duration: duration, dampingRatio: 1) {
                 switch state {
                 case .expanded:
@@ -152,7 +146,7 @@ class ContainerViewController: UIViewController {
                     }
                 }
             }
-
+            
             blurAnimator.startAnimation()
             runningAnimations.append(blurAnimator)
         }
@@ -168,7 +162,6 @@ class ContainerViewController: UIViewController {
             animator.pauseAnimation()
             animationProgressWhenInterupted = animator.fractionComplete
         }
-        
     }
     
     private func updateInteractiveTransition(fractionCompleted: CGFloat) {
@@ -181,9 +174,7 @@ class ContainerViewController: UIViewController {
         for animator in runningAnimations {
             animator.continueAnimation(withTimingParameters: nil, durationFactor: 0)
         }
-        
     }
-    
 }
 
 extension ContainerViewController: MainViewControllerDelegate {
