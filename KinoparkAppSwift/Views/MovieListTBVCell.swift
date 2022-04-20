@@ -22,15 +22,27 @@ class MovieListTBVCell: UITableViewCell {
     
     private let movieButton = UIButton()
     private let movieNameLabel = UILabel()
-    private let genreLable = UILabel()
+    private let genreLabel = UILabel()
+    private let pgLabel: UILabel = {
+        let label = UILabel(frame: CGRect(x: 0, y: 0, width: 15, height: 15))
+        label.font = .systemFont(ofSize: 8)
+        label.transform = CGAffineTransform(rotationAngle: -95)
+        return label
+    }()
     private let pgView: UIView = {
-       let view = UIView()
-        view.transform = CGAffineTransform(rotationAngle: 45)
+        let view = UIView(frame: CGRect(x: 0, y: 0, width: 15, height: 15))
         view.backgroundColor = .systemYellow
-
+        view.layer.cornerRadius = 3
+        view.transform = CGAffineTransform(rotationAngle: 95)
         return view
     }()
     private let durationLabel = UILabel()
+    private lazy var playButton: UIButton = {
+        let button = UIButton(frame: CGRect(x: 0, y: 0, width: 70, height: 30))
+        button.setBackgroundImage(UIImage(named: "play.circle.fill"), for: .normal)
+        button.addTarget(self, action: #selector(sortCinemas), for: .touchUpInside)
+        return button
+    }()
     
     private var imageUrl: URL? {
         didSet {
@@ -40,9 +52,9 @@ class MovieListTBVCell: UITableViewCell {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        configureSubview(subviews: movieButton, movieNameLabel, genreLable, pgView, durationLabel, collectionView)
+        configureSubview(subviews: movieButton, movieNameLabel, genreLabel, pgView, durationLabel, playButton, collectionView)
         configureCollectionView()
-        setConstraints() 
+        setConstraints()
     }
     
     required init?(coder: NSCoder) {
@@ -59,6 +71,7 @@ class MovieListTBVCell: UITableViewCell {
         subviews.forEach { subview in
             contentView.addSubview(subview)
         }
+        pgView.addSubview(pgLabel)
     }
     
     private func configureMovieButton(for image: String) {
@@ -75,18 +88,19 @@ class MovieListTBVCell: UITableViewCell {
     
     private func configureLabel(name: String) {
         movieNameLabel.text = name
-        movieNameLabel.numberOfLines = 0
-        movieNameLabel.adjustsFontSizeToFitWidth = true
+        movieNameLabel.numberOfLines = 1
+        movieNameLabel.font = .boldSystemFont(ofSize: 13)
         
-        genreLable.text = name
-        genreLable.textColor = .lightGray
-        genreLable.font = .systemFont(ofSize: 12)
+        genreLabel.text = "Боевик • Фантастика"
+        genreLabel.numberOfLines = 1
+        genreLabel.textColor = .lightGray
+        genreLabel.font = .systemFont(ofSize: 12)
         
         durationLabel.text = "Продолжительность: 100 минут"
         durationLabel.font = .systemFont(ofSize: 12)
         
-        pgView.frame = CGRect(x: 0, y: 0, width: 50, height: 50)
-        
+        pgLabel.text = "16+"
+        pgLabel.textColor = .black
     }
     
     private func configureCollectionView() {
@@ -111,33 +125,53 @@ class MovieListTBVCell: UITableViewCell {
         movieNameLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             movieNameLabel.topAnchor.constraint(equalTo: movieButton.topAnchor),
-            movieNameLabel.leadingAnchor.constraint(equalTo: movieButton.trailingAnchor, constant: 12),
+            movieNameLabel.leadingAnchor.constraint(equalTo: movieButton.trailingAnchor, constant: 10),
             movieNameLabel.heightAnchor.constraint(equalToConstant: 30),
-            movieNameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10)
+            movieNameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
+            movieNameLabel.trailingAnchor.constraint(lessThanOrEqualTo: contentView.trailingAnchor)
         ])
         
-        genreLable.translatesAutoresizingMaskIntoConstraints = false
+        genreLabel.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            genreLable.topAnchor.constraint(equalTo: movieNameLabel.bottomAnchor),
-            genreLable.leadingAnchor.constraint(equalTo: movieNameLabel.leadingAnchor),
-            genreLable.heightAnchor.constraint(equalToConstant: 20)
+            genreLabel.topAnchor.constraint(equalTo: movieNameLabel.bottomAnchor),
+            genreLabel.leadingAnchor.constraint(equalTo: movieNameLabel.leadingAnchor),
+            genreLabel.heightAnchor.constraint(equalToConstant: 20)
         ])
         
         pgView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            pgView.centerYAnchor.constraint(equalTo: genreLable.centerYAnchor),
-            pgView.leadingAnchor.constraint(equalTo: genreLable.trailingAnchor, constant: 5),
-            pgView.heightAnchor.constraint(equalToConstant: 50)
+            pgView.centerYAnchor.constraint(equalTo: genreLabel.centerYAnchor),
+            pgView.leadingAnchor.constraint(equalTo: genreLabel.trailingAnchor, constant: 10),
+            pgView.heightAnchor.constraint(equalToConstant: 15),
+            pgView.widthAnchor.constraint(equalToConstant: 15),
+            pgView.trailingAnchor.constraint(lessThanOrEqualTo: contentView.trailingAnchor, constant: -20)
+            
+        ])
+        
+        pgLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            pgLabel.centerYAnchor.constraint(equalTo: pgView.centerYAnchor),
+            pgLabel.centerXAnchor.constraint(equalTo: pgView.centerXAnchor)
         ])
         
         durationLabel.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            durationLabel.topAnchor.constraint(equalTo: genreLable.bottomAnchor, constant: 10),
-            durationLabel.leadingAnchor.constraint(equalTo: genreLable.leadingAnchor),
-            durationLabel.heightAnchor.constraint(equalToConstant: 20)
+            durationLabel.topAnchor.constraint(equalTo: genreLabel.bottomAnchor, constant: 18),
+            durationLabel.leadingAnchor.constraint(equalTo: genreLabel.leadingAnchor),
+            durationLabel.heightAnchor.constraint(equalToConstant: 15)
+        ])
+        
+        playButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            playButton.topAnchor.constraint(equalTo: durationLabel.bottomAnchor, constant: 10),
+            playButton.leadingAnchor.constraint(equalTo: durationLabel.leadingAnchor),
+            playButton.heightAnchor.constraint(equalToConstant: 30),
+            playButton.widthAnchor.constraint(equalTo: playButton.heightAnchor)
         ])
         
         collectionView.translatesAutoresizingMaskIntoConstraints = false
