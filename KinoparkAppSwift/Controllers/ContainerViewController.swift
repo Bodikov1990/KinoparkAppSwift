@@ -15,7 +15,7 @@ class ContainerViewController: UIViewController {
     }
     
     let mainViewController = MainViewController()
-    let citiesTableViewController = CitiesVC()
+    let citiesTableViewController = CitiesTableViewController()
     var sideMenuViewCintroller: SideMenuViewController!
     var visualEffectView: UIVisualEffectView!
     

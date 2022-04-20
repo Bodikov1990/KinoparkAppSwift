@@ -7,7 +7,7 @@
 
 import UIKit
 
-class CitiesVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class CitiesTableViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     private var cityList: [CityData] = []
     private let startingUrl = NetworkManager.shared.startingUrl
