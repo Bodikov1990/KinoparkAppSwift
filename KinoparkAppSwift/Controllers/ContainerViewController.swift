@@ -14,9 +14,9 @@ class ContainerViewController: UIViewController {
         case collapsed
     }
     
-    let mainVC = MainViewController()
-    let citites = CitiesVC()
-    var sideMenuVC: SideMenuViewController!
+    let mainViewController = MainViewController()
+    let citiesTableViewController = CitiesVC()
+    var sideMenuViewCintroller: SideMenuViewController!
     var visualEffectView: UIVisualEffectView!
     
     let sideMenuWidth: CGFloat = 350
@@ -33,7 +33,7 @@ class ContainerViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        mainVC.delegate = self
+        mainViewController.delegate = self
         
         
         setupMenu()
@@ -51,8 +51,8 @@ class ContainerViewController: UIViewController {
 
         let tabBarVC = UITabBarController()
         tabBarVC.viewControllers = [
-            generateNavController(rootViewcontroller: mainVC, title: "Главная", image: "list.and.film", navBarIsHidden: false),
-            generateNavController(rootViewcontroller: citites, title: "Фильмы", image: "film", navBarIsHidden: false)
+            generateNavController(rootViewcontroller: mainViewController, title: "Главная", image: "list.and.film", navBarIsHidden: false),
+            generateNavController(rootViewcontroller: citiesTableViewController, title: "Фильмы", image: "film", navBarIsHidden: false)
         ]
         addChild(tabBarVC)
         view.addSubview(tabBarVC.view)
@@ -63,15 +63,15 @@ class ContainerViewController: UIViewController {
         visualEffectView.frame = self.view.frame
         self.view.addSubview(visualEffectView)
         
-        sideMenuVC = SideMenuViewController()
-        addChild(sideMenuVC)
-        view.addSubview(sideMenuVC.view)
-        sideMenuVC.view.frame = CGRect(x: self.view.frame.width - sideMenuHandleAreaWidth, y: 0, width: sideMenuWidth, height: self.view.bounds.height)
+        sideMenuViewCintroller = SideMenuViewController()
+        addChild(sideMenuViewCintroller)
+        view.addSubview(sideMenuViewCintroller.view)
+        sideMenuViewCintroller.view.frame = CGRect(x: self.view.frame.width - sideMenuHandleAreaWidth, y: 0, width: sideMenuWidth, height: self.view.bounds.height)
         
-        sideMenuVC.view.clipsToBounds = true
+        sideMenuViewCintroller.view.clipsToBounds = true
         
         let panGestureRecognizier = UIPanGestureRecognizer(target: self, action: #selector(ContainerViewController.handleSideMenuPanGesture(recognizier:)))
-        sideMenuVC.view.addGestureRecognizer(panGestureRecognizier)
+        sideMenuViewCintroller.view.addGestureRecognizer(panGestureRecognizier)
         
     }
     
@@ -81,7 +81,7 @@ class ContainerViewController: UIViewController {
         case .began:
             startInteractiveTransition(state: nextState, duration: duratioForAnimation)
         case .changed:
-            let translation = recognizier.translation(in: self.sideMenuVC.view)
+            let translation = recognizier.translation(in: self.sideMenuViewCintroller.view)
             var fractionComplete = translation.x / sideMenuWidth
             fractionComplete = menuVisible ? fractionComplete : -fractionComplete
             updateInteractiveTransition(fractionCompleted: fractionComplete)
@@ -103,9 +103,9 @@ class ContainerViewController: UIViewController {
             let frameAnimator = UIViewPropertyAnimator(duration: duration, dampingRatio: 0.8) {
                 switch state {
                 case .expanded:
-                    self.sideMenuVC.view.frame.origin.x = self.view.frame.width - self.sideMenuWidth
+                    self.sideMenuViewCintroller.view.frame.origin.x = self.view.frame.width - self.sideMenuWidth
                 case .collapsed:
-                    self.sideMenuVC.view.frame.origin.x = self.view.frame.width - self.sideMenuHandleAreaWidth
+                    self.sideMenuViewCintroller.view.frame.origin.x = self.view.frame.width - self.sideMenuHandleAreaWidth
                 }
             }
             
@@ -120,9 +120,9 @@ class ContainerViewController: UIViewController {
             let cornerRaduisAnimator = UIViewPropertyAnimator(duration: duration, curve: .linear) {
                 switch state {
                 case .expanded:
-                    self.sideMenuVC.view.layer.cornerRadius = 10
+                    self.sideMenuViewCintroller.view.layer.cornerRadius = 10
                 case .collapsed:
-                    self.sideMenuVC.view.layer.cornerRadius = 0
+                    self.sideMenuViewCintroller.view.layer.cornerRadius = 0
                 }
             }
             
