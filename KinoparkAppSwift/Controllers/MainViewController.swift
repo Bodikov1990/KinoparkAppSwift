@@ -15,55 +15,13 @@ class MainViewController: UIViewController {
     
     var delegate: MainViewControllerDelegate?
     
-    private let mainTableView: UITableView = {
-        let tableView = UITableView()
-        tableView.register(MovieListTBVCell.self, forCellReuseIdentifier: MovieListTBVCell.identifier)
-        return tableView
-    }()
-    
-    let headerView = UIView()
-    
-    private var cinemasSortView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .systemBlue
-        view.layer.cornerRadius = 10
-        return view
-    }()
-    
-    private lazy var cinemasSortButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("Kinopark 7 Aktobe", for: .normal)
-        button.setTitleColor(UIColor.systemGray, for: .normal)
-        button.addTarget(self, action: #selector(sortCinemas), for: .touchUpInside)
-        
-        return button
-    }()
-    
-    private lazy var filterButton: UIButton = {
-        let button = UIButton()
-        button.setBackgroundImage(UIImage(named: "slider.horizontal.3"), for: .normal)
-        button.setTitleColor(UIColor.black, for: .normal)
-        button.addTarget(self, action: #selector(sortCinemas), for: .touchUpInside)
-        
-        return button
-    }()
-    
-    private let collectionView: UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .horizontal
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "movieItem")
-        collectionView.showsHorizontalScrollIndicator = false
-        return collectionView
-    }()
-    
     private var movies: [TestModel] = [
         TestModel(
             image: "600x900",
             name: "Миссия невыполнимых: Последствия",
             testModel2: [
                 TestModel2(text: "Миссия невыполнимых: Последствия"),
-
+                
             ]),
         TestModel(
             image: "600x900",
@@ -71,7 +29,7 @@ class MainViewController: UIViewController {
             testModel2: [
                 TestModel2(text: "Миссия невыполнимых: Последствия"),
                 TestModel2(text: "Миссия невыполнимых: Последствия"),
-
+                
             ]),
         TestModel(
             image: "600x900",
@@ -158,6 +116,42 @@ class MainViewController: UIViewController {
             ])
     ]
     
+    private let mainTableView: UITableView = {
+        let tableView = UITableView()
+        tableView.register(MovieListTBVCell.self, forCellReuseIdentifier: MovieListTBVCell.identifier)
+        return tableView
+    }()
+    
+    private let collectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "movieItem")
+        collectionView.showsHorizontalScrollIndicator = false
+        return collectionView
+    }()
+    
+    private let headerView = UIView()
+    
+    private lazy var cinemasSortView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .lightGray
+        view.layer.cornerRadius = 10
+        return view
+    }()
+    
+    private lazy var cinemasSortButton: UIButton = {
+        let button = UIButton()
+        return button
+    }()
+    
+    private lazy var filterButton: UIButton = {
+        let button = UIButton()
+        button.setBackgroundImage(UIImage(named: "slider.horizontal.3"), for: .normal)
+        button.addTarget(self, action: #selector(filterAction), for: .touchUpInside)
+        return button
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         if #available(iOS 13.0, *) {
@@ -167,15 +161,8 @@ class MainViewController: UIViewController {
         }
         setupNavBar()
         addLogoToNav()
-        
-        mainTableView.tableHeaderView = headerView
-        view.addSubview(mainTableView)
-        mainTableView.delegate = self
-        mainTableView.dataSource = self
-        
-        mainTableView.estimatedRowHeight = 200
-        mainTableView.rowHeight = UITableView.automaticDimension
-        
+        setupTableView()
+        setupCinemaSortButton()
         collectionView.dataSource = self
         collectionView.delegate = self
     }
@@ -190,8 +177,22 @@ class MainViewController: UIViewController {
         setConstraints()
     }
     
+    private func setupTableView() {
+        mainTableView.tableHeaderView = headerView
+        view.addSubview(mainTableView)
+        mainTableView.estimatedRowHeight = 200
+        mainTableView.rowHeight = UITableView.automaticDimension
+        mainTableView.delegate = self
+        mainTableView.dataSource = self
+    }
     
-    @objc private func sortCinemas() {
+    private func setupCinemaSortButton() {
+        cinemasSortButton.setTitle("Kinopark 7 Aktobe", for: .normal)
+        cinemasSortButton.addTarget(self, action: #selector(filterAction), for: .touchUpInside)
+        cinemasSortButton.setTitleColor(UIColor.black, for: .normal)
+    }
+    
+    @objc private func filterAction() {
         print("tap")
     }
 }
@@ -206,13 +207,12 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: MovieListTBVCell.identifier, for: indexPath) as! MovieListTBVCell
         let movies = movies[indexPath.row]
         
-        cell.configure(movies: movies)
+        cell.configure(movie: movies)
         cell.frame = tableView.bounds
         cell.layoutIfNeeded()
         cell.collectionView.reloadData()
         let tableContenSize = cell.collectionView.collectionViewLayout.collectionViewContentSize.height
-        
-        cell.collectionView.heightAnchor.constraint(greaterThanOrEqualToConstant: tableContenSize).isActive = true
+        cell.collectionView.heightAnchor.constraint(equalToConstant: tableContenSize).isActive = true
         
         return cell
     }
@@ -240,7 +240,7 @@ extension MainViewController: UICollectionViewDataSource, UICollectionViewDelega
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        CGSize(width: 60, height: 30)
+        CGSize(width: (view.frame.size.width / 4) - 2, height: 30)
     }
 }
 

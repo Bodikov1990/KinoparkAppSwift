@@ -10,30 +10,18 @@ import UIKit
 class MovieListTBVCell: UITableViewCell {
     
     static let identifier = "MovieListTBVCell"
-    
-    var collectionViewHeight: CGFloat?
-    
+    var testModel2: [TestModel2] = []
     
     var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
-        layout.minimumInteritemSpacing = 1
+        layout.minimumInteritemSpacing = 2
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "seances")
-        collectionView.heightAnchor.constraint(greaterThanOrEqualToConstant: 20).isActive = true
-        collectionView.isScrollEnabled = false
         return collectionView
     }()
     
-    var testModel2: [TestModel2] = []
-    
     private let movieNameLabel = UILabel()
-    private lazy var movieButton: UIButton = {
-        let button = UIButton()
-        button.addTarget(self, action: #selector(sortCinemas), for: .touchUpInside)
-        
-        return button
-    }()
+    private let movieButton = UIButton()
     
     private var imageUrl: URL? {
         didSet {
@@ -43,13 +31,8 @@ class MovieListTBVCell: UITableViewCell {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        contentView.addSubview(movieButton)
-        contentView.addSubview(movieNameLabel)
-        contentView.addSubview(collectionView)
-        
+        configureSubview(subviews: movieButton, movieNameLabel, collectionView)
         configureCollectionView()
-        configureImageView()
-        configureLabel()
         setConstraints() 
     }
     
@@ -57,30 +40,39 @@ class MovieListTBVCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    @objc private func sortCinemas() {
-        print("tap")
+    func configure(movie: TestModel) {
+        configureLabel(name: movie.name)
+        configureMovieButton(for: movie.image)
+        testModel2 = movie.testModel2
     }
     
-    func configure(movies: TestModel) {
-        movieNameLabel.text = movies.name
-        movieButton.setBackgroundImage(UIImage(named: movies.image), for: .normal)
-        testModel2 = movies.testModel2
+    private func configureSubview(subviews: UIView...) {
+        subviews.forEach { subview in
+            contentView.addSubview(subview)
+        }
     }
-    
     private func configureCollectionView() {
         collectionView.frame = CGRect(x: 0, y: 0, width: contentView.frame.size.width, height: contentView.frame.size.height)
-        
+        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "seances")
+        collectionView.isScrollEnabled = false
         collectionView.delegate = self
         collectionView.dataSource = self
     }
     
-    private func configureImageView() {
+    private func configureMovieButton(for image: String) {
+        movieButton.setBackgroundImage(UIImage(named: image), for: .normal)
         movieButton.frame = CGRect(x: 0, y: 0, width: contentView.frame.width, height: contentView.frame.height)
         movieButton.layer.cornerRadius = 10
         movieButton.clipsToBounds = true
+        movieButton.addTarget(self, action: #selector(sortCinemas), for: .touchUpInside)
     }
     
-    private func configureLabel() {
+    @objc private func sortCinemas() {
+        print("tap")
+    }
+    
+    private func configureLabel(name: String) {
+        movieNameLabel.text = name
         movieNameLabel.numberOfLines = 0
         movieNameLabel.adjustsFontSizeToFitWidth = true
     }
@@ -110,6 +102,7 @@ class MovieListTBVCell: UITableViewCell {
             collectionView.topAnchor.constraint(equalTo: movieButton.bottomAnchor, constant: 10),
             collectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
             collectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
+            collectionView.heightAnchor.constraint(equalToConstant: 30),
             collectionView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10)
         ])
     }
@@ -123,7 +116,7 @@ extension MovieListTBVCell: UICollectionViewDelegate, UICollectionViewDataSource
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "seances", for: indexPath)
         
-        
+        cell.clipsToBounds = true
         cell.layer.cornerRadius = 8
         cell.contentView.backgroundColor = .red
         return cell
@@ -131,7 +124,7 @@ extension MovieListTBVCell: UICollectionViewDelegate, UICollectionViewDataSource
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
-        return CGSize(width: collectionView.frame.size.width / 6 , height: 20)
+        return CGSize(width: (collectionView.frame.size.width / 6) - 4 , height: 30)
     }
     
 }
