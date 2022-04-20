@@ -20,8 +20,17 @@ class MovieListTBVCell: UITableViewCell {
         return collectionView
     }()
     
-    private let movieNameLabel = UILabel()
     private let movieButton = UIButton()
+    private let movieNameLabel = UILabel()
+    private let genreLable = UILabel()
+    private let pgView: UIView = {
+       let view = UIView()
+        view.transform = CGAffineTransform(rotationAngle: 45)
+        view.backgroundColor = .systemYellow
+
+        return view
+    }()
+    private let durationLabel = UILabel()
     
     private var imageUrl: URL? {
         didSet {
@@ -31,7 +40,7 @@ class MovieListTBVCell: UITableViewCell {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        configureSubview(subviews: movieButton, movieNameLabel, collectionView)
+        configureSubview(subviews: movieButton, movieNameLabel, genreLable, pgView, durationLabel, collectionView)
         configureCollectionView()
         setConstraints() 
     }
@@ -41,8 +50,8 @@ class MovieListTBVCell: UITableViewCell {
     }
     
     func configure(movie: TestModel) {
-        configureLabel(name: movie.name)
         configureMovieButton(for: movie.image)
+        configureLabel(name: movie.name)
         testModel2 = movie.testModel2
     }
     
@@ -50,13 +59,6 @@ class MovieListTBVCell: UITableViewCell {
         subviews.forEach { subview in
             contentView.addSubview(subview)
         }
-    }
-    private func configureCollectionView() {
-        collectionView.frame = CGRect(x: 0, y: 0, width: contentView.frame.size.width, height: contentView.frame.size.height)
-        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "seances")
-        collectionView.isScrollEnabled = false
-        collectionView.delegate = self
-        collectionView.dataSource = self
     }
     
     private func configureMovieButton(for image: String) {
@@ -75,6 +77,24 @@ class MovieListTBVCell: UITableViewCell {
         movieNameLabel.text = name
         movieNameLabel.numberOfLines = 0
         movieNameLabel.adjustsFontSizeToFitWidth = true
+        
+        genreLable.text = name
+        genreLable.textColor = .lightGray
+        genreLable.font = .systemFont(ofSize: 12)
+        
+        durationLabel.text = "Продолжительность: 100 минут"
+        durationLabel.font = .systemFont(ofSize: 12)
+        
+        pgView.frame = CGRect(x: 0, y: 0, width: 50, height: 50)
+        
+    }
+    
+    private func configureCollectionView() {
+        collectionView.frame = CGRect(x: 0, y: 0, width: contentView.frame.size.width, height: contentView.frame.size.height)
+        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "seances")
+        collectionView.isScrollEnabled = false
+        collectionView.delegate = self
+        collectionView.dataSource = self
     }
     
     private func setConstraints() {
@@ -94,6 +114,30 @@ class MovieListTBVCell: UITableViewCell {
             movieNameLabel.leadingAnchor.constraint(equalTo: movieButton.trailingAnchor, constant: 12),
             movieNameLabel.heightAnchor.constraint(equalToConstant: 30),
             movieNameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10)
+        ])
+        
+        genreLable.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            genreLable.topAnchor.constraint(equalTo: movieNameLabel.bottomAnchor),
+            genreLable.leadingAnchor.constraint(equalTo: movieNameLabel.leadingAnchor),
+            genreLable.heightAnchor.constraint(equalToConstant: 20)
+        ])
+        
+        pgView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            pgView.centerYAnchor.constraint(equalTo: genreLable.centerYAnchor),
+            pgView.leadingAnchor.constraint(equalTo: genreLable.trailingAnchor, constant: 5),
+            pgView.heightAnchor.constraint(equalToConstant: 50)
+        ])
+        
+        durationLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            durationLabel.topAnchor.constraint(equalTo: genreLable.bottomAnchor, constant: 10),
+            durationLabel.leadingAnchor.constraint(equalTo: genreLable.leadingAnchor),
+            durationLabel.heightAnchor.constraint(equalToConstant: 20)
         ])
         
         collectionView.translatesAutoresizingMaskIntoConstraints = false
