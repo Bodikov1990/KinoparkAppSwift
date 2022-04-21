@@ -29,6 +29,11 @@ class MovieListTBVCell: UITableViewCell {
         label.transform = CGAffineTransform(rotationAngle: -95)
         return label
     }()
+    private let playLabel: UILabel = {
+        let label = UILabel(frame: CGRect(x: 0, y: 0, width: 130, height: 30))
+        label.font = .systemFont(ofSize: 10)
+        return label
+    }()
     private let pgView: UIView = {
         let view = UIView(frame: CGRect(x: 0, y: 0, width: 15, height: 15))
         view.backgroundColor = .systemYellow
@@ -39,10 +44,17 @@ class MovieListTBVCell: UITableViewCell {
     private let durationLabel = UILabel()
     private lazy var playButton: UIButton = {
         let button = UIButton(frame: CGRect(x: 0, y: 0, width: 70, height: 30))
-        button.setBackgroundImage(UIImage(named: "play.circle.fill"), for: .normal)
+        button.backgroundColor = .clear
         button.addTarget(self, action: #selector(sortCinemas), for: .touchUpInside)
         return button
     }()
+    
+    let playImage: UIImageView = {
+       let image = UIImageView(image: UIImage(named: "play.circle.fill"))
+        return image
+    }()
+    
+    let descriptionTextView = UITextView()
     
     private var imageUrl: URL? {
         didSet {
@@ -52,7 +64,7 @@ class MovieListTBVCell: UITableViewCell {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        configureSubview(subviews: movieButton, movieNameLabel, genreLabel, pgView, durationLabel, playButton, collectionView)
+        configureSubview(subviews: movieButton, movieNameLabel, genreLabel, pgView, durationLabel, playButton, descriptionTextView, collectionView)
         configureCollectionView()
         setConstraints()
     }
@@ -72,6 +84,8 @@ class MovieListTBVCell: UITableViewCell {
             contentView.addSubview(subview)
         }
         pgView.addSubview(pgLabel)
+        playButton.addSubview(playLabel)
+        playButton.addSubview(playImage)
     }
     
     private func configureMovieButton(for image: String) {
@@ -89,7 +103,7 @@ class MovieListTBVCell: UITableViewCell {
     private func configureLabel(name: String) {
         movieNameLabel.text = name
         movieNameLabel.numberOfLines = 1
-        movieNameLabel.font = .boldSystemFont(ofSize: 13)
+        movieNameLabel.font = .boldSystemFont(ofSize: 12)
         
         genreLabel.text = "Боевик • Фантастика"
         genreLabel.numberOfLines = 1
@@ -101,6 +115,14 @@ class MovieListTBVCell: UITableViewCell {
         
         pgLabel.text = "16+"
         pgLabel.textColor = .black
+        
+        playLabel.text = "Смотреть трейлер"
+        
+        descriptionTextView.frame = CGRect(x: 0, y: 0, width: 300, height: 20)
+        descriptionTextView.text = "wiqojfqinqi nfiwqfjqiwn fiqnw fiqn fiq nifINQI WFIQN FOInfnqw ifnqi finqiw fnqn ofiqn fwi nqEI WFWIEN GNGW"
+        descriptionTextView.isScrollEnabled = false
+        descriptionTextView.isEditable = false
+        
     }
     
     private func configureCollectionView() {
@@ -171,13 +193,39 @@ class MovieListTBVCell: UITableViewCell {
             playButton.topAnchor.constraint(equalTo: durationLabel.bottomAnchor, constant: 10),
             playButton.leadingAnchor.constraint(equalTo: durationLabel.leadingAnchor),
             playButton.heightAnchor.constraint(equalToConstant: 30),
-            playButton.widthAnchor.constraint(equalTo: playButton.heightAnchor)
+            playButton.widthAnchor.constraint(equalToConstant: playLabel.frame.size.width)
+        ])
+        
+        playLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            playLabel.leadingAnchor.constraint(equalTo: playImage.trailingAnchor, constant: 5),
+            playLabel.centerYAnchor.constraint(equalTo: playButton.centerYAnchor)
+        ])
+        
+        playImage.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            playImage.centerYAnchor.constraint(equalTo: playButton.centerYAnchor),
+            playImage.leadingAnchor.constraint(equalTo: playButton.leadingAnchor),
+            playImage.heightAnchor.constraint(equalToConstant: 24),
+            playImage.widthAnchor.constraint(equalTo: playImage.heightAnchor)
+        ])
+        
+        descriptionTextView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            descriptionTextView.topAnchor.constraint(equalTo: movieButton.bottomAnchor, constant: 10),
+            descriptionTextView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            descriptionTextView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            descriptionTextView.heightAnchor.constraint(equalToConstant: 30)
+            
         ])
         
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalTo: movieButton.bottomAnchor, constant: 10),
+            collectionView.topAnchor.constraint(equalTo: descriptionTextView.bottomAnchor, constant: 10),
             collectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
             collectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
             collectionView.heightAnchor.constraint(equalToConstant: 30),
