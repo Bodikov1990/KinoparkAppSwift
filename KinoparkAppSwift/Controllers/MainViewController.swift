@@ -132,15 +132,14 @@ class MainViewController: UIViewController {
     }()
     
     private let headerView = UIView()
-    
-    private lazy var cinemasSortView: UIView = {
+    private let cinemasView: UIView = {
         let view = UIView()
-        view.backgroundColor = .lightGray
+//        view.backgroundColor = .lightGray
         view.layer.cornerRadius = 10
         return view
     }()
     
-    private lazy var cinemasSortButton: UIButton = {
+    private lazy var cinemasButton: UIButton = {
         let button = UIButton()
         return button
     }()
@@ -171,8 +170,8 @@ class MainViewController: UIViewController {
         super.viewDidLayoutSubviews()
         mainTableView.frame = view.bounds
         headerView.frame = CGRect(x: 0, y: 0, width: view.frame.size.width, height: 110)
-        cinemasSortView.frame = CGRect(x: 0, y: 0, width: view.frame.size.width, height: 40)
-        cinemasSortButton.frame = CGRect(x: 0, y: 0, width: cinemasSortView.frame.size.width / 2, height: cinemasSortView.frame.size.height)
+        setupCinemasView()
+        cinemasButton.frame = CGRect(x: 0, y: 0, width: cinemasView.frame.size.width / 2, height: cinemasView.frame.size.height)
         collectionView.frame = CGRect(x: 0, y: 0, width: view.frame.size.width, height: 30)
         setConstraints()
     }
@@ -182,14 +181,37 @@ class MainViewController: UIViewController {
         view.addSubview(mainTableView)
         mainTableView.estimatedRowHeight = 200
         mainTableView.rowHeight = UITableView.automaticDimension
+        mainTableView.layer.cornerRadius = 10
         mainTableView.delegate = self
         mainTableView.dataSource = self
     }
     
+    private func setupCinemasView() {
+        cinemasView.frame = CGRect(x: 0, y: 0, width: headerView.frame.width - 20, height: 40)
+
+        let topColor: UIColor = #colorLiteral(red: 0.7646051049, green: 0.1110634878, blue: 0.1571588814, alpha: 1)
+        let bottomColor: UIColor = #colorLiteral(red: 0.7646051049, green: 0.1110634878, blue: 0.1571588814, alpha: 0.513153699)
+        
+        let startPointX: CGFloat = 0
+        let startPointY: CGFloat = 0
+        let endPointX: CGFloat = 1
+        let endPointY: CGFloat = 1
+        
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.colors = [topColor.cgColor, bottomColor.cgColor]
+        gradientLayer.startPoint = CGPoint(x: startPointX, y: startPointY)
+        gradientLayer.endPoint = CGPoint(x: endPointX, y: endPointY)
+        gradientLayer.frame = cinemasView.frame
+        gradientLayer.cornerRadius = 10
+        cinemasView.layer.addSublayer(gradientLayer)
+        cinemasView.layoutIfNeeded()
+        
+    }
+    
     private func setupCinemaSortButton() {
-        cinemasSortButton.setTitle("Kinopark 7 Aktobe", for: .normal)
-        cinemasSortButton.addTarget(self, action: #selector(filterAction), for: .touchUpInside)
-        cinemasSortButton.setTitleColor(UIColor.black, for: .normal)
+        cinemasButton.setTitle("Kinopark 7 Keruencity", for: .normal)
+        cinemasButton.addTarget(self, action: #selector(filterAction), for: .touchUpInside)
+        cinemasButton.setTitleColor(UIColor.white, for: .normal)
     }
     
     @objc private func filterAction() {
@@ -207,7 +229,11 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: MovieListTBVCell.identifier, for: indexPath) as! MovieListTBVCell
         let movies = movies[indexPath.row]
         
+        
         cell.configure(movie: movies)
+        cell.contentView.backgroundColor = .cyan
+        cell.contentView.clipsToBounds = true
+        cell.contentView.layer.cornerRadius = 10
         cell.frame = tableView.bounds
         cell.layoutIfNeeded()
         cell.collectionView.reloadData()
@@ -281,36 +307,38 @@ extension MainViewController {
     }
     
     private func setConstraints() {
-        headerView.addSubview(cinemasSortView)
-        cinemasSortView.translatesAutoresizingMaskIntoConstraints = false
+        
+        
+        headerView.addSubview(cinemasView)
+        cinemasView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            cinemasSortView.topAnchor.constraint(equalTo: headerView.topAnchor, constant: 10),
-            cinemasSortView.leftAnchor.constraint(equalTo: headerView.leftAnchor, constant: 10),
-            cinemasSortView.rightAnchor.constraint(equalTo: headerView.rightAnchor, constant: -10),
-            cinemasSortView.heightAnchor.constraint(equalToConstant: 40)
+            cinemasView.topAnchor.constraint(equalTo: headerView.topAnchor, constant: 10),
+            cinemasView.leftAnchor.constraint(equalTo: headerView.leftAnchor, constant: 10),
+            cinemasView.rightAnchor.constraint(equalTo: headerView.rightAnchor, constant: -10),
+            cinemasView.heightAnchor.constraint(equalToConstant: 40)
         ])
         
-        cinemasSortView.addSubview(cinemasSortButton)
-        cinemasSortButton.translatesAutoresizingMaskIntoConstraints = false
+        cinemasView.addSubview(cinemasButton)
+        cinemasButton.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            cinemasSortButton.leftAnchor.constraint(equalTo: cinemasSortView.leftAnchor, constant: 10),
-            cinemasSortButton.centerYAnchor.constraint(equalTo: cinemasSortView.centerYAnchor)
+            cinemasButton.leftAnchor.constraint(equalTo: cinemasView.leftAnchor, constant: 10),
+            cinemasButton.centerYAnchor.constraint(equalTo: cinemasView.centerYAnchor)
         ])
         
-        cinemasSortView.addSubview(filterButton)
+        cinemasView.addSubview(filterButton)
         filterButton.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            filterButton.rightAnchor.constraint(equalTo: cinemasSortView.rightAnchor, constant: -10),
-            filterButton.centerYAnchor.constraint(equalTo: cinemasSortView.centerYAnchor)
+            filterButton.rightAnchor.constraint(equalTo: cinemasView.rightAnchor, constant: -10),
+            filterButton.centerYAnchor.constraint(equalTo: cinemasView.centerYAnchor)
         ])
         
         headerView.addSubview(collectionView)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalTo: cinemasSortView.bottomAnchor),
+            collectionView.topAnchor.constraint(equalTo: cinemasView.bottomAnchor),
             collectionView.leftAnchor.constraint(equalTo: headerView.leftAnchor, constant: 10),
             collectionView.rightAnchor.constraint(equalTo: headerView.rightAnchor, constant: -10),
             collectionView.bottomAnchor.constraint(equalTo: headerView.bottomAnchor)

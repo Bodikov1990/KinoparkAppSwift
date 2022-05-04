@@ -17,6 +17,7 @@ class MovieListTBVCell: UITableViewCell {
         layout.scrollDirection = .vertical
         layout.minimumInteritemSpacing = 2
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.backgroundColor = .clear
         return collectionView
     }()
     
@@ -68,6 +69,8 @@ class MovieListTBVCell: UITableViewCell {
         configureCollectionView()
         setConstraints()
     }
+    
+
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -122,7 +125,8 @@ class MovieListTBVCell: UITableViewCell {
         descriptionTextView.text = "wiqojfqinqi nfiwqfjqiwn fiqnw fiqn fiq nifINQI WFIQN FOInfnqw ifnqi finqiw fnqn ofiqn fwi nqEI WFWIEN GNGW"
         descriptionTextView.isScrollEnabled = false
         descriptionTextView.isEditable = false
-        
+        descriptionTextView.isSelectable = true
+        descriptionTextView.backgroundColor = .clear
     }
     
     private func configureCollectionView() {

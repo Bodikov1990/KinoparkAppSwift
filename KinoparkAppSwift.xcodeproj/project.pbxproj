@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		122F7F86280B14E6008A9329 /* TestModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 122F7F85280B14E6008A9329 /* TestModel.swift */; };
+		122FCFBC2812C69700FFAC4F /* HallMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 122FCFBB2812C69700FFAC4F /* HallMapViewController.swift */; };
+		122FCFBE2812C87400FFAC4F /* HallMapModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 122FCFBD2812C87400FFAC4F /* HallMapModel.swift */; };
 		12328E4B27EF274C005BB074 /* SideMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12328E4A27EF274C005BB074 /* SideMenuViewController.swift */; };
 		12328E4D27EF2E1E005BB074 /* ContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12328E4C27EF2E1E005BB074 /* ContainerViewController.swift */; };
 		123682722809EDB600CE851F /* MovieListTBVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 123682712809EDB500CE851F /* MovieListTBVCell.swift */; };
@@ -23,6 +25,8 @@
 
 /* Begin PBXFileReference section */
 		122F7F85280B14E6008A9329 /* TestModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestModel.swift; sourceTree = "<group>"; };
+		122FCFBB2812C69700FFAC4F /* HallMapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HallMapViewController.swift; sourceTree = "<group>"; };
+		122FCFBD2812C87400FFAC4F /* HallMapModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HallMapModel.swift; sourceTree = "<group>"; };
 		12328E4A27EF274C005BB074 /* SideMenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuViewController.swift; sourceTree = "<group>"; };
 		12328E4C27EF2E1E005BB074 /* ContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerViewController.swift; sourceTree = "<group>"; };
 		123682712809EDB500CE851F /* MovieListTBVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieListTBVCell.swift; sourceTree = "<group>"; };
@@ -111,6 +115,7 @@
 				1265180227E9D689004027E0 /* MainViewController.swift */,
 				12328E4A27EF274C005BB074 /* SideMenuViewController.swift */,
 				12328E4C27EF2E1E005BB074 /* ContainerViewController.swift */,
+				122FCFBB2812C69700FFAC4F /* HallMapViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -120,6 +125,7 @@
 			children = (
 				129B2E1527E788660066D52E /* CityList.swift */,
 				122F7F85280B14E6008A9329 /* TestModel.swift */,
+				122FCFBD2812C87400FFAC4F /* HallMapModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -204,6 +210,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				129B2E0127E785650066D52E /* CitiesTableViewController.swift in Sources */,
+				122FCFBE2812C87400FFAC4F /* HallMapModel.swift in Sources */,
 				1265180327E9D689004027E0 /* MainViewController.swift in Sources */,
 				12328E4D27EF2E1E005BB074 /* ContainerViewController.swift in Sources */,
 				129B2DFD27E785650066D52E /* AppDelegate.swift in Sources */,
@@ -211,6 +218,7 @@
 				126348822808A0C200484AC0 /* StorageManager.swift in Sources */,
 				12328E4B27EF274C005BB074 /* SideMenuViewController.swift in Sources */,
 				122F7F86280B14E6008A9329 /* TestModel.swift in Sources */,
+				122FCFBC2812C69700FFAC4F /* HallMapViewController.swift in Sources */,
 				129B2E1627E788660066D52E /* CityList.swift in Sources */,
 				123682722809EDB600CE851F /* MovieListTBVCell.swift in Sources */,
 			);

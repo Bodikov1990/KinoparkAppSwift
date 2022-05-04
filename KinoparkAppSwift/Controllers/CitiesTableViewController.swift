@@ -52,17 +52,15 @@ class CitiesTableViewController: UIViewController, UITableViewDelegate, UITableV
     }
     
     private func showCities() {
-        NetworkManager.shared.fetch(dataType: CityList.self, from: startingUrl, convertFromSnakeCase: true) { result in
+        NetworkManager.shared.fetchWithBearerToken(dataType: CityList.self, from: startingUrl, convertFromSnakeCase: true) { result in
             switch result {
             case .success(let cities):
                 self.cityList = cities.data ?? []
                 self.tableView.reloadData()
-                print(cities)
             case .failure(let error):
                 print(error)
             }
         }
     }
-    
 }
 
