@@ -119,6 +119,7 @@ class MainViewController: UIViewController {
     private let mainTableView: UITableView = {
         let tableView = UITableView()
         tableView.register(MovieListTBVCell.self, forCellReuseIdentifier: MovieListTBVCell.identifier)
+        tableView.separatorStyle = .none
         return tableView
     }()
     
@@ -134,7 +135,6 @@ class MainViewController: UIViewController {
     private let headerView = UIView()
     private let cinemasView: UIView = {
         let view = UIView()
-//        view.backgroundColor = .lightGray
         view.layer.cornerRadius = 10
         return view
     }()
@@ -231,9 +231,6 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         
         
         cell.configure(movie: movies)
-        cell.contentView.backgroundColor = .cyan
-        cell.contentView.clipsToBounds = true
-        cell.contentView.layer.cornerRadius = 10
         cell.frame = tableView.bounds
         cell.layoutIfNeeded()
         cell.collectionView.reloadData()
@@ -337,10 +334,11 @@ extension MainViewController {
         
         headerView.addSubview(collectionView)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
+        
         NSLayoutConstraint.activate([
             collectionView.topAnchor.constraint(equalTo: cinemasView.bottomAnchor),
-            collectionView.leftAnchor.constraint(equalTo: headerView.leftAnchor, constant: 10),
-            collectionView.rightAnchor.constraint(equalTo: headerView.rightAnchor, constant: -10),
+            collectionView.leftAnchor.constraint(equalTo: headerView.leftAnchor),
+            collectionView.rightAnchor.constraint(equalTo: headerView.rightAnchor),
             collectionView.bottomAnchor.constraint(equalTo: headerView.bottomAnchor)
         ])
         

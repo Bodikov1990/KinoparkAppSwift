@@ -21,6 +21,21 @@ class MovieListTBVCell: UITableViewCell {
         return collectionView
     }()
     
+    private let backgroundCell: UIView = {
+        let view = UIView(frame: CGRect(x: 0, y: 0, width: 15, height: 15))
+        if #available(iOS 13.0, *) {
+            view.backgroundColor = .systemBackground
+        } else {
+            view.backgroundColor = .white
+        }
+        view.layer.shadowColor = UIColor.lightGray.cgColor
+        view.layer.shadowOffset = CGSize(width: 0, height: 0)
+        view.layer.shadowOpacity = 0.8
+        view.layer.masksToBounds = false
+        view.layer.cornerRadius = 10
+        return view
+    }()
+    
     private let movieButton = UIButton()
     private let movieNameLabel = UILabel()
     private let genreLabel = UILabel()
@@ -51,7 +66,7 @@ class MovieListTBVCell: UITableViewCell {
     }()
     
     let playImage: UIImageView = {
-       let image = UIImageView(image: UIImage(named: "play.circle.fill"))
+        let image = UIImageView(image: UIImage(named: "play.circle.fill"))
         return image
     }()
     
@@ -65,12 +80,21 @@ class MovieListTBVCell: UITableViewCell {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        configureSubview(subviews: movieButton, movieNameLabel, genreLabel, pgView, durationLabel, playButton, descriptionTextView, collectionView)
+        configureSubview(subviews:
+                            backgroundCell,
+                         movieButton,
+                         movieNameLabel,
+                         genreLabel,
+                         pgView,
+                         durationLabel,
+                         playButton,
+                         descriptionTextView,
+                         collectionView
+        )
         configureCollectionView()
         setConstraints()
     }
     
-
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -93,10 +117,17 @@ class MovieListTBVCell: UITableViewCell {
     
     private func configureMovieButton(for image: String) {
         movieButton.setBackgroundImage(UIImage(named: image), for: .normal)
-        movieButton.frame = CGRect(x: 0, y: 0, width: contentView.frame.width, height: contentView.frame.height)
+        movieButton.frame = CGRect(
+            x: 0,
+            y: 0,
+            width: contentView.frame.width,
+            height: contentView.frame.height)
         movieButton.layer.cornerRadius = 10
         movieButton.clipsToBounds = true
-        movieButton.addTarget(self, action: #selector(sortCinemas), for: .touchUpInside)
+        movieButton.addTarget(
+            self,
+            action: #selector(sortCinemas),
+            for: .touchUpInside)
     }
     
     @objc private func sortCinemas() {
@@ -130,7 +161,11 @@ class MovieListTBVCell: UITableViewCell {
     }
     
     private func configureCollectionView() {
-        collectionView.frame = CGRect(x: 0, y: 0, width: contentView.frame.size.width, height: contentView.frame.size.height)
+        collectionView.frame = CGRect(
+            x: 0,
+            y: 0,
+            width: contentView.frame.size.width,
+            height: contentView.frame.size.height)
         collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "seances")
         collectionView.isScrollEnabled = false
         collectionView.delegate = self
@@ -139,11 +174,20 @@ class MovieListTBVCell: UITableViewCell {
     
     private func setConstraints() {
         
+        backgroundCell.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            backgroundCell.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
+            backgroundCell.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
+            backgroundCell.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
+            backgroundCell.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8)
+        ])
+        
         movieButton.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            movieButton.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
-            movieButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
+            movieButton.topAnchor.constraint(equalTo: backgroundCell.topAnchor, constant: 10),
+            movieButton.leadingAnchor.constraint(equalTo: backgroundCell.leadingAnchor, constant: 10),
             movieButton.heightAnchor.constraint(equalToConstant: 130),
             movieButton.widthAnchor.constraint(equalTo: movieButton.heightAnchor, multiplier: 10/16)
         ])
@@ -172,7 +216,7 @@ class MovieListTBVCell: UITableViewCell {
             pgView.leadingAnchor.constraint(equalTo: genreLabel.trailingAnchor, constant: 10),
             pgView.heightAnchor.constraint(equalToConstant: 15),
             pgView.widthAnchor.constraint(equalToConstant: 15),
-            pgView.trailingAnchor.constraint(lessThanOrEqualTo: contentView.trailingAnchor, constant: -20)
+            pgView.trailingAnchor.constraint(lessThanOrEqualTo: backgroundCell.trailingAnchor, constant: -20)
             
         ])
         
@@ -220,8 +264,8 @@ class MovieListTBVCell: UITableViewCell {
         
         NSLayoutConstraint.activate([
             descriptionTextView.topAnchor.constraint(equalTo: movieButton.bottomAnchor, constant: 10),
-            descriptionTextView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            descriptionTextView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            descriptionTextView.leadingAnchor.constraint(equalTo: backgroundCell.leadingAnchor, constant: 16),
+            descriptionTextView.trailingAnchor.constraint(equalTo: backgroundCell.trailingAnchor),
             descriptionTextView.heightAnchor.constraint(equalToConstant: 30)
             
         ])
@@ -230,10 +274,10 @@ class MovieListTBVCell: UITableViewCell {
         
         NSLayoutConstraint.activate([
             collectionView.topAnchor.constraint(equalTo: descriptionTextView.bottomAnchor, constant: 10),
-            collectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
-            collectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
+            collectionView.leadingAnchor.constraint(equalTo: backgroundCell.leadingAnchor, constant: 10),
+            collectionView.trailingAnchor.constraint(equalTo: backgroundCell.trailingAnchor, constant: -10),
             collectionView.heightAnchor.constraint(equalToConstant: 30),
-            collectionView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10)
+            collectionView.bottomAnchor.constraint(equalTo: backgroundCell.bottomAnchor, constant: -10)
         ])
     }
 }

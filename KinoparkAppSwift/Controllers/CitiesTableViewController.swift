@@ -26,6 +26,7 @@ class CitiesTableViewController: UIViewController, UITableViewDelegate, UITableV
     
     override func viewDidLayoutSubviews() {
         tableView.frame = view.bounds
+        showCities()
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -55,6 +56,7 @@ class CitiesTableViewController: UIViewController, UITableViewDelegate, UITableV
         NetworkManager.shared.fetchWithBearerToken(dataType: CityList.self, from: startingUrl, convertFromSnakeCase: true) { result in
             switch result {
             case .success(let cities):
+                print("\(cities)")
                 self.cityList = cities.data ?? []
                 self.tableView.reloadData()
             case .failure(let error):
