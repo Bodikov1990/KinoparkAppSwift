@@ -50,4 +50,30 @@ class SideMenuViewController: UIViewController, UITableViewDelegate, UITableView
         
         return cell
     }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        let options = MenuOptions.allCases[indexPath.row]
+        switch options {
+        case .city:
+            let option = CitiesTableViewController()
+            show(option, sender: nil)
+        case .language:
+            let option = MainViewController()
+            present(option, animated: true)
+        case .FAQ:
+            let option = CitiesTableViewController()
+            show(option, sender: nil)
+        case .rules:
+            let option = CitiesTableViewController()
+            show(option, sender: nil)
+        case .confidence:
+            let option = CitiesTableViewController()
+            show(option, sender: nil)
+        case .contacts:
+            let option = CitiesTableViewController()
+            show(option, sender: nil)
+        }
+        
+    }
 }
