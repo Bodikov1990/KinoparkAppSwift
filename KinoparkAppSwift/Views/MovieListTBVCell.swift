@@ -32,7 +32,8 @@ class MovieListTBVCell: UITableViewCell {
         view.layer.shadowOffset = CGSize(width: 0, height: 0)
         view.layer.shadowOpacity = 0.8
         view.layer.masksToBounds = false
-        view.layer.cornerRadius = 10
+        view.layer.shadowRadius = 4
+        view.layer.cornerRadius = 20
         return view
     }()
     
@@ -152,7 +153,7 @@ class MovieListTBVCell: UITableViewCell {
         
         playLabel.text = "Смотреть трейлер"
         
-        descriptionTextView.frame = CGRect(x: 0, y: 0, width: 300, height: 20)
+        descriptionTextView.frame = CGRect(x: 0, y: 0, width: contentView.frame.size.width - 20, height: 20)
         descriptionTextView.text = "wiqojfqinqi nfiwqfjqiwn fiqnw fiqn fiq nifINQI WFIQN FOInfnqw ifnqi finqiw fnqn ofiqn fwi nqEI WFWIEN GNGW"
         descriptionTextView.isScrollEnabled = false
         descriptionTextView.isEditable = false

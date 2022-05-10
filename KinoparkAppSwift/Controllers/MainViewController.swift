@@ -161,7 +161,7 @@ class MainViewController: UIViewController {
         setupNavBar()
         addLogoToNav()
         setupTableView()
-        setupCinemaSortButton()
+        setupCinemaFilterButton()
         collectionView.dataSource = self
         collectionView.delegate = self
     }
@@ -189,29 +189,23 @@ class MainViewController: UIViewController {
     private func setupCinemasView() {
         cinemasView.frame = CGRect(x: 0, y: 0, width: headerView.frame.width - 20, height: 40)
 
-        let topColor: UIColor = #colorLiteral(red: 0.7646051049, green: 0.1110634878, blue: 0.1571588814, alpha: 1)
-        let bottomColor: UIColor = #colorLiteral(red: 0.7646051049, green: 0.1110634878, blue: 0.1571588814, alpha: 0.513153699)
+        if #available(iOS 13.0, *) {
+            cinemasView.backgroundColor = .systemBackground
+        } else {
+            cinemasView.backgroundColor = .white
+        }
         
-        let startPointX: CGFloat = 0
-        let startPointY: CGFloat = 0
-        let endPointX: CGFloat = 1
-        let endPointY: CGFloat = 1
-        
-        let gradientLayer = CAGradientLayer()
-        gradientLayer.colors = [topColor.cgColor, bottomColor.cgColor]
-        gradientLayer.startPoint = CGPoint(x: startPointX, y: startPointY)
-        gradientLayer.endPoint = CGPoint(x: endPointX, y: endPointY)
-        gradientLayer.frame = cinemasView.frame
-        gradientLayer.cornerRadius = 10
-        cinemasView.layer.addSublayer(gradientLayer)
-        cinemasView.layoutIfNeeded()
+        cinemasView.layer.shadowColor = UIColor.lightGray.cgColor
+        cinemasView.layer.shadowOpacity = 1
+        cinemasView.layer.shadowOffset = CGSize(width: 1, height: 1)
+        cinemasView.layer.shadowRadius = 5
         
     }
     
-    private func setupCinemaSortButton() {
+    private func setupCinemaFilterButton() {
         cinemasButton.setTitle("Kinopark 7 Keruencity", for: .normal)
         cinemasButton.addTarget(self, action: #selector(filterAction), for: .touchUpInside)
-        cinemasButton.setTitleColor(UIColor.white, for: .normal)
+        cinemasButton.setTitleColor(UIColor.systemYellow, for: .normal)
     }
     
     @objc private func filterAction() {
@@ -244,6 +238,10 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         print("\(movies.indices[indexPath.row])")
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableView.automaticDimension
     }
@@ -267,7 +265,7 @@ extension MainViewController: UICollectionViewDataSource, UICollectionViewDelega
     }
 }
 
-// MARK: - Setup Nav Controller and Contraints
+// MARK: - Setup Nav Controller
 extension MainViewController {
     
     private func setupNavBar() {
@@ -303,17 +301,17 @@ extension MainViewController {
         }
     }
     
+// MARK: - Contraints
     private func setConstraints() {
-        
         
         headerView.addSubview(cinemasView)
         cinemasView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            cinemasView.topAnchor.constraint(equalTo: headerView.topAnchor, constant: 10),
+            cinemasView.topAnchor.constraint(equalTo: headerView.topAnchor, constant: 20),
             cinemasView.leftAnchor.constraint(equalTo: headerView.leftAnchor, constant: 10),
             cinemasView.rightAnchor.constraint(equalTo: headerView.rightAnchor, constant: -10),
-            cinemasView.heightAnchor.constraint(equalToConstant: 40)
+            cinemasView.heightAnchor.constraint(equalToConstant: 50)
         ])
         
         cinemasView.addSubview(cinemasButton)
@@ -336,7 +334,7 @@ extension MainViewController {
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalTo: cinemasView.bottomAnchor),
+            collectionView.topAnchor.constraint(equalTo: cinemasView.bottomAnchor, constant: 10),
             collectionView.leftAnchor.constraint(equalTo: headerView.leftAnchor),
             collectionView.rightAnchor.constraint(equalTo: headerView.rightAnchor),
             collectionView.bottomAnchor.constraint(equalTo: headerView.bottomAnchor)

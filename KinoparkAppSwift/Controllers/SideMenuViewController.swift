@@ -7,8 +7,11 @@
 
 import UIKit
 
+protocol SideMenuViewControllerDelegate: AnyObject {
+    func closeButton()
+}
+
 class SideMenuViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
-    
     
     enum MenuOptions: String, CaseIterable {
         case city = "Город"
@@ -17,26 +20,75 @@ class SideMenuViewController: UIViewController, UITableViewDelegate, UITableView
         case rules = "Пользовательское соглашение"
         case confidence = "Политика конфиденциальности"
         case contacts = "Связаться с нами"
+        
+        var imageName: String {
+            switch self {
+            case .city:
+                return "mappin.and.ellipse"
+            case .language:
+                return "questionmark.circle"
+            case .FAQ:
+                return "questionmark.circle"
+            case .rules:
+                return "hand.raised.slash"
+            case .confidence:
+                return "list.dash.header.rectangle"
+            case .contacts:
+                return "envelope"
+            }
+        }
     }
+    
+    var delegate: SideMenuViewControllerDelegate?
+    
+    private let headerView = UIView()
+    let personImageView: UIImageView = {
+        let imageName = "person.crop.circle"
+        let image: UIImage!
+        if #available(iOS 13.0, *) {
+            image = UIImage(systemName: imageName)
+        } else {
+            image = UIImage(named: imageName)
+        }
+        let imageView = UIImageView(image: image)
+        imageView.contentMode = .scaleAspectFit
+        imageView.tintColor = .systemRed
+        imageView.frame = CGRect(x: 0, y: 0, width: 50, height: 50)
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+    
+    private lazy var nameLabel: UILabel = {
+        let label = UILabel(frame: CGRect(x: 0, y: 0, width: 130, height: 30))
+        label.font = .boldSystemFont(ofSize: 20)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
     
     let tableView: UITableView = {
         let tableView = UITableView()
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "menu")
+        tableView.isScrollEnabled = false
         return tableView
     }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        view.addSubview(tableView)
-        
+        setupNavBar()
+        tableView.tableHeaderView = headerView
+        configureSubview(subviews: tableView)
+        setConstraints()
         tableView.delegate = self
         tableView.dataSource = self
+        
+        nameLabel.text = "Kuat Bodikov"
     }
+
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        tableView.frame = CGRect(x: 0, y: 0, width: view.bounds.size.width, height: view.bounds.size.height)
+        tableView.frame = view.bounds
+        headerView.frame = CGRect(x: 0, y: 0, width: view.frame.size.width, height: 70)
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -47,7 +99,13 @@ class SideMenuViewController: UIViewController, UITableViewDelegate, UITableView
         let cell = tableView.dequeueReusableCell(withIdentifier: "menu", for: indexPath)
         
         cell.textLabel?.text = MenuOptions.allCases[indexPath.row].rawValue
-        
+        if #available(iOS 13.0, *) {
+            cell.imageView?.image = UIImage(systemName: MenuOptions.allCases[indexPath.row].imageName)
+            cell.imageView?.tintColor = .red
+        } else {
+            cell.imageView?.image = UIImage(named: MenuOptions.allCases[indexPath.row].imageName)
+        }
+        cell.accessoryType = .disclosureIndicator
         return cell
     }
     
@@ -60,7 +118,7 @@ class SideMenuViewController: UIViewController, UITableViewDelegate, UITableView
             show(option, sender: nil)
         case .language:
             let option = MainViewController()
-            present(option, animated: true)
+            show(option, sender: nil)
         case .FAQ:
             let option = CitiesTableViewController()
             show(option, sender: nil)
@@ -74,6 +132,49 @@ class SideMenuViewController: UIViewController, UITableViewDelegate, UITableView
             let option = CitiesTableViewController()
             show(option, sender: nil)
         }
-        
     }
 }
+
+extension SideMenuViewController {
+    private func setupNavBar() {
+        title = "Мой Kinopark"
+        navigationItem.leftBarButtonItem = UIBarButtonItem(
+            image: UIImage(named: "xmark"),
+            style: .plain,
+            target: self,
+            action: #selector(sideMenu)
+        )
+        navigationController?.navigationBar.tintColor = .systemGray
+    }
+    
+    @objc private func sideMenu(){
+        delegate?.closeButton()
+    }
+    
+    private func configureSubview(subviews: UIView...) {
+        subviews.forEach { subview in
+            view.addSubview(subview)
+        }
+    }
+    
+    private func setConstraints() {
+        headerView.addSubview(personImageView)
+        
+        NSLayoutConstraint.activate([
+            personImageView.centerYAnchor.constraint(equalTo: headerView.centerYAnchor),
+            personImageView.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 16),
+            personImageView.heightAnchor.constraint(equalToConstant: personImageView.frame.size.height),
+            personImageView.widthAnchor.constraint(equalToConstant: personImageView.frame.size.width)
+        ])
+        
+        headerView.addSubview(nameLabel)
+        
+        NSLayoutConstraint.activate([
+            nameLabel.centerYAnchor.constraint(equalTo: personImageView.centerYAnchor),
+            nameLabel.leadingAnchor.constraint(equalTo: personImageView.trailingAnchor, constant: 12),
+            nameLabel.heightAnchor.constraint(equalToConstant: nameLabel.frame.size.height),
+            nameLabel.widthAnchor.constraint(equalToConstant: nameLabel.frame.size.width)
+        ])
+    }
+}
+

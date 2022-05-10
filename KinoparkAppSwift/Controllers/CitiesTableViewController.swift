@@ -52,6 +52,11 @@ class CitiesTableViewController: UIViewController, UITableViewDelegate, UITableV
         return cell
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        dismiss(animated: true)
+    }
+    
     private func showCities() {
         NetworkManager.shared.fetchWithBearerToken(dataType: CityList.self, from: startingUrl, convertFromSnakeCase: true) { result in
             switch result {
