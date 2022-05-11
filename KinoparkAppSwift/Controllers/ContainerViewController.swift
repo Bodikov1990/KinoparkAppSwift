@@ -59,7 +59,7 @@ class ContainerViewController: UIViewController, UINavigationControllerDelegate 
                 image: "film",
                 navBarIsHidden: false)
         ]
-        tabBarVC.tabBar.tintColor = .red
+        tabBarVC.tabBar.tintColor = #colorLiteral(red: 0.7646051049, green: 0.1110634878, blue: 0.1571588814, alpha: 1)
         addChild(tabBarVC)
         view.addSubview(tabBarVC.view)
         tabBarVC.didMove(toParent: self)

@@ -156,13 +156,20 @@ class MainViewController: UIViewController {
     
     private lazy var filterButton: UIButton = {
         let button = UIButton()
-        button.setBackgroundImage(UIImage(named: "slider.horizontal.3"), for: .normal)
+        if #available(iOS 13.0, *) {
+            button.setBackgroundImage(UIImage(systemName: "slider.horizontal.3"), for: .normal)
+            button.tintColor = #colorLiteral(red: 0.7646051049, green: 0.1110634878, blue: 0.1571588814, alpha: 1)
+        } else {
+            button.setBackgroundImage(UIImage(named: "slider.horizontal.3"), for: .normal)
+        }
+        
+        
         button.addTarget(self, action: #selector(filterAction), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
     
-//MARK: - ViewDidLoad
+    //MARK: - ViewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
         if #available(iOS 13.0, *) {
@@ -180,7 +187,7 @@ class MainViewController: UIViewController {
         collectionView.delegate = self
     }
     
-//MARK: - ViewDidLayoutSubviews
+    //MARK: - ViewDidLayoutSubviews
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         mainTableView.frame = view.bounds
@@ -204,7 +211,7 @@ class MainViewController: UIViewController {
     private func setupViews(views: UIView...) {
         views.forEach { view in
             view.frame = CGRect(x: 0, y: 0, width: headerView.frame.width, height: 36)
-
+            
             if #available(iOS 13.0, *) {
                 view.backgroundColor = .systemBackground
             } else {
@@ -212,16 +219,21 @@ class MainViewController: UIViewController {
             }
             
             view.layer.shadowColor = UIColor.lightGray.cgColor
-            view.layer.shadowOpacity = 1
-            view.layer.shadowOffset = CGSize(width: 1, height: 1)
+            view.layer.shadowOpacity = 0.8
+            view.layer.shadowOffset = CGSize(width: 1, height: 3)
             view.layer.shadowRadius = 5
         }
     }
     
     private func setupCinemaFilterButton() {
         cinemasButton.setTitle("Kinopark 7 Keruencity", for: .normal)
-        cinemasButton.addTarget(self, action: #selector(filterAction), for: .touchUpInside)
-        cinemasButton.setTitleColor(UIColor.systemYellow, for: .normal)
+        cinemasButton.setTitleColor(
+            UIColor(named: "textColor"),
+            for: .normal)
+        cinemasButton.addTarget(
+            self,
+            action: #selector(filterAction),
+            for: .touchUpInside)
     }
     
     @objc private func filterAction() {
@@ -239,7 +251,6 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: MovieListTBVCell.identifier, for: indexPath) as! MovieListTBVCell
         let movies = movies[indexPath.row]
         
-        
         cell.configure(movie: movies)
         cell.frame = tableView.bounds
         cell.layoutIfNeeded()
@@ -248,10 +259,6 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         cell.collectionView.heightAnchor.constraint(equalToConstant: tableContenSize).isActive = true
         
         return cell
-    }
-    
-    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        print("\(movies.indices[indexPath.row])")
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -271,7 +278,7 @@ extension MainViewController: UICollectionViewDataSource, UICollectionViewDelega
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "movieItem", for: indexPath)
-        cell.contentView.backgroundColor = .red
+        cell.contentView.backgroundColor = #colorLiteral(red: 0.7646051049, green: 0.1110634878, blue: 0.1571588814, alpha: 1)
         
         return cell
     }
@@ -285,12 +292,22 @@ extension MainViewController: UICollectionViewDataSource, UICollectionViewDelega
 extension MainViewController {
     
     private func setupNavBar() {
-        navigationItem.rightBarButtonItem = UIBarButtonItem(
-            image: UIImage(named: "line.3.horizontal"),
-            style: .plain,
-            target: self,
-            action: #selector(sideMenu)
-        )
+        if #available(iOS 13.0, *) {
+            navigationItem.rightBarButtonItem = UIBarButtonItem(
+                image: UIImage(systemName: "line.3.horizontal"),
+                style: .plain,
+                target: self,
+                action: #selector(sideMenu)
+            )
+            navigationController?.navigationBar.tintColor = #colorLiteral(red: 0.7646051049, green: 0.1110634878, blue: 0.1571588814, alpha: 1)
+        } else {
+            navigationItem.rightBarButtonItem = UIBarButtonItem(
+                image: UIImage(named: "line.3.horizontal"),
+                style: .plain,
+                target: self,
+                action: #selector(sideMenu)
+            )
+        }
     }
     
     @objc private func sideMenu(){
@@ -316,9 +333,9 @@ extension MainViewController {
             
         }
     }
-
     
-// MARK: - Contraints
+    
+    // MARK: - Contraints
     private func configureSubview(subviews: UIView...) {
         subviews.forEach { subview in
             headerView.addSubview(subview)
@@ -342,19 +359,19 @@ extension MainViewController {
         ])
         
         cinemasView.addSubview(cinemasButton)
-
+        
         NSLayoutConstraint.activate([
-            cinemasButton.leftAnchor.constraint(equalTo: cinemasView.leftAnchor, constant: 10),
+            cinemasButton.leftAnchor.constraint(equalTo: cinemasView.leftAnchor, constant: 16),
             cinemasButton.centerYAnchor.constraint(equalTo: cinemasView.centerYAnchor)
         ])
-
+        
         filterView.addSubview(filterButton)
-
+        
         NSLayoutConstraint.activate([
             filterButton.centerXAnchor.constraint(equalTo: filterView.centerXAnchor),
             filterButton.centerYAnchor.constraint(equalTo: filterView.centerYAnchor)
         ])
-  
+        
         NSLayoutConstraint.activate([
             collectionView.topAnchor.constraint(equalTo: cinemasView.bottomAnchor, constant: 10),
             collectionView.leftAnchor.constraint(equalTo: headerView.leftAnchor),

@@ -29,10 +29,10 @@ class MovieListTBVCell: UITableViewCell {
             view.backgroundColor = .white
         }
         view.layer.shadowColor = UIColor.lightGray.cgColor
-        view.layer.shadowOffset = CGSize(width: 0, height: 0)
+        view.layer.shadowOffset = CGSize(width: 1, height: 3)
         view.layer.shadowOpacity = 0.8
         view.layer.masksToBounds = false
-        view.layer.shadowRadius = 4
+        view.layer.shadowRadius = 5
         view.layer.cornerRadius = 20
         return view
     }()
@@ -67,8 +67,18 @@ class MovieListTBVCell: UITableViewCell {
     }()
     
     let playImage: UIImageView = {
-        let image = UIImageView(image: UIImage(named: "play.circle.fill"))
-        return image
+        let imageName = "play.circle.fill"
+        let image: UIImage!
+        if #available(iOS 13.0, *) {
+            image = UIImage(systemName: imageName)
+        } else {
+            image = UIImage(named: imageName)
+        }
+        let imageView = UIImageView(image: image)
+        imageView.contentMode = .scaleAspectFit
+        imageView.tintColor = #colorLiteral(red: 0.7646051049, green: 0.1110634878, blue: 0.1571588814, alpha: 1)
+        imageView.frame = CGRect(x: 0, y: 0, width: 50, height: 50)
+        return imageView
     }()
     
     let descriptionTextView = UITextView()
@@ -153,7 +163,7 @@ class MovieListTBVCell: UITableViewCell {
         
         playLabel.text = "Смотреть трейлер"
         
-        descriptionTextView.frame = CGRect(x: 0, y: 0, width: contentView.frame.size.width - 20, height: 20)
+        descriptionTextView.frame = CGRect(x: 0, y: 0, width: contentView.frame.size.width, height: 20)
         descriptionTextView.text = "wiqojfqinqi nfiwqfjqiwn fiqnw fiqn fiq nifINQI WFIQN FOInfnqw ifnqi finqiw fnqn ofiqn fwi nqEI WFWIEN GNGW"
         descriptionTextView.isScrollEnabled = false
         descriptionTextView.isEditable = false
@@ -194,6 +204,7 @@ class MovieListTBVCell: UITableViewCell {
         ])
         
         movieNameLabel.translatesAutoresizingMaskIntoConstraints = false
+        
         NSLayoutConstraint.activate([
             movieNameLabel.topAnchor.constraint(equalTo: movieButton.topAnchor),
             movieNameLabel.leadingAnchor.constraint(equalTo: movieButton.trailingAnchor, constant: 10),
@@ -293,7 +304,7 @@ extension MovieListTBVCell: UICollectionViewDelegate, UICollectionViewDataSource
         
         cell.clipsToBounds = true
         cell.layer.cornerRadius = 8
-        cell.contentView.backgroundColor = .red
+        cell.contentView.backgroundColor = #colorLiteral(red: 0.7646051049, green: 0.1110634878, blue: 0.1571588814, alpha: 1)
         return cell
     }
     
