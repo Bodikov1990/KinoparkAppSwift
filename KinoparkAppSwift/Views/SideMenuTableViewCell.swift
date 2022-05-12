@@ -7,14 +7,32 @@
 
 import UIKit
 
+enum Theme: Int {
+    case device
+    case light
+    case dark
+    
+    func getUserInterfaceStyle() -> UIUserInterfaceStyle {
+        switch self {
+        case .device:
+            return .unspecified
+        case .light:
+            return .light
+        case .dark:
+            return .dark
+        }
+    }
+}
+
 class SideMenuTableViewCell: UITableViewCell {
     static let identifier = "SideMenuTableViewCell"
     
-    private lazy var cellImageView: UIImageView = {
+    let cellImageView: UIImageView = {
         let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 50, height: 50))
         imageView.contentMode = .scaleAspectFit
         imageView.tintColor = #colorLiteral(red: 0.7646051049, green: 0.1110634878, blue: 0.1571588814, alpha: 1)
         imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.isHidden = false
         return imageView
     }()
     
@@ -25,24 +43,33 @@ class SideMenuTableViewCell: UITableViewCell {
         return label
     }()
     
+    let secondLabel: UILabel = {
+        let label = UILabel(frame: CGRect(x: 0, y: 0, width: 130, height: 30))
+        label.font = .systemFont(ofSize: 14)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.isHidden = false
+        return label
+    }()
+    
     let segmentedControl: UISegmentedControl = {
         let segmentedControl = UISegmentedControl(items: ["Системный", "Светлый", "Темный"])
-        segmentedControl.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-        if #available(iOS 13.0, *) {
-            segmentedControl.selectedSegmentTintColor = #colorLiteral(red: 0.7646051049, green: 0.1110634878, blue: 0.1571588814, alpha: 1)
-        } else {
-            
-        }
-        segmentedControl.tintColor = #colorLiteral(red: 0.7646051049, green: 0.1110634878, blue: 0.1571588814, alpha: 1)
+        segmentedControl.backgroundColor = #colorLiteral(red: 0.7646051049, green: 0.1110634878, blue: 0.1571588814, alpha: 1)
+        segmentedControl.tintColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         segmentedControl.selectedSegmentIndex = 0
-        segmentedControl.addTarget(SideMenuTableViewCell.self, action: #selector(changeInterface), for: .valueChanged)
+        segmentedControl.addTarget(
+            self,
+            action: #selector(changeInterface),
+            for: .valueChanged
+        )
         segmentedControl.translatesAutoresizingMaskIntoConstraints = false
+        segmentedControl.isHidden = false
         return segmentedControl
     }()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        configureSubview(subviews: cellImageView, cellLabel, segmentedControl)
+        configureSubview(subviews: cellImageView, cellLabel, secondLabel, segmentedControl)
+        segmentedControl.selectedSegmentIndex = MTUserDefaults.shared.theme.rawValue
         setContraints()
     }
     
@@ -51,7 +78,12 @@ class SideMenuTableViewCell: UITableViewCell {
     }
     
     @objc private func changeInterface() {
-        print("changed")
+        MTUserDefaults.shared.theme = Theme(rawValue: segmentedControl.selectedSegmentIndex) ?? .device
+        if #available(iOS 13.0, *) {
+            contentView.window?.overrideUserInterfaceStyle = MTUserDefaults.shared.theme.getUserInterfaceStyle()
+        } else {
+            // Fallback on earlier versions
+        }
     }
     
     func configure(option: String, image: String) {
@@ -85,6 +117,11 @@ class SideMenuTableViewCell: UITableViewCell {
         NSLayoutConstraint.activate([
             cellLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             cellLabel.leadingAnchor.constraint(equalTo: cellImageView.trailingAnchor, constant: 12)
+        ])
+        
+        NSLayoutConstraint.activate([
+            secondLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            secondLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16)
         ])
         
         NSLayoutConstraint.activate([

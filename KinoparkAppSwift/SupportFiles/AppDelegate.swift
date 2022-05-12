@@ -17,7 +17,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.makeKeyAndVisible()
         window?.rootViewController = ContainerViewController()
-        
+        if #available(iOS 13.0, *) {
+            window?.overrideUserInterfaceStyle = MTUserDefaults.shared.theme.getUserInterfaceStyle()
+        } else {
+            // Fallback on earlier versions
+        }
         return true
     }
 

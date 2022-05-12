@@ -16,7 +16,7 @@ class SideMenuViewController: UIViewController, UITableViewDelegate, UITableView
     enum MenuOptions: String, CaseIterable {
         case city = "Город"
         case language = "Язык"
-        case FAQ = "Часто задаваемые вопросы"
+        case faq = "Часто задаваемые вопросы"
         case rules = "Пользовательское соглашение"
         case confidence = "Политика конфиденциальности"
         case contacts = "Связаться с нами"
@@ -28,7 +28,7 @@ class SideMenuViewController: UIViewController, UITableViewDelegate, UITableView
                 return "mappin.and.ellipse"
             case .language:
                 return "questionmark.circle"
-            case .FAQ:
+            case .faq:
                 return "questionmark.circle"
             case .rules:
                 return "hand.raised.slash"
@@ -103,13 +103,20 @@ class SideMenuViewController: UIViewController, UITableViewDelegate, UITableView
         let cell = tableView.dequeueReusableCell(withIdentifier: SideMenuTableViewCell.identifier, for: indexPath) as! SideMenuTableViewCell
         let menuOptions = MenuOptions.allCases[indexPath.row]
         
-        
-        cell.configure(option: menuOptions.rawValue, image: menuOptions.imageName)
-        if menuOptions.rawValue != MenuOptions.darkMode.rawValue{
-//            cell.configure(option: "", image: menuOptions.imageName)
-            cell.segmentedControl.isHidden = true
+        switch menuOptions {
+            
+        case .city, .language:
+            cell.configure(option: menuOptions.rawValue, image: menuOptions.imageName)
             cell.accessoryType = .disclosureIndicator
+            cell.segmentedControl.isHidden.toggle()
+        case .faq, .rules, .confidence, .contacts:
+            cell.configure(option: menuOptions.rawValue, image: menuOptions.imageName)
+            cell.accessoryType = .disclosureIndicator
+            cell.segmentedControl.isHidden.toggle()
+        case .darkMode:
+            break
         }
+        
         return cell
     }
     
@@ -121,9 +128,9 @@ class SideMenuViewController: UIViewController, UITableViewDelegate, UITableView
             let option = CitiesTableViewController()
             show(option, sender: nil)
         case .language:
-            let option = MainViewController()
+            let option = CitiesTableViewController()
             show(option, sender: nil)
-        case .FAQ:
+        case .faq:
             let option = CitiesTableViewController()
             show(option, sender: nil)
         case .rules:

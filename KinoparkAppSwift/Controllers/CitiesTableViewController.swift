@@ -54,7 +54,9 @@ class CitiesTableViewController: UIViewController, UITableViewDelegate, UITableV
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        dismiss(animated: true)
+        dismiss(animated: true) {
+            print("diss")
+        }
     }
     
     private func showCities() {
