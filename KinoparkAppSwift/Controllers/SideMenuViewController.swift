@@ -20,6 +20,7 @@ class SideMenuViewController: UIViewController, UITableViewDelegate, UITableView
         case rules = "Пользовательское соглашение"
         case confidence = "Политика конфиденциальности"
         case contacts = "Связаться с нами"
+        case darkMode = "Режим"
         
         var imageName: String {
             switch self {
@@ -35,6 +36,8 @@ class SideMenuViewController: UIViewController, UITableViewDelegate, UITableView
                 return "list.dash.header.rectangle"
             case .contacts:
                 return "envelope"
+            case .darkMode:
+                return "moon"
             }
         }
     }
@@ -42,6 +45,7 @@ class SideMenuViewController: UIViewController, UITableViewDelegate, UITableView
     var delegate: SideMenuViewControllerDelegate?
     
     private let headerView = UIView()
+    private let footerView = UIView()
     private let personImageView: UIImageView = {
         let imageName = "person.crop.circle"
         let image: UIImage!
@@ -65,30 +69,13 @@ class SideMenuViewController: UIViewController, UITableViewDelegate, UITableView
         return label
     }()
     
-    private lazy var segmentModeLabel: UILabel = {
-        let label = UILabel(frame: CGRect(x: 0, y: 0, width: view.frame.size.width, height: 30))
-        label.font = .systemFont(ofSize: 14)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
     let tableView: UITableView = {
         let tableView = UITableView()
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "menu")
+        tableView.register(SideMenuTableViewCell.self, forCellReuseIdentifier: SideMenuTableViewCell.identifier)
         tableView.isScrollEnabled = false
         return tableView
     }()
     
-    private lazy var modeSegmentedControl: UISegmentedControl = {
-        let segmentedControl = UISegmentedControl(items: ["Системный", "Светлый", "Темный"])
-        segmentedControl.frame = CGRect(x: 0, y: 0, width: view.frame.size.width - 24, height: 24)
-        segmentedControl.backgroundColor = #colorLiteral(red: 0.7646051049, green: 0.1110634878, blue: 0.1571588814, alpha: 1)
-        segmentedControl.tintColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-        segmentedControl.selectedSegmentIndex = 0
-        segmentedControl.addTarget(self, action: #selector(sideMenu), for: .valueChanged)
-        segmentedControl.translatesAutoresizingMaskIntoConstraints = false
-        return segmentedControl
-    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -98,9 +85,7 @@ class SideMenuViewController: UIViewController, UITableViewDelegate, UITableView
         setConstraints()
         tableView.delegate = self
         tableView.dataSource = self
-        
         nameLabel.text = "Kuat Bodikov"
-        segmentModeLabel.text = "Выберите режим экрана"
     }
 
     
@@ -115,16 +100,16 @@ class SideMenuViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "menu", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: SideMenuTableViewCell.identifier, for: indexPath) as! SideMenuTableViewCell
+        let menuOptions = MenuOptions.allCases[indexPath.row]
         
-        cell.textLabel?.text = MenuOptions.allCases[indexPath.row].rawValue
-        if #available(iOS 13.0, *) {
-            cell.imageView?.image = UIImage(systemName: MenuOptions.allCases[indexPath.row].imageName)
-            cell.imageView?.tintColor = #colorLiteral(red: 0.7646051049, green: 0.1110634878, blue: 0.1571588814, alpha: 1)
-        } else {
-            cell.imageView?.image = UIImage(named: MenuOptions.allCases[indexPath.row].imageName)
+        
+        cell.configure(option: menuOptions.rawValue, image: menuOptions.imageName)
+        if menuOptions.rawValue != MenuOptions.darkMode.rawValue{
+//            cell.configure(option: "", image: menuOptions.imageName)
+            cell.segmentedControl.isHidden = true
+            cell.accessoryType = .disclosureIndicator
         }
-        cell.accessoryType = .disclosureIndicator
         return cell
     }
     
@@ -150,6 +135,8 @@ class SideMenuViewController: UIViewController, UITableViewDelegate, UITableView
         case .contacts:
             let option = CitiesTableViewController()
             show(option, sender: nil)
+        case .darkMode:
+            break
         }
     }
 }
@@ -193,14 +180,6 @@ extension SideMenuViewController {
             nameLabel.leadingAnchor.constraint(equalTo: personImageView.trailingAnchor, constant: 12),
             nameLabel.heightAnchor.constraint(equalToConstant: nameLabel.frame.size.height),
             nameLabel.widthAnchor.constraint(equalToConstant: nameLabel.frame.size.width)
-        ])
-        
-        tableView.addSubview(segmentModeLabel)
-        
-        NSLayoutConstraint.activate([
-            segmentModeLabel.bottomAnchor.constraint(equalTo: tableView.bottomAnchor, constant: 100),
-            segmentModeLabel.leadingAnchor.constraint(equalTo: tableView.leadingAnchor, constant: 16),
-            segmentModeLabel.trailingAnchor.constraint(equalTo: tableView.trailingAnchor, constant: -16)
         ])
     }
 }

@@ -12,6 +12,7 @@
 		12328E4B27EF274C005BB074 /* SideMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12328E4A27EF274C005BB074 /* SideMenuViewController.swift */; };
 		12328E4D27EF2E1E005BB074 /* ContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12328E4C27EF2E1E005BB074 /* ContainerViewController.swift */; };
 		123682722809EDB600CE851F /* MovieListTBVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 123682712809EDB500CE851F /* MovieListTBVCell.swift */; };
+		1256669D282D38FE005FEE04 /* SideMenuTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1256669C282D38FE005FEE04 /* SideMenuTableViewCell.swift */; };
 		126348822808A0C200484AC0 /* StorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 126348812808A0C200484AC0 /* StorageManager.swift */; };
 		1265180327E9D689004027E0 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1265180227E9D689004027E0 /* MainViewController.swift */; };
 		129B2DFD27E785650066D52E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 129B2DFC27E785650066D52E /* AppDelegate.swift */; };
@@ -29,6 +30,7 @@
 		12328E4A27EF274C005BB074 /* SideMenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuViewController.swift; sourceTree = "<group>"; };
 		12328E4C27EF2E1E005BB074 /* ContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerViewController.swift; sourceTree = "<group>"; };
 		123682712809EDB500CE851F /* MovieListTBVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieListTBVCell.swift; sourceTree = "<group>"; };
+		1256669C282D38FE005FEE04 /* SideMenuTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuTableViewCell.swift; sourceTree = "<group>"; };
 		126348812808A0C200484AC0 /* StorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageManager.swift; sourceTree = "<group>"; };
 		1265180227E9D689004027E0 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		129B2DF927E785650066D52E /* KinoparkAppSwift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KinoparkAppSwift.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -57,6 +59,7 @@
 			isa = PBXGroup;
 			children = (
 				123682712809EDB500CE851F /* MovieListTBVCell.swift */,
+				1256669C282D38FE005FEE04 /* SideMenuTableViewCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -220,6 +223,7 @@
 				12B76CDB28250DE300C8DFA9 /* CinemasModel.swift in Sources */,
 				122FCFBC2812C69700FFAC4F /* HallMapViewController.swift in Sources */,
 				129B2E1627E788660066D52E /* CityList.swift in Sources */,
+				1256669D282D38FE005FEE04 /* SideMenuTableViewCell.swift in Sources */,
 				123682722809EDB600CE851F /* MovieListTBVCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
