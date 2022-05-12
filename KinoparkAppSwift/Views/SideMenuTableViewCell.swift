@@ -79,11 +79,7 @@ class SideMenuTableViewCell: UITableViewCell {
     
     @objc private func changeInterface() {
         MTUserDefaults.shared.theme = Theme(rawValue: segmentedControl.selectedSegmentIndex) ?? .device
-        if #available(iOS 13.0, *) {
-            contentView.window?.overrideUserInterfaceStyle = MTUserDefaults.shared.theme.getUserInterfaceStyle()
-        } else {
-            // Fallback on earlier versions
-        }
+        contentView.window?.overrideUserInterfaceStyle = MTUserDefaults.shared.theme.getUserInterfaceStyle()
     }
     
     func configure(option: String, image: String) {

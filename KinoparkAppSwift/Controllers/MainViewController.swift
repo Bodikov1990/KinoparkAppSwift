@@ -156,14 +156,8 @@ class MainViewController: UIViewController {
     
     private lazy var filterButton: UIButton = {
         let button = UIButton()
-        if #available(iOS 13.0, *) {
             button.setBackgroundImage(UIImage(systemName: "slider.horizontal.3"), for: .normal)
             button.tintColor = #colorLiteral(red: 0.7646051049, green: 0.1110634878, blue: 0.1571588814, alpha: 1)
-        } else {
-            button.setBackgroundImage(UIImage(named: "slider.horizontal.3"), for: .normal)
-        }
-        
-        
         button.addTarget(self, action: #selector(filterAction), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
@@ -172,11 +166,7 @@ class MainViewController: UIViewController {
     //MARK: - ViewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
-        if #available(iOS 13.0, *) {
-            view.backgroundColor = .systemBackground
-        } else {
-            view.backgroundColor = .white
-        }
+        view.backgroundColor = .systemBackground
         
         configureSubview(subviews: cinemasView, filterView, collectionView)
         setupNavBar()
@@ -211,13 +201,7 @@ class MainViewController: UIViewController {
     private func setupViews(views: UIView...) {
         views.forEach { view in
             view.frame = CGRect(x: 0, y: 0, width: headerView.frame.width, height: 36)
-            
-            if #available(iOS 13.0, *) {
-                view.backgroundColor = .systemBackground
-            } else {
-                view.backgroundColor = .white
-            }
-            
+            view.backgroundColor = .systemBackground
             view.layer.shadowColor = UIColor.lightGray.cgColor
             view.layer.shadowOpacity = 0.8
             view.layer.shadowOffset = CGSize(width: 1, height: 3)
@@ -292,7 +276,6 @@ extension MainViewController: UICollectionViewDataSource, UICollectionViewDelega
 extension MainViewController {
     
     private func setupNavBar() {
-        if #available(iOS 13.0, *) {
             navigationItem.rightBarButtonItem = UIBarButtonItem(
                 image: UIImage(systemName: "line.3.horizontal"),
                 style: .plain,
@@ -300,14 +283,6 @@ extension MainViewController {
                 action: #selector(sideMenu)
             )
             navigationController?.navigationBar.tintColor = #colorLiteral(red: 0.7646051049, green: 0.1110634878, blue: 0.1571588814, alpha: 1)
-        } else {
-            navigationItem.rightBarButtonItem = UIBarButtonItem(
-                image: UIImage(named: "line.3.horizontal"),
-                style: .plain,
-                target: self,
-                action: #selector(sideMenu)
-            )
-        }
     }
     
     @objc private func sideMenu(){

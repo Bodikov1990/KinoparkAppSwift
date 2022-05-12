@@ -48,12 +48,7 @@ class SideMenuViewController: UIViewController, UITableViewDelegate, UITableView
     private let footerView = UIView()
     private let personImageView: UIImageView = {
         let imageName = "person.crop.circle"
-        let image: UIImage!
-        if #available(iOS 13.0, *) {
-            image = UIImage(systemName: imageName)
-        } else {
-            image = UIImage(named: imageName)
-        }
+        let image = UIImage(systemName: imageName)
         let imageView = UIImageView(image: image)
         imageView.contentMode = .scaleAspectFit
         imageView.tintColor = #colorLiteral(red: 0.7646051049, green: 0.1110634878, blue: 0.1571588814, alpha: 1)

@@ -40,7 +40,7 @@ class ContainerViewController: UIViewController, UINavigationControllerDelegate 
         setupTabBar()
         setupMenu()
         sideMenuViewController.delegate = self
-
+        
     }
     
     
@@ -72,26 +72,20 @@ class ContainerViewController: UIViewController, UINavigationControllerDelegate 
         
         let navigationVC = UINavigationController(rootViewController: rootViewcontroller)
         navigationVC.tabBarItem.title = title
-
-        
-        if #available(iOS 13.0, *) {
-            navigationVC.tabBarItem.image = UIImage(systemName: image)
-        } else {
-            navigationVC.tabBarItem.image = UIImage(named: image)
-        }
+        navigationVC.tabBarItem.image = UIImage(systemName: image)
         navigationVC.navigationBar.isHidden = navBarIsHidden
         return navigationVC
     }
     
     private func setupMenu() {
-
+        
         visualEffectView = UIVisualEffectView()
         visualEffectView.isHidden = true
         
-
+        
         visualEffectView.frame = self.view.frame
         self.view.addSubview(visualEffectView)
-
+        
         addChild(sideMenuWithNavVC)
         view.addSubview(sideMenuWithNavVC.view)
         sideMenuWithNavVC.didMove(toParent: self)
@@ -166,13 +160,8 @@ class ContainerViewController: UIViewController, UINavigationControllerDelegate 
             let blurAnimator = UIViewPropertyAnimator(duration: duration, dampingRatio: 1) {
                 switch state {
                 case .expanded:
-                    if #available(iOS 13.0, *) {
-                        self.visualEffectView.effect = UIBlurEffect(style: .systemChromeMaterial)
-                        self.visualEffectView.isHidden.toggle()
-                    } else {
-                        self.visualEffectView.effect = UIBlurEffect(style: .light)
-                        self.visualEffectView.isHidden.toggle()
-                    }
+                    self.visualEffectView.effect = UIBlurEffect(style: .systemChromeMaterial)
+                    self.visualEffectView.isHidden.toggle()
                 case .collapsed:
                     self.visualEffectView.effect = nil
                     DispatchQueue.main.asyncAfter(deadline: .now()+duration) {
