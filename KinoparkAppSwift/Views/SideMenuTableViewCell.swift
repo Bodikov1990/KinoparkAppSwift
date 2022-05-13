@@ -26,7 +26,7 @@ enum Theme: Int {
 
 class SideMenuTableViewCell: UITableViewCell {
     static let identifier = "SideMenuTableViewCell"
-    
+
     let cellImageView: UIImageView = {
         let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 50, height: 50))
         imageView.contentMode = .scaleAspectFit
@@ -62,7 +62,7 @@ class SideMenuTableViewCell: UITableViewCell {
             for: .valueChanged
         )
         segmentedControl.translatesAutoresizingMaskIntoConstraints = false
-        segmentedControl.isHidden = false
+        segmentedControl.isHidden = true
         return segmentedControl
     }()
     
@@ -71,6 +71,7 @@ class SideMenuTableViewCell: UITableViewCell {
         configureSubview(subviews: cellImageView, cellLabel, secondLabel, segmentedControl)
         segmentedControl.selectedSegmentIndex = MTUserDefaults.shared.theme.rawValue
         setContraints()
+
     }
     
     required init?(coder: NSCoder) {

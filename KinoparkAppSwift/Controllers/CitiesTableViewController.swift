@@ -8,12 +8,12 @@
 import UIKit
 
 protocol CitiesTableViewControllerDelegate: AnyObject {
-    func getCity(cityData: CityData)
+    func printTap(cityData: CityData)
 }
 
 class CitiesTableViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
-    
-    var delegate: CitiesTableViewControllerDelegate?
+
+    var delegate: CitiesTableViewControllerDelegate!
     
     private var cityList: [CityData] = []
     private let startingUrl = NetworkManager.shared.startingUrl
@@ -26,13 +26,11 @@ class CitiesTableViewController: UIViewController, UITableViewDelegate, UITableV
         
         tableView.delegate = self
         tableView.dataSource = self
-        
         showCities()
     }
     
     override func viewDidLayoutSubviews() {
         tableView.frame = view.bounds
-        showCities()
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -57,25 +55,33 @@ class CitiesTableViewController: UIViewController, UITableViewDelegate, UITableV
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        
-        let city = self.cityList[indexPath.row]
-        guard let cityName = city.name else { return }
-        print(cityName)
-        delegate?.getCity(cityData: city)
+        let city = cityList[indexPath.row]
 
+        dismiss(animated: true)
+        delegate.printTap(cityData: city)
     }
     
     private func showCities() {
-        NetworkManager.shared.fetchWithBearerToken(dataType: CityList.self, from: startingUrl, convertFromSnakeCase: true) { result in
+        NetworkManager.shared.fetchWithBearerToken(dataType: CityList.self) { result in
             switch result {
             case .success(let cities):
-                print("\(cities)")
+//                print("\(cities)")
                 self.cityList = cities.data ?? []
                 self.tableView.reloadData()
             case .failure(let error):
                 print(error)
             }
         }
+//        NetworkManager.shared.fetchWithBearerToken(dataType: CityList.self, from: startingUrl, convertFromSnakeCase: true) { result in
+//            switch result {
+//            case .success(let cities):
+////                print("\(cities)")
+//                self.cityList = cities.data ?? []
+//                self.tableView.reloadData()
+//            case .failure(let error):
+//                print(error)
+//            }
+//        }
     }
 }
 

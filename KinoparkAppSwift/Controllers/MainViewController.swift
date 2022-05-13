@@ -13,8 +13,9 @@ protocol MainViewControllerDelegate: AnyObject {
 
 class MainViewController: UIViewController {
     
-    var delegate: MainViewControllerDelegate?
-    let citiesTableViewController = CitiesTableViewController()
+    
+    weak var delegate: MainViewControllerDelegate?
+    private let citiesTableViewController = SideMenuViewController()
     private var movies: [TestModel] = [
         TestModel(
             image: "600x900",
@@ -175,7 +176,7 @@ class MainViewController: UIViewController {
         setupCinemaFilterButton()
         collectionView.dataSource = self
         collectionView.delegate = self
-        citiesTableViewController.delegate = self
+
     }
     
     //MARK: - ViewDidLayoutSubviews
@@ -188,6 +189,7 @@ class MainViewController: UIViewController {
         setupViews(views: cinemasView, filterView)
         setConstraints()
     }
+
     
     private func setupTableView() {
         mainTableView.tableHeaderView = headerView
@@ -272,22 +274,6 @@ extension MainViewController: UICollectionViewDataSource, UICollectionViewDelega
         CGSize(width: (view.frame.size.width / 4) - 2, height: 30)
     }
 }
-//MARK: - CitiesTableViewControllerDelegate
-
-extension MainViewController: CitiesTableViewControllerDelegate {
-    func didTap() {
-        print("did")
-    }
-    
-    func getCity(cityData: CityData) {
-        guard let cityName = cityData.uuid else { return }
-        print(cityName)
-        print("tap")
-    }
-    
-    
-}
-
 
 // MARK: - Setup Nav Controller
 extension MainViewController {
@@ -372,3 +358,6 @@ extension MainViewController {
         
     }
 }
+
+//MARK: - CitiesTableViewControllerDelegate
+

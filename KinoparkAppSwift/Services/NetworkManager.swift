@@ -63,9 +63,9 @@ class NetworkManager {
         }.resume()
     }
     
-    func fetchWithBearerToken<T: Decodable>(dataType: T.Type, from url: String, convertFromSnakeCase: Bool = true, completion: @escaping(Result<T, NetworkError>) -> Void) {
+    func fetchWithBearerToken<T: Decodable>(dataType: T.Type, from url: String = "", convertFromSnakeCase: Bool = true, completion: @escaping(Result<T, NetworkError>) -> Void) {
 
-        guard let url = URL(string: url) else {
+        guard let url = URL(string: startingUrl) else {
             completion(.failure(.invalidURL))
             return
         }

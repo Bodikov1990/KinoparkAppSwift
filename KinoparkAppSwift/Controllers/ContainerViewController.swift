@@ -16,7 +16,7 @@ class ContainerViewController: UIViewController, UINavigationControllerDelegate 
     }
     
     private let mainViewController = MainViewController()
-    private let citiesTableViewController = CitiesTableViewController()
+    private let citiesViewController = CitiesTableViewController()
     private let sideMenuViewController = SideMenuViewController()
     private lazy var sideMenuWithNavVC = UINavigationController(rootViewController: sideMenuViewController)
     private var visualEffectView: UIVisualEffectView!
@@ -36,10 +36,9 @@ class ContainerViewController: UIViewController, UINavigationControllerDelegate 
     override func viewDidLoad() {
         super.viewDidLoad()
         mainViewController.delegate = self
-        
+        sideMenuViewController.delegate = self
         setupTabBar()
         setupMenu()
-        sideMenuViewController.delegate = self
         
     }
     
@@ -52,7 +51,7 @@ class ContainerViewController: UIViewController, UINavigationControllerDelegate 
                 image: "list.and.film",
                 navBarIsHidden: false),
             generateNavController(
-                rootViewcontroller: citiesTableViewController,
+                rootViewcontroller: citiesViewController,
                 title: "Фильмы",
                 image: "film",
                 navBarIsHidden: false)
@@ -80,13 +79,12 @@ class ContainerViewController: UIViewController, UINavigationControllerDelegate 
         visualEffectView = UIVisualEffectView()
         visualEffectView.isHidden = true
         
-        
         visualEffectView.frame = self.view.frame
-        self.view.addSubview(visualEffectView)
+        view.addSubview(visualEffectView)
         
         addChild(sideMenuWithNavVC)
         view.addSubview(sideMenuWithNavVC.view)
-        sideMenuWithNavVC.didMove(toParent: self)
+        sideMenuWithNavVC.didMove(toParent: mainViewController)
         
         sideMenuWithNavVC.view.frame = CGRect(x: self.view.frame.width - sideMenuHandleAreaWidth, y: 0, width: sideMenuWidth, height: self.view.bounds.height)
         
@@ -199,10 +197,6 @@ class ContainerViewController: UIViewController, UINavigationControllerDelegate 
 }
 
 extension ContainerViewController: MainViewControllerDelegate {
-    func ta() {
-        print("ta")
-    }
-    
     func didTapSideMenu() {
         animateTransitionIfNeed(state: nextState, duration: duratioForAnimation)
     }

@@ -9,6 +9,8 @@ import UIKit
 
 protocol SideMenuViewControllerDelegate: AnyObject {
     func closeButton()
+    
+    
 }
 
 class SideMenuViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
@@ -42,8 +44,8 @@ class SideMenuViewController: UIViewController, UITableViewDelegate, UITableView
         }
     }
     
-    var delegate: SideMenuViewControllerDelegate?
-    
+    var delegate: SideMenuViewControllerDelegate!
+    private var secondLabel = ""
     private let headerView = UIView()
     private let footerView = UIView()
     private let personImageView: UIImageView = {
@@ -80,6 +82,7 @@ class SideMenuViewController: UIViewController, UITableViewDelegate, UITableView
         setConstraints()
         tableView.delegate = self
         tableView.dataSource = self
+
         nameLabel.text = "Kuat Bodikov"
     }
 
@@ -97,19 +100,20 @@ class SideMenuViewController: UIViewController, UITableViewDelegate, UITableView
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: SideMenuTableViewCell.identifier, for: indexPath) as! SideMenuTableViewCell
         let menuOptions = MenuOptions.allCases[indexPath.row]
+        cell.accessoryType = .disclosureIndicator
         
         switch menuOptions {
-            
-        case .city, .language:
+        case .city:
             cell.configure(option: menuOptions.rawValue, image: menuOptions.imageName)
-            cell.accessoryType = .disclosureIndicator
-            cell.segmentedControl.isHidden.toggle()
+            cell.secondLabel.text = self.secondLabel
+        case .language:
+            cell.configure(option: menuOptions.rawValue, image: menuOptions.imageName)
+            cell.secondLabel.text = "Язык"
         case .faq, .rules, .confidence, .contacts:
             cell.configure(option: menuOptions.rawValue, image: menuOptions.imageName)
-            cell.accessoryType = .disclosureIndicator
-            cell.segmentedControl.isHidden.toggle()
         case .darkMode:
-            break
+            cell.accessoryType = .none
+            cell.segmentedControl.isHidden = false
         }
         
         return cell
@@ -121,9 +125,10 @@ class SideMenuViewController: UIViewController, UITableViewDelegate, UITableView
         switch options {
         case .city:
             let option = CitiesTableViewController()
+            option.delegate = self
             show(option, sender: nil)
         case .language:
-            let option = CitiesTableViewController()
+            let option = MainViewController()
             show(option, sender: nil)
         case .faq:
             let option = CitiesTableViewController()
@@ -186,3 +191,13 @@ extension SideMenuViewController {
     }
 }
 
+extension SideMenuViewController: CitiesTableViewControllerDelegate {
+    func printTap(cityData: CityData) {
+        guard let cityName = cityData.name else { return }
+        guard let cityData = cityData.uuid else { return }
+        self.secondLabel = cityName
+        
+        tableView.reloadData()
+        print(cityData)
+    }
+}
