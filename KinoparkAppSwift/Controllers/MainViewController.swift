@@ -14,7 +14,7 @@ protocol MainViewControllerDelegate: AnyObject {
 class MainViewController: UIViewController {
     
     var delegate: MainViewControllerDelegate?
-    
+    let citiesTableViewController = CitiesTableViewController()
     private var movies: [TestModel] = [
         TestModel(
             image: "600x900",
@@ -118,7 +118,7 @@ class MainViewController: UIViewController {
     
     private let mainTableView: UITableView = {
         let tableView = UITableView()
-        tableView.register(MovieListTBVCell.self, forCellReuseIdentifier: MovieListTBVCell.identifier)
+        tableView.register(MainTableViewCell.self, forCellReuseIdentifier: MainTableViewCell.identifier)
         tableView.separatorStyle = .none
         return tableView
     }()
@@ -175,6 +175,7 @@ class MainViewController: UIViewController {
         setupCinemaFilterButton()
         collectionView.dataSource = self
         collectionView.delegate = self
+        citiesTableViewController.delegate = self
     }
     
     //MARK: - ViewDidLayoutSubviews
@@ -232,7 +233,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: MovieListTBVCell.identifier, for: indexPath) as! MovieListTBVCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: MainTableViewCell.identifier, for: indexPath) as! MainTableViewCell
         let movies = movies[indexPath.row]
         
         cell.configure(movie: movies)
@@ -271,6 +272,22 @@ extension MainViewController: UICollectionViewDataSource, UICollectionViewDelega
         CGSize(width: (view.frame.size.width / 4) - 2, height: 30)
     }
 }
+//MARK: - CitiesTableViewControllerDelegate
+
+extension MainViewController: CitiesTableViewControllerDelegate {
+    func didTap() {
+        print("did")
+    }
+    
+    func getCity(cityData: CityData) {
+        guard let cityName = cityData.uuid else { return }
+        print(cityName)
+        print("tap")
+    }
+    
+    
+}
+
 
 // MARK: - Setup Nav Controller
 extension MainViewController {
@@ -308,7 +325,6 @@ extension MainViewController {
             
         }
     }
-    
     
     // MARK: - Contraints
     private func configureSubview(subviews: UIView...) {

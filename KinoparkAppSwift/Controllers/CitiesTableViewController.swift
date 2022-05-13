@@ -7,7 +7,13 @@
 
 import UIKit
 
+protocol CitiesTableViewControllerDelegate: AnyObject {
+    func getCity(cityData: CityData)
+}
+
 class CitiesTableViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+    
+    var delegate: CitiesTableViewControllerDelegate?
     
     private var cityList: [CityData] = []
     private let startingUrl = NetworkManager.shared.startingUrl
@@ -35,28 +41,28 @@ class CitiesTableViewController: UIViewController, UITableViewDelegate, UITableV
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "showCities", for: indexPath)
+        let city = cityList[indexPath.row]
         
         if #available(iOS 14.0, *) {
-            let city = cityList[indexPath.row]
             var content = cell.defaultContentConfiguration()
             content.text = city.name
-            
             cell.contentConfiguration = content
             return cell
         } else {
-            let city = cityList[indexPath.row]
-            
             cell.textLabel?.text = city.name
         }
-        
+    
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        dismiss(animated: true) {
-            print("diss")
-        }
+        
+        let city = self.cityList[indexPath.row]
+        guard let cityName = city.name else { return }
+        print(cityName)
+        delegate?.getCity(cityData: city)
+
     }
     
     private func showCities() {

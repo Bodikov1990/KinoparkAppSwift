@@ -1,5 +1,5 @@
 //
-//  MovieListTBVCell.swift
+//  MainTableViewCell.swift
 //  KinoparkAppSwift
 //
 //  Created by Kuat Bodikov on 15.04.2022.
@@ -7,9 +7,9 @@
 
 import UIKit
 
-class MovieListTBVCell: UITableViewCell {
+class MainTableViewCell: UITableViewCell {
     
-    static let identifier = "MovieListTBVCell"
+    static let identifier = "MainTableViewCell"
     var testModel2: [TestModel2] = []
     
     var collectionView: UICollectionView = {
@@ -23,11 +23,7 @@ class MovieListTBVCell: UITableViewCell {
     
     private let backgroundCell: UIView = {
         let view = UIView(frame: CGRect(x: 0, y: 0, width: 15, height: 15))
-        if #available(iOS 13.0, *) {
-            view.backgroundColor = .systemBackground
-        } else {
-            view.backgroundColor = .white
-        }
+        view.backgroundColor = .systemBackground
         view.layer.shadowColor = UIColor.lightGray.cgColor
         view.layer.shadowOffset = CGSize(width: 1, height: 3)
         view.layer.shadowOpacity = 0.8
@@ -68,12 +64,7 @@ class MovieListTBVCell: UITableViewCell {
     
     let playImage: UIImageView = {
         let imageName = "play.circle.fill"
-        let image: UIImage!
-        if #available(iOS 13.0, *) {
-            image = UIImage(systemName: imageName)
-        } else {
-            image = UIImage(named: imageName)
-        }
+        let image = UIImage(systemName: imageName)
         let imageView = UIImageView(image: image)
         imageView.contentMode = .scaleAspectFit
         imageView.tintColor = #colorLiteral(red: 0.7646051049, green: 0.1110634878, blue: 0.1571588814, alpha: 1)
@@ -164,7 +155,7 @@ class MovieListTBVCell: UITableViewCell {
         playLabel.text = "Смотреть трейлер"
         
         descriptionTextView.frame = CGRect(x: 0, y: 0, width: contentView.frame.size.width, height: 20)
-        descriptionTextView.text = "wiqojfqinqi nfiwqfjqiwn fiqnw fiqn fiq nifINQI WFIQN FOInfnqw ifnqi finqiw fnqn ofiqn fwi nqEI WFWIEN GNGW"
+        descriptionTextView.text = "Кинопарк 7 Актобе, ул. Маметова 4, г. Актобе"
         descriptionTextView.isScrollEnabled = false
         descriptionTextView.isEditable = false
         descriptionTextView.isSelectable = true
@@ -294,7 +285,7 @@ class MovieListTBVCell: UITableViewCell {
     }
 }
 
-extension MovieListTBVCell: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+extension MainTableViewCell: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         testModel2.count
     }

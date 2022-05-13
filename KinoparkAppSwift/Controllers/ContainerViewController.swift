@@ -43,8 +43,6 @@ class ContainerViewController: UIViewController, UINavigationControllerDelegate 
         
     }
     
-    
-    
     private func setupTabBar() {
         let tabBarVC = UITabBarController()
         tabBarVC.viewControllers = [
@@ -201,6 +199,10 @@ class ContainerViewController: UIViewController, UINavigationControllerDelegate 
 }
 
 extension ContainerViewController: MainViewControllerDelegate {
+    func ta() {
+        print("ta")
+    }
+    
     func didTapSideMenu() {
         animateTransitionIfNeed(state: nextState, duration: duratioForAnimation)
     }
