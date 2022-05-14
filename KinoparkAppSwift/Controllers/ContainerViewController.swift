@@ -11,57 +11,63 @@ import UIKit
 class ContainerViewController: UIViewController, UINavigationControllerDelegate {
     
     enum MenuState {
-        case expanded
-        case collapsed
+        case closed
+        case opened
     }
     
-    private let mainViewController = MainViewController()
-    private lazy var citiesViewController = CitiesTableViewController()
+    private var menuState: MenuState = .closed
+    
     private let sideMenuViewController = SideMenuViewController()
-    private lazy var sideMenuWithNavVC = UINavigationController(rootViewController: sideMenuViewController)
-    private var visualEffectView: UIVisualEffectView!
-    
-    private let sideMenuWidth: CGFloat = 350
-    private let sideMenuHandleAreaWidth: CGFloat = 0
-    private let duratioForAnimation = 0.5
-    
-    private var menuVisible = false
-    private var nextState: MenuState {
-        return menuVisible ? .collapsed : .expanded
-    }
-    
-    private var runningAnimations = [UIViewPropertyAnimator]()
-    private var animationProgressWhenInterupted: CGFloat = 0
+    private let mainViewController = MainViewController()
+    private let citiesViewController = CitiesTableViewController()
+    private lazy var mainVC = generateNavController(
+        rootViewcontroller: mainViewController,
+        title: "Главная",
+        image: "list.and.film",
+        navBarIsHidden: false)
+    private lazy var citiesVC = generateNavController(
+        rootViewcontroller: citiesViewController,
+        title: "Фильмы",
+        image: "film",
+        navBarIsHidden: false)
+    private lazy var sideMenuVC = generateNavController(
+        rootViewcontroller: sideMenuViewController,
+        title: "Фильмы",
+        image: "film",
+        navBarIsHidden: false)
+    private lazy var tabBarVC = setupTabBar(viewControllers: mainVC, citiesVC)
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .systemBackground
         mainViewController.delegate = self
         sideMenuViewController.delegate = self
-        citiesViewController.delegate = mainViewController
-        setupTabBar()
-        setupMenu()
-        
+        addChildVCs()
     }
     
-    private func setupTabBar() {
-        let tabBarVC = UITabBarController()
-        tabBarVC.viewControllers = [
-            generateNavController(
-                rootViewcontroller: mainViewController,
-                title: "Главная",
-                image: "list.and.film",
-                navBarIsHidden: false),
-            generateNavController(
-                rootViewcontroller: citiesViewController,
-                title: "Фильмы",
-                image: "film",
-                navBarIsHidden: false)
-        ]
+    private func addChildVCs() {
+        //        Menu
+        sideMenuVC.view.frame = CGRect(x: +50, y: 0, width: sideMenuVC.view.frame.size.width - 50, height: self.view.frame.size.height)
+        addChild(sideMenuVC)
+        view.addSubview(sideMenuVC.view)
+        sideMenuVC.didMove(toParent: self)
         
-        tabBarVC.tabBar.tintColor = #colorLiteral(red: 0.7646051049, green: 0.1110634878, blue: 0.1571588814, alpha: 1)
+        //        TabBar
+        tabBarVC.view.layer.shadowColor = UIColor.lightGray.cgColor
+        tabBarVC.view.layer.shadowOpacity = 0.8
+        tabBarVC.view.layer.shadowOffset = CGSize(width: 1, height: 3)
+        tabBarVC.view.layer.shadowRadius = 5
         addChild(tabBarVC)
         view.addSubview(tabBarVC.view)
-        tabBarVC.didMove(toParent: mainViewController)
+        tabBarVC.didMove(toParent: self)
+
+    }
+    
+    private func setupTabBar(viewControllers: UIViewController...) -> UITabBarController {
+        let tabBarVC = UITabBarController()
+        tabBarVC.viewControllers = viewControllers
+        tabBarVC.tabBar.tintColor = #colorLiteral(red: 0.7646051049, green: 0.1110634878, blue: 0.1571588814, alpha: 1)
+        return tabBarVC
     }
     
     private func generateNavController(rootViewcontroller: UIViewController,
@@ -74,139 +80,88 @@ class ContainerViewController: UIViewController, UINavigationControllerDelegate 
         navigationVC.navigationBar.isHidden = navBarIsHidden
         return navigationVC
     }
-    
-    private func setupMenu() {
-        
-        visualEffectView = UIVisualEffectView()
-        visualEffectView.isHidden = true
-        
-        visualEffectView.frame = self.view.frame
-        view.addSubview(visualEffectView)
-        
-        addChild(sideMenuWithNavVC)
-        view.addSubview(sideMenuWithNavVC.view)
-        sideMenuWithNavVC.didMove(toParent: self)
-        
-        sideMenuWithNavVC.view.frame = CGRect(x: self.view.frame.width - sideMenuHandleAreaWidth, y: 0, width: sideMenuWidth, height: self.view.bounds.height)
-        
-        sideMenuWithNavVC.view.clipsToBounds = true
-        
-        let panGestureRecognizier = UIPanGestureRecognizer(
-            target: self,
-            action: #selector(ContainerViewController.handleSideMenuPanGesture(recognizier:)
-                             )
-        )
-        sideMenuWithNavVC.view.addGestureRecognizer(panGestureRecognizier)
-        
-    }
-    
-    @objc private func handleSideMenuPanGesture(recognizier: UIPanGestureRecognizer) {
-        switch recognizier.state {
-            
-        case .began:
-            startInteractiveTransition(state: nextState, duration: duratioForAnimation)
-        case .changed:
-            let translation = recognizier.translation(in: self.sideMenuWithNavVC.view)
-            var fractionComplete = translation.x / sideMenuWidth
-            fractionComplete = menuVisible ? fractionComplete : -fractionComplete
-            updateInteractiveTransition(fractionCompleted: fractionComplete)
-        case .ended:
-            continueInteractiveTtransition()
-        case .possible:
-            break
-        case .cancelled:
-            break
-        case .failed:
-            break
-        @unknown default:
-            break
-        }
-    }
-    
-    private func animateTransitionIfNeed(state: MenuState, duration: TimeInterval) {
-        if runningAnimations.isEmpty {
-            let frameAnimator = UIViewPropertyAnimator(duration: duration, dampingRatio: 0.8) {
-                switch state {
-                case .expanded:
-                    self.sideMenuWithNavVC.view.frame.origin.x = self.view.frame.width - self.sideMenuWidth
-                case .collapsed:
-                    self.sideMenuWithNavVC.view.frame.origin.x = self.view.frame.width - self.sideMenuHandleAreaWidth
-                }
-            }
-            
-            frameAnimator.addCompletion { _ in
-                self.menuVisible = !self.menuVisible
-                self.runningAnimations.removeAll()
-            }
-            
-            frameAnimator.startAnimation()
-            runningAnimations.append(frameAnimator)
-            
-            let cornerRaduisAnimator = UIViewPropertyAnimator(duration: duration, curve: .linear) {
-                switch state {
-                case .expanded:
-                    self.sideMenuWithNavVC.view.layer.cornerRadius = 20
-                case .collapsed:
-                    self.sideMenuWithNavVC.view.layer.cornerRadius = 0
-                }
-            }
-            
-            cornerRaduisAnimator.startAnimation()
-            runningAnimations.append(cornerRaduisAnimator)
-            
-            let blurAnimator = UIViewPropertyAnimator(duration: duration, dampingRatio: 1) {
-                switch state {
-                case .expanded:
-                    self.visualEffectView.effect = UIBlurEffect(style: .systemChromeMaterial)
-                    self.visualEffectView.isHidden.toggle()
-                case .collapsed:
-                    self.visualEffectView.effect = nil
-                    DispatchQueue.main.asyncAfter(deadline: .now()+duration) {
-                        self.visualEffectView.isHidden.toggle()
-                        
-                    }
-                }
-            }
-            
-            blurAnimator.startAnimation()
-            runningAnimations.append(blurAnimator)
-        }
-    }
-    
-    
-    private func startInteractiveTransition(state: MenuState, duration: TimeInterval) {
-        if runningAnimations.isEmpty {
-            animateTransitionIfNeed(state: state, duration: duration)
-        }
-        
-        for animator in runningAnimations {
-            animator.pauseAnimation()
-            animationProgressWhenInterupted = animator.fractionComplete
-        }
-    }
-    
-    private func updateInteractiveTransition(fractionCompleted: CGFloat) {
-        for animator in runningAnimations {
-            animator.fractionComplete = fractionCompleted + animationProgressWhenInterupted
-        }
-    }
-    
-    private func continueInteractiveTtransition() {
-        for animator in runningAnimations {
-            animator.continueAnimation(withTimingParameters: nil, durationFactor: 0)
-        }
-    }
 }
 
 extension ContainerViewController: MainViewControllerDelegate {
     func didTapSideMenu() {
-        animateTransitionIfNeed(state: nextState, duration: duratioForAnimation)
+        print("DID TAP")
+        switch menuState {
+        case .closed:
+            UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0, options: .curveEaseInOut) {
+                self.tabBarVC.view.frame.origin.x -= self.tabBarVC.view.frame.width - 50
+            } completion: { [weak self] done in
+                if done {
+                    self?.menuState = .opened
+                }
+            }
+
+        case .opened:
+            UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0, options: .curveEaseInOut) {
+                self.tabBarVC.view.frame.origin.x = 0
+            } completion: { [weak self] done in
+                if done {
+                    self?.menuState = .closed
+                }
+            }
+        }
     }
 }
 
 extension ContainerViewController: SideMenuViewControllerDelegate {
-    
     func closeButton() {
-        animateTransitionIfNeed(state: nextState, duration: duratioForAnimation)
+        switch menuState {
+        case .closed:
+            UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0, options: .curveEaseInOut) {
+                self.tabBarVC.view.frame.origin.x -= self.tabBarVC.view.frame.width - 50
+            } completion: { [weak self] done in
+                if done {
+                    self?.menuState = .opened
+                }
+            }
+
+        case .opened:
+            UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0, options: .curveEaseInOut) {
+                self.tabBarVC.view.frame.origin.x = 0
+            } completion: { [weak self] done in
+                if done {
+                    self?.menuState = .closed
+                }
+            }
+        }
     }
 }
+
+
+/*
+   private func setupTabBar() {
+       let tabBarVC = UITabBarController()
+       tabBarVC.viewControllers = [
+           generateNavController(
+               rootViewcontroller: mainViewController,
+               title: "Главная",
+               image: "list.and.film",
+               navBarIsHidden: false),
+           generateNavController(
+               rootViewcontroller: citiesViewController,
+               title: "Фильмы",
+               image: "film",
+               navBarIsHidden: false)
+       ]
+       
+       tabBarVC.tabBar.tintColor = #colorLiteral(red: 0.7646051049, green: 0.1110634878, blue: 0.1571588814, alpha: 1)
+       addChild(tabBarVC)
+       view.addSubview(tabBarVC.view)
+       tabBarVC.didMove(toParent: mainViewController)
+   }
+   
+   private func generateNavController(rootViewcontroller: UIViewController,
+                                      title: String,
+                                      image: String,
+                                      navBarIsHidden: Bool) -> UIViewController {
+       let navigationVC = UINavigationController(rootViewController: rootViewcontroller)
+       navigationVC.tabBarItem.title = title
+       navigationVC.tabBarItem.image = UIImage(systemName: image)
+       navigationVC.navigationBar.isHidden = navBarIsHidden
+       return navigationVC
+   }
+ */

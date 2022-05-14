@@ -58,7 +58,7 @@ class CitiesTableViewController: UIViewController, UITableViewDelegate, UITableV
         
         let city = cityList[indexPath.row]
         delegate.getCity(cityData: city)
-        
+        dismiss(animated: true)
     }
     
     private func showCities() {
