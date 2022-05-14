@@ -47,7 +47,7 @@ class SideMenuTableViewCell: UITableViewCell {
         let label = UILabel(frame: CGRect(x: 0, y: 0, width: 130, height: 30))
         label.font = .systemFont(ofSize: 14)
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.isHidden = false
+        label.isHidden = true
         return label
     }()
     

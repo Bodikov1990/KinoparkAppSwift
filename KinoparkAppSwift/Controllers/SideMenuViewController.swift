@@ -9,8 +9,6 @@ import UIKit
 
 protocol SideMenuViewControllerDelegate: AnyObject {
     func closeButton()
-    
-    
 }
 
 class SideMenuViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
@@ -45,7 +43,7 @@ class SideMenuViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     var delegate: SideMenuViewControllerDelegate!
-    private var secondLabel = ""
+    private var secondLabel: String?
     private let headerView = UIView()
     private let footerView = UIView()
     private let personImageView: UIImageView = {
@@ -60,7 +58,7 @@ class SideMenuViewController: UIViewController, UITableViewDelegate, UITableView
     }()
     
     private lazy var nameLabel: UILabel = {
-        let label = UILabel(frame: CGRect(x: 0, y: 0, width: 130, height: 30))
+        let label = UILabel(frame: CGRect(x: 0, y: 0, width: headerView.frame.size.width, height: 30))
         label.font = .boldSystemFont(ofSize: 20)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -82,7 +80,6 @@ class SideMenuViewController: UIViewController, UITableViewDelegate, UITableView
         setConstraints()
         tableView.delegate = self
         tableView.dataSource = self
-
         nameLabel.text = "Kuat Bodikov"
     }
 
@@ -100,16 +97,20 @@ class SideMenuViewController: UIViewController, UITableViewDelegate, UITableView
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: SideMenuTableViewCell.identifier, for: indexPath) as! SideMenuTableViewCell
         let menuOptions = MenuOptions.allCases[indexPath.row]
+        
         cell.accessoryType = .disclosureIndicator
         
         switch menuOptions {
         case .city:
             cell.configure(option: menuOptions.rawValue, image: menuOptions.imageName)
-            cell.secondLabel.text = self.secondLabel
+            cell.secondLabel.isHidden = false
+            cell.secondLabel.text = self.secondLabel ?? ""
         case .language:
             cell.configure(option: menuOptions.rawValue, image: menuOptions.imageName)
-            cell.secondLabel.text = "Язык"
+//            cell.secondLabel.text = "Язык"
+//            cell.secondLabel.isHidden = false
         case .faq, .rules, .confidence, .contacts:
+            cell.secondLabel.isHidden = true
             cell.configure(option: menuOptions.rawValue, image: menuOptions.imageName)
         case .darkMode:
             cell.accessoryType = .none
@@ -152,7 +153,7 @@ extension SideMenuViewController {
     private func setupNavBar() {
         title = "Мой Kinopark"
         navigationItem.leftBarButtonItem = UIBarButtonItem(
-            image: UIImage(named: "xmark"),
+            image: UIImage(systemName: "xmark"),
             style: .plain,
             target: self,
             action: #selector(sideMenu)
@@ -186,18 +187,14 @@ extension SideMenuViewController {
             nameLabel.centerYAnchor.constraint(equalTo: personImageView.centerYAnchor),
             nameLabel.leadingAnchor.constraint(equalTo: personImageView.trailingAnchor, constant: 12),
             nameLabel.heightAnchor.constraint(equalToConstant: nameLabel.frame.size.height),
-            nameLabel.widthAnchor.constraint(equalToConstant: nameLabel.frame.size.width)
         ])
     }
 }
 
 extension SideMenuViewController: CitiesTableViewControllerDelegate {
-    func printTap(cityData: CityData) {
+    func getCity(cityData: CityData) {
         guard let cityName = cityData.name else { return }
-        guard let cityData = cityData.uuid else { return }
         self.secondLabel = cityName
-        
         tableView.reloadData()
-        print(cityData)
     }
 }

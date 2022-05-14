@@ -16,7 +16,7 @@ class ContainerViewController: UIViewController, UINavigationControllerDelegate 
     }
     
     private let mainViewController = MainViewController()
-    private let citiesViewController = CitiesTableViewController()
+    private lazy var citiesViewController = CitiesTableViewController()
     private let sideMenuViewController = SideMenuViewController()
     private lazy var sideMenuWithNavVC = UINavigationController(rootViewController: sideMenuViewController)
     private var visualEffectView: UIVisualEffectView!
@@ -37,6 +37,7 @@ class ContainerViewController: UIViewController, UINavigationControllerDelegate 
         super.viewDidLoad()
         mainViewController.delegate = self
         sideMenuViewController.delegate = self
+        citiesViewController.delegate = mainViewController
         setupTabBar()
         setupMenu()
         
@@ -56,17 +57,17 @@ class ContainerViewController: UIViewController, UINavigationControllerDelegate 
                 image: "film",
                 navBarIsHidden: false)
         ]
+        
         tabBarVC.tabBar.tintColor = #colorLiteral(red: 0.7646051049, green: 0.1110634878, blue: 0.1571588814, alpha: 1)
         addChild(tabBarVC)
         view.addSubview(tabBarVC.view)
-        tabBarVC.didMove(toParent: self)
+        tabBarVC.didMove(toParent: mainViewController)
     }
     
     private func generateNavController(rootViewcontroller: UIViewController,
                                        title: String,
                                        image: String,
                                        navBarIsHidden: Bool) -> UIViewController {
-        
         let navigationVC = UINavigationController(rootViewController: rootViewcontroller)
         navigationVC.tabBarItem.title = title
         navigationVC.tabBarItem.image = UIImage(systemName: image)
@@ -84,7 +85,7 @@ class ContainerViewController: UIViewController, UINavigationControllerDelegate 
         
         addChild(sideMenuWithNavVC)
         view.addSubview(sideMenuWithNavVC.view)
-        sideMenuWithNavVC.didMove(toParent: mainViewController)
+        sideMenuWithNavVC.didMove(toParent: self)
         
         sideMenuWithNavVC.view.frame = CGRect(x: self.view.frame.width - sideMenuHandleAreaWidth, y: 0, width: sideMenuWidth, height: self.view.bounds.height)
         
@@ -144,7 +145,7 @@ class ContainerViewController: UIViewController, UINavigationControllerDelegate 
             let cornerRaduisAnimator = UIViewPropertyAnimator(duration: duration, curve: .linear) {
                 switch state {
                 case .expanded:
-                    self.sideMenuWithNavVC.view.layer.cornerRadius = 10
+                    self.sideMenuWithNavVC.view.layer.cornerRadius = 20
                 case .collapsed:
                     self.sideMenuWithNavVC.view.layer.cornerRadius = 0
                 }
@@ -162,6 +163,7 @@ class ContainerViewController: UIViewController, UINavigationControllerDelegate 
                     self.visualEffectView.effect = nil
                     DispatchQueue.main.asyncAfter(deadline: .now()+duration) {
                         self.visualEffectView.isHidden.toggle()
+                        
                     }
                 }
             }
@@ -203,6 +205,7 @@ extension ContainerViewController: MainViewControllerDelegate {
 }
 
 extension ContainerViewController: SideMenuViewControllerDelegate {
+    
     func closeButton() {
         animateTransitionIfNeed(state: nextState, duration: duratioForAnimation)
     }

@@ -8,7 +8,7 @@
 import UIKit
 
 protocol CitiesTableViewControllerDelegate: AnyObject {
-    func printTap(cityData: CityData)
+    func getCity(cityData: CityData)
 }
 
 class CitiesTableViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
@@ -54,34 +54,24 @@ class CitiesTableViewController: UIViewController, UITableViewDelegate, UITableV
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
+        tableView.deselectRow(at: indexPath, animated: false)
+        
         let city = cityList[indexPath.row]
-
-        dismiss(animated: true)
-        delegate.printTap(cityData: city)
+        delegate.getCity(cityData: city)
+        
     }
     
     private func showCities() {
         NetworkManager.shared.fetchWithBearerToken(dataType: CityList.self) { result in
             switch result {
             case .success(let cities):
-//                print("\(cities)")
+                print(cities)
                 self.cityList = cities.data ?? []
                 self.tableView.reloadData()
             case .failure(let error):
                 print(error)
             }
         }
-//        NetworkManager.shared.fetchWithBearerToken(dataType: CityList.self, from: startingUrl, convertFromSnakeCase: true) { result in
-//            switch result {
-//            case .success(let cities):
-////                print("\(cities)")
-//                self.cityList = cities.data ?? []
-//                self.tableView.reloadData()
-//            case .failure(let error):
-//                print(error)
-//            }
-//        }
     }
 }
 

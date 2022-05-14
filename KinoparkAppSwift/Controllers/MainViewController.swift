@@ -15,7 +15,7 @@ class MainViewController: UIViewController {
     
     
     weak var delegate: MainViewControllerDelegate?
-    private let citiesTableViewController = SideMenuViewController()
+    private let citiesTableViewController = CitiesTableViewController()
     private var movies: [TestModel] = [
         TestModel(
             image: "600x900",
@@ -179,6 +179,7 @@ class MainViewController: UIViewController {
 
     }
     
+    
     //MARK: - ViewDidLayoutSubviews
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
@@ -188,8 +189,8 @@ class MainViewController: UIViewController {
         collectionView.frame = CGRect(x: 0, y: 0, width: view.frame.size.width, height: 30)
         setupViews(views: cinemasView, filterView)
         setConstraints()
+        citiesTableViewController.delegate = self
     }
-
     
     private func setupTableView() {
         mainTableView.tableHeaderView = headerView
@@ -237,7 +238,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: MainTableViewCell.identifier, for: indexPath) as! MainTableViewCell
         let movies = movies[indexPath.row]
-        
+        cell.selectionStyle = .none
         cell.configure(movie: movies)
         cell.frame = tableView.bounds
         cell.layoutIfNeeded()
@@ -361,3 +362,10 @@ extension MainViewController {
 
 //MARK: - CitiesTableViewControllerDelegate
 
+extension MainViewController: CitiesTableViewControllerDelegate {
+    func getCity(cityData: CityData) {
+        guard let cityName = cityData.name else { return }
+        
+        print(cityName)
+    }
+}
