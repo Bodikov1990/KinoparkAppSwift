@@ -128,6 +128,7 @@ class SideMenuViewController: UIViewController, UITableViewDelegate, UITableView
             let option = CitiesTableViewController()
             option.delegate = self
 //            show(option, sender: nil)
+            option.modalPresentationStyle = .overCurrentContext
             present(option, animated: true)
         case .language:
             let option = MainViewController()
