@@ -13,6 +13,7 @@
 		12328E4D27EF2E1E005BB074 /* ContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12328E4C27EF2E1E005BB074 /* ContainerViewController.swift */; };
 		123682722809EDB600CE851F /* MainTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 123682712809EDB500CE851F /* MainTableViewCell.swift */; };
 		123D69DD282D9E0600EC05FE /* MTUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 123D69DC282D9E0600EC05FE /* MTUserDefaults.swift */; };
+		125662DF28314DAC00E1FA2A /* TestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 125662DE28314DAC00E1FA2A /* TestViewController.swift */; };
 		1256669D282D38FE005FEE04 /* SideMenuTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1256669C282D38FE005FEE04 /* SideMenuTableViewCell.swift */; };
 		126348822808A0C200484AC0 /* StorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 126348812808A0C200484AC0 /* StorageManager.swift */; };
 		1265180327E9D689004027E0 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1265180227E9D689004027E0 /* MainViewController.swift */; };
@@ -32,6 +33,7 @@
 		12328E4C27EF2E1E005BB074 /* ContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerViewController.swift; sourceTree = "<group>"; };
 		123682712809EDB500CE851F /* MainTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTableViewCell.swift; sourceTree = "<group>"; };
 		123D69DC282D9E0600EC05FE /* MTUserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MTUserDefaults.swift; sourceTree = "<group>"; };
+		125662DE28314DAC00E1FA2A /* TestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestViewController.swift; sourceTree = "<group>"; };
 		1256669C282D38FE005FEE04 /* SideMenuTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuTableViewCell.swift; sourceTree = "<group>"; };
 		126348812808A0C200484AC0 /* StorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageManager.swift; sourceTree = "<group>"; };
 		1265180227E9D689004027E0 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
@@ -121,6 +123,7 @@
 				12328E4A27EF274C005BB074 /* SideMenuViewController.swift */,
 				12328E4C27EF2E1E005BB074 /* ContainerViewController.swift */,
 				122FCFBB2812C69700FFAC4F /* HallMapViewController.swift */,
+				125662DE28314DAC00E1FA2A /* TestViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -225,6 +228,7 @@
 				122F7F86280B14E6008A9329 /* TestModel.swift in Sources */,
 				12B76CDB28250DE300C8DFA9 /* CinemasModel.swift in Sources */,
 				122FCFBC2812C69700FFAC4F /* HallMapViewController.swift in Sources */,
+				125662DF28314DAC00E1FA2A /* TestViewController.swift in Sources */,
 				129B2E1627E788660066D52E /* CityList.swift in Sources */,
 				123D69DD282D9E0600EC05FE /* MTUserDefaults.swift in Sources */,
 				1256669D282D38FE005FEE04 /* SideMenuTableViewCell.swift in Sources */,

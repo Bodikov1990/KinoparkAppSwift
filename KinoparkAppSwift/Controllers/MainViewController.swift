@@ -13,10 +13,9 @@ protocol MainViewControllerDelegate: AnyObject {
 
 class MainViewController: UIViewController {
     
-    
     weak var delegate: MainViewControllerDelegate?
-    private let citiesTableViewController = CitiesTableViewController()
-    private var movies: [TestModel] = [
+    
+    var movies: [TestModel] = [
         TestModel(
             image: "600x900",
             name: "Миссия невыполнимых: Последствия",
@@ -176,9 +175,8 @@ class MainViewController: UIViewController {
         setupCinemaFilterButton()
         collectionView.dataSource = self
         collectionView.delegate = self
-
+        
     }
-    
     
     //MARK: - ViewDidLayoutSubviews
     override func viewDidLayoutSubviews() {
@@ -189,7 +187,7 @@ class MainViewController: UIViewController {
         collectionView.frame = CGRect(x: 0, y: 0, width: view.frame.size.width, height: 30)
         setupViews(views: cinemasView, filterView)
         setConstraints()
-        citiesTableViewController.delegate = self
+        
     }
     
     private func setupTableView() {
@@ -365,7 +363,7 @@ extension MainViewController {
 extension MainViewController: CitiesTableViewControllerDelegate {
     func getCity(cityData: CityData) {
         guard let cityName = cityData.name else { return }
-        
         print(cityName)
+        print("main")
     }
 }

@@ -13,7 +13,7 @@ protocol CitiesTableViewControllerDelegate: AnyObject {
 
 class CitiesTableViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
-    var delegate: CitiesTableViewControllerDelegate!
+    weak var delegate: CitiesTableViewControllerDelegate?
     
     private var cityList: [CityData] = []
     private let startingUrl = NetworkManager.shared.startingUrl
@@ -26,13 +26,14 @@ class CitiesTableViewController: UIViewController, UITableViewDelegate, UITableV
         
         tableView.delegate = self
         tableView.dataSource = self
+        
         showCities()
     }
     
     override func viewDidLayoutSubviews() {
         tableView.frame = view.bounds
     }
-    
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         cityList.count
     }
@@ -57,7 +58,8 @@ class CitiesTableViewController: UIViewController, UITableViewDelegate, UITableV
         tableView.deselectRow(at: indexPath, animated: false)
         
         let city = cityList[indexPath.row]
-        delegate.getCity(cityData: city)
+        delegate?.getCity(cityData: city)
+        
         dismiss(animated: true)
     }
     
@@ -65,7 +67,7 @@ class CitiesTableViewController: UIViewController, UITableViewDelegate, UITableV
         NetworkManager.shared.fetchWithBearerToken(dataType: CityList.self) { result in
             switch result {
             case .success(let cities):
-                print(cities)
+//                print(cities)
                 self.cityList = cities.data ?? []
                 self.tableView.reloadData()
             case .failure(let error):
@@ -74,4 +76,3 @@ class CitiesTableViewController: UIViewController, UITableViewDelegate, UITableV
         }
     }
 }
-

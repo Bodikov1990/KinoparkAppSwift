@@ -42,7 +42,7 @@ class SideMenuViewController: UIViewController, UITableViewDelegate, UITableView
         }
     }
     
-    var delegate: SideMenuViewControllerDelegate!
+    var delegate: SideMenuViewControllerDelegate?
     private var secondLabel: String?
     private let headerView = UIView()
     private let footerView = UIView()
@@ -90,6 +90,8 @@ class SideMenuViewController: UIViewController, UITableViewDelegate, UITableView
         headerView.frame = CGRect(x: 0, y: 0, width: view.frame.size.width, height: 70)
     }
     
+
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         MenuOptions.allCases.count
     }
@@ -107,8 +109,8 @@ class SideMenuViewController: UIViewController, UITableViewDelegate, UITableView
             cell.secondLabel.text = self.secondLabel ?? ""
         case .language:
             cell.configure(option: menuOptions.rawValue, image: menuOptions.imageName)
-//            cell.secondLabel.text = "Язык"
-//            cell.secondLabel.isHidden = false
+            cell.secondLabel.text = "Язык"
+            cell.secondLabel.isHidden = false
         case .faq, .rules, .confidence, .contacts:
             cell.secondLabel.isHidden = true
             cell.configure(option: menuOptions.rawValue, image: menuOptions.imageName)
@@ -127,11 +129,10 @@ class SideMenuViewController: UIViewController, UITableViewDelegate, UITableView
         case .city:
             let option = CitiesTableViewController()
             option.delegate = self
-//            show(option, sender: nil)
             option.modalPresentationStyle = .overCurrentContext
             present(option, animated: true)
         case .language:
-            let option = MainViewController()
+            let option = TestViewController()
             show(option, sender: nil)
         case .faq:
             let option = CitiesTableViewController()
@@ -197,6 +198,7 @@ extension SideMenuViewController: CitiesTableViewControllerDelegate {
     func getCity(cityData: CityData) {
         guard let cityName = cityData.name else { return }
         self.secondLabel = cityName
+//        delegate.closeButton()
         tableView.reloadData()
     }
 }

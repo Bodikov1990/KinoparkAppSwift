@@ -17,34 +17,40 @@ class ContainerViewController: UIViewController, UINavigationControllerDelegate 
     
     private var menuState: MenuState = .closed
     
-    private let sideMenuViewController = SideMenuViewController()
     private let mainViewController = MainViewController()
-    private let citiesViewController = CitiesTableViewController()
+    private let sideMenuViewController = SideMenuViewController()
+    private let testViewController = TestViewController()
+
     private var visualEffectView = UIVisualEffectView()
+    private let durationForAnimation = 0.5
+    
     private lazy var mainVC = generateNavController(
         rootViewcontroller: mainViewController,
         title: "Главная",
         image: "list.and.film",
         navBarIsHidden: false)
+    
     private lazy var citiesVC = generateNavController(
-        rootViewcontroller: citiesViewController,
+        rootViewcontroller: testViewController,
         title: "Фильмы",
         image: "film",
         navBarIsHidden: false)
+    
     private lazy var sideMenuVC = generateNavController(
         rootViewcontroller: sideMenuViewController,
         title: "Фильмы",
         image: "film",
         navBarIsHidden: false)
-    private lazy var tabBarVC = setupTabBar(viewControllers: mainVC, citiesVC)
     
-    private let durationForAnimation = 0.5
+    private lazy var tabBarVC = setupTabBar(viewControllers: mainVC, citiesVC)
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
+        
         mainViewController.delegate = self
         sideMenuViewController.delegate = self
+        
         addChildVCs()
         tapGesture()
         swipeGesture()
@@ -152,7 +158,6 @@ extension ContainerViewController {
     }
     
     @objc private func swipedGesture(_ gesture: UISwipeGestureRecognizer) {
-        print("swiped left")
         animateView()
     }
 }
