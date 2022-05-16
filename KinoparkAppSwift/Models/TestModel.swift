@@ -16,3 +16,6 @@ struct TestModel {
 struct TestModel2 {
     let text: String
 }
+
+
+//https://afisha.api.kinopark.kz//api/city/4f8a4da2-0f66-4e9f-b634-cd07b4f684f3/cinemas

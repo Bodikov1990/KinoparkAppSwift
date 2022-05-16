@@ -116,14 +116,16 @@ class MainViewController: UIViewController {
             ])
     ]
     
-    private let mainTableView: UITableView = {
+    let startVC = StartTableViewController()
+    
+    let mainTableView: UITableView = {
         let tableView = UITableView()
         tableView.register(MainTableViewCell.self, forCellReuseIdentifier: MainTableViewCell.identifier)
         tableView.separatorStyle = .none
         return tableView
     }()
     
-    private let collectionView: UICollectionView = {
+    let collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
@@ -148,7 +150,7 @@ class MainViewController: UIViewController {
         return view
     }()
     
-    private lazy var cinemasButton: UIButton = {
+    lazy var cinemasButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
@@ -162,6 +164,7 @@ class MainViewController: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
+    
     
     //MARK: - ViewDidLoad
     override func viewDidLoad() {
@@ -223,7 +226,17 @@ class MainViewController: UIViewController {
     }
     
     @objc private func filterAction() {
-        print("tap")
+        let cinemasVC = CinemasTableViewController()
+        cinemasVC.delegate = self
+        cinemasVC.modalPresentationStyle = .popover
+        
+        let popOverCitiesVC = cinemasVC.popoverPresentationController
+        popOverCitiesVC?.delegate = self
+        popOverCitiesVC?.sourceView = self.cinemasView
+        popOverCitiesVC?.sourceRect = CGRect(x: self.cinemasView.bounds.maxY, y: self.cinemasView.bounds.midY, width: 0, height: 0)
+        cinemasVC.preferredContentSize = CGSize(width: self.view.frame.size.width - 50, height: self.view.frame.size.height - 50)
+        
+        self.present(cinemasVC, animated: true)
     }
 }
 
@@ -360,10 +373,20 @@ extension MainViewController {
 
 //MARK: - CitiesTableViewControllerDelegate
 
-extension MainViewController: CitiesTableViewControllerDelegate {
-    func getCity(cityData: CityData) {
-        guard let cityName = cityData.name else { return }
-        print(cityName)
-        print("main")
+extension MainViewController: StartTableViewControllerDelegate {
+    func cityData(cityData: CityData) {
+        print("PRIIIINT")
+    }
+}
+
+extension MainViewController: UIPopoverPresentationControllerDelegate {
+    func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
+        .none
+    }
+}
+
+extension MainViewController: CinemasTableViewControllerDelegate {
+    func getCinema(cinemasData: CinemasData) {
+        cinemasButton.setTitle(cinemasData.name, for: .normal)
     }
 }

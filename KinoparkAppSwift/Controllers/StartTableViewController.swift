@@ -1,44 +1,36 @@
 //
-//  ViewController.swift
+//  StartTableViewController.swift
 //  KinoparkAppSwift
 //
-//  Created by Kuat Bodikov on 20.03.2022.
+//  Created by Kuat Bodikov on 16.05.2022.
 //
 
 import UIKit
 
-protocol CitiesTableViewControllerDelegate: AnyObject {
-    func getCity(cityData: CityData)
+protocol StartTableViewControllerDelegate: AnyObject {
+    func cityData(cityData: CityData)
 }
 
-class CitiesTableViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class StartTableViewController: UITableViewController {
 
-    weak var delegate: CitiesTableViewControllerDelegate?
+    weak var delegate: StartTableViewControllerDelegate?
     
     private var cityList: [CityData] = []
-    private let startingUrl = NetworkManager.shared.startingUrl
     
-    let tableView = UITableView()
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.addSubview(tableView)
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "showCities")
-        
-        tableView.delegate = self
-        tableView.dataSource = self
         
         showCities()
     }
-    
-    override func viewDidLayoutSubviews() {
-        tableView.frame = view.bounds
-    }
 
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    // MARK: - Table view data source
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         cityList.count
     }
+
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "showCities", for: indexPath)
         let city = cityList[indexPath.row]
         
@@ -54,13 +46,17 @@ class CitiesTableViewController: UIViewController, UITableViewDelegate, UITableV
         return cell
     }
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false)
-        
         let city = cityList[indexPath.row]
-        delegate?.getCity(cityData: city)
-         
-        dismiss(animated: true)
+        delegate?.cityData(cityData: city)
+        
+        
+        let containerViewController = ContainerViewController()
+        
+        containerViewController.modalPresentationStyle = .fullScreen
+        present(containerViewController, animated: true)
+        
     }
     
     private func showCities() {
@@ -75,4 +71,5 @@ class CitiesTableViewController: UIViewController, UITableViewDelegate, UITableV
             }
         }
     }
+    
 }

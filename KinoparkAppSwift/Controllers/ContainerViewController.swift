@@ -36,11 +36,7 @@ class ContainerViewController: UIViewController, UINavigationControllerDelegate 
         image: "film",
         navBarIsHidden: false)
     
-    private lazy var sideMenuVC = generateNavController(
-        rootViewcontroller: sideMenuViewController,
-        title: "Фильмы",
-        image: "film",
-        navBarIsHidden: false)
+    private lazy var sideMenuVC = UINavigationController(rootViewController: sideMenuViewController)
     
     private lazy var tabBarVC = setupTabBar(viewControllers: mainVC, citiesVC)
     
@@ -50,7 +46,7 @@ class ContainerViewController: UIViewController, UINavigationControllerDelegate 
         
         mainViewController.delegate = self
         sideMenuViewController.delegate = self
-        
+        sideMenuVC.delegate = self
         addChildVCs()
         tapGesture()
         swipeGesture()
@@ -75,12 +71,6 @@ class ContainerViewController: UIViewController, UINavigationControllerDelegate 
         let tabBarVC = UITabBarController()
         tabBarVC.viewControllers = viewControllers
         tabBarVC.tabBar.tintColor = #colorLiteral(red: 0.7646051049, green: 0.1110634878, blue: 0.1571588814, alpha: 1)
-        tabBarVC.view.clipsToBounds = true
-        tabBarVC.view.layer.shadowColor = UIColor.lightGray.cgColor
-        tabBarVC.view.layer.shadowOpacity = 0.8
-        tabBarVC.view.layer.shadowOffset = CGSize(width: 1, height: 3)
-        tabBarVC.view.layer.shadowRadius = 5
-        
         return tabBarVC
     }
     
@@ -132,9 +122,9 @@ extension ContainerViewController {
     }
     
     private func closeStateAnimate() {
-        self.sideMenuVC.view.frame.origin.x = self.tabBarVC.view.frame.width
-        self.sideMenuVC.view.layer.cornerRadius = 0
-        self.visualEffectView.effect = nil
+        sideMenuVC.view.frame.origin.x = self.tabBarVC.view.frame.width
+        sideMenuVC.view.layer.cornerRadius = 0
+        visualEffectView.effect = nil
     }
     
     private func tapGesture() {
@@ -171,5 +161,19 @@ extension ContainerViewController: MainViewControllerDelegate {
 extension ContainerViewController: SideMenuViewControllerDelegate {
     func closeButton() {
         animateView()
+    }
+}
+
+extension ContainerViewController: CitiesTableViewControllerDelegate {
+    func getCity(cityData: CityData) {
+        guard let cityName = cityData.name else { return }
+        print(cityName)
+        print("main")
+    }
+}
+
+extension ContainerViewController: StartTableViewControllerDelegate {
+    func cityData(cityData: CityData) {
+        print("PRIIIINT")
     }
 }
