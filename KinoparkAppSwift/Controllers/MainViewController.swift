@@ -261,7 +261,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
+        
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -371,7 +371,13 @@ extension MainViewController {
     }
 }
 
-//MARK: - CitiesTableViewControllerDelegate
+
+
+extension MainViewController: UIPopoverPresentationControllerDelegate {
+    func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
+        .none
+    }
+}
 
 extension MainViewController: StartTableViewControllerDelegate {
     func cityData(cityData: CityData) {
@@ -379,11 +385,6 @@ extension MainViewController: StartTableViewControllerDelegate {
     }
 }
 
-extension MainViewController: UIPopoverPresentationControllerDelegate {
-    func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
-        .none
-    }
-}
 
 extension MainViewController: CinemasTableViewControllerDelegate {
     func getCinema(cinemasData: CinemasData) {

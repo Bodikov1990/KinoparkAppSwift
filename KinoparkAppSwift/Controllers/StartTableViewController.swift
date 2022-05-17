@@ -51,7 +51,6 @@ class StartTableViewController: UITableViewController {
         let city = cityList[indexPath.row]
         delegate?.cityData(cityData: city)
         
-        
         let containerViewController = ContainerViewController()
         
         containerViewController.modalPresentationStyle = .fullScreen

@@ -57,13 +57,11 @@ class CinemasTableViewController: UITableViewController {
         NetworkManager.shared.fetchWithBearerToken(dataType: CinemasModel.self, from: url, convertFromSnakeCase: true) { result in
             switch result {
             case .success(let cinemas):
-                print(cinemas.data ?? [])
                 self.cinemas = cinemas.data ?? []
                 self.tableView.reloadData()
             case .failure(let error):
                 print(error)
             }
         }
-
     }
 }

@@ -67,7 +67,6 @@ class CitiesTableViewController: UIViewController, UITableViewDelegate, UITableV
         NetworkManager.shared.fetchWithBearerToken(dataType: CityList.self, from: startingUrl) { result in
             switch result {
             case .success(let cities):
-//                print(cities)
                 self.cityList = cities.data ?? []
                 self.tableView.reloadData()
             case .failure(let error):

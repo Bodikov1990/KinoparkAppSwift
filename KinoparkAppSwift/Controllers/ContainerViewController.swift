@@ -17,8 +17,8 @@ class ContainerViewController: UIViewController, UINavigationControllerDelegate 
     
     private var menuState: MenuState = .closed
     
-    private let mainViewController = MainViewController()
-    private let sideMenuViewController = SideMenuViewController()
+    let mainViewController = MainViewController()
+    let sideMenuViewController = SideMenuViewController()
     private let testViewController = TestViewController()
 
     private var visualEffectView = UIVisualEffectView()

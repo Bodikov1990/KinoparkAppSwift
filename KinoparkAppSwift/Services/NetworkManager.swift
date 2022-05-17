@@ -60,15 +60,12 @@ class NetworkManager {
                 }
     
                 let type = try decoder.decode(T.self, from: data)
-                print(type)
                 DispatchQueue.main.async {
                     completion(.success(type))
                 }
             } catch {
                 completion(.failure(.decodingError))
             }
-
-
         }.resume()
     }
     
