@@ -53,16 +53,17 @@ class CinemasTableViewController: UITableViewController {
     }
     
     private func fetchCinemas() {
-        let url = "http://afisha.api.kinopark.kz/api/city/905c5db9-1e7b-4ea5-bf72-2bfd694da4a3/cinemas"
-        NetworkManager.shared.fetchWithBearerToken(dataType: CinemasModel.self, from: url, convertFromSnakeCase: false) { result in
+        let url = "http://afisha.api.kinopark.kz/api/city/905c5db9-1e7b-4ea5-bf72-2bfd694da4a3/cinemas?page=1&per_page=15&sort=name:asc&dial_timeout=5s&request_timeout=5s&retries=1"
+        NetworkManager.shared.fetchWithBearerToken(dataType: CinemasModel.self, from: url, convertFromSnakeCase: true) { result in
             switch result {
             case .success(let cinemas):
-//                print(cities)
+                print(cinemas.data ?? [])
                 self.cinemas = cinemas.data ?? []
                 self.tableView.reloadData()
             case .failure(let error):
                 print(error)
             }
         }
+
     }
 }

@@ -60,7 +60,10 @@ class StartTableViewController: UITableViewController {
     }
     
     private func showCities() {
-        NetworkManager.shared.fetchWithBearerToken(dataType: CityList.self) { result in
+        NetworkManager.shared.fetchWithBearerToken(
+            dataType: CityList.self,
+            from: NetworkManager.shared.startingUrl,
+            convertFromSnakeCase: true) { result in
             switch result {
             case .success(let cities):
 //                print(cities)

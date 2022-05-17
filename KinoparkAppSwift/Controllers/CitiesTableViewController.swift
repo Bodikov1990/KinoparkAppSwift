@@ -64,7 +64,7 @@ class CitiesTableViewController: UIViewController, UITableViewDelegate, UITableV
     }
     
     private func showCities() {
-        NetworkManager.shared.fetchWithBearerToken(dataType: CityList.self) { result in
+        NetworkManager.shared.fetchWithBearerToken(dataType: CityList.self, from: startingUrl) { result in
             switch result {
             case .success(let cities):
 //                print(cities)
