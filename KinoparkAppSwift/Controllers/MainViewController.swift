@@ -14,6 +14,7 @@ protocol MainViewControllerDelegate: AnyObject {
 class MainViewController: UIViewController {
     
     weak var delegate: MainViewControllerDelegate?
+    private let cinemasVC = CinemasTableViewController()
     
     var movies: [TestModel] = [
         TestModel(
@@ -115,8 +116,9 @@ class MainViewController: UIViewController {
                 TestModel2(text: "Миссия невыполнимых: Последствия"),
             ])
     ]
+    var cinemas: [CinemasData] = []
     
-    let startVC = StartTableViewController()
+    private var cinamasName: String!
     
     let mainTableView: UITableView = {
         let tableView = UITableView()
@@ -166,6 +168,20 @@ class MainViewController: UIViewController {
     }()
     
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        fetchCinemas()
+        cinemasVC.cinemas = self.cinemas
+        
+//        let indexPath = IndexPath(row: 0, section: 0)
+//        cinemasVC.tableView.selectRow(at: .init(row: 0, section: 0), animated: false, scrollPosition: .none)
+//        let select = cinemasVC.cinemas[indexPath.row]
+//        cinemasVC.delegate?.getCinema(cinemasData: select)
+//
+//        cinemasVC.viewDidLoad()
+    }
+    
     //MARK: - ViewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -178,6 +194,7 @@ class MainViewController: UIViewController {
         setupCinemaFilterButton()
         collectionView.dataSource = self
         collectionView.delegate = self
+        cinemasVC.delegate = self
         
     }
     
@@ -215,7 +232,7 @@ class MainViewController: UIViewController {
     }
     
     private func setupCinemaFilterButton() {
-        cinemasButton.setTitle("Kinopark 7 Keruencity", for: .normal)
+        cinemasButton.setTitle(cinamasName ?? "TEST Cinema", for: .normal)
         cinemasButton.setTitleColor(
             UIColor(named: "textColor"),
             for: .normal)
@@ -226,9 +243,10 @@ class MainViewController: UIViewController {
     }
     
     @objc private func filterAction() {
-        let cinemasVC = CinemasTableViewController()
-        cinemasVC.delegate = self
+        
         cinemasVC.modalPresentationStyle = .popover
+//        cinemasVC.cinemas = self.cinemas
+//        cinemasVC.viewDidLoad()
         
         let popOverCitiesVC = cinemasVC.popoverPresentationController
         popOverCitiesVC?.delegate = self
@@ -237,6 +255,26 @@ class MainViewController: UIViewController {
         cinemasVC.preferredContentSize = CGSize(width: self.view.frame.size.width - 50, height: self.view.frame.size.height - 50)
         
         self.present(cinemasVC, animated: true)
+    }
+    
+    private func fetchCinemas() {
+//        cinemasVC.viewDidLoad()
+        
+        let url = "http://afisha.api.kinopark.kz/api/city/905c5db9-1e7b-4ea5-bf72-2bfd694da4a3/cinemas"
+        NetworkManager.shared.fetchWithBearerToken(dataType: CinemasModel.self, from: url, convertFromSnakeCase: true) { result in
+            switch result {
+            case .success(let cinemas):
+                guard let cinemas = cinemas.data else { return }
+                
+                let indexPath = IndexPath(row: 0, section: 0)
+                self.cinemasVC.tableView.selectRow(at: .init(row: 0, section: 0), animated: false, scrollPosition: .none)
+                let select = cinemas[indexPath.row]
+                self.cinemasVC.delegate?.getCinema(cinemasData: select)
+                self.cinemasVC.cinemas = cinemas
+            case .failure(let error):
+                print(error)
+            }
+        }
     }
 }
 
@@ -320,7 +358,6 @@ extension MainViewController {
             logoContainer.addSubview(imageView)
             
             navigationItem.titleView = logoContainer
-            
         }
     }
     
@@ -371,20 +408,11 @@ extension MainViewController {
     }
 }
 
-
-
 extension MainViewController: UIPopoverPresentationControllerDelegate {
     func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
         .none
     }
 }
-
-extension MainViewController: StartTableViewControllerDelegate {
-    func cityData(cityData: CityData) {
-        print("PRIIIINT")
-    }
-}
-
 
 extension MainViewController: CinemasTableViewControllerDelegate {
     func getCinema(cinemasData: CinemasData) {

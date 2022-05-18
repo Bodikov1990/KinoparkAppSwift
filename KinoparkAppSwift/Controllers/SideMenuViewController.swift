@@ -43,6 +43,7 @@ class SideMenuViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     var delegate: SideMenuViewControllerDelegate?
+    
     private var secondLabel: String?
     private let headerView = UIView()
     private let footerView = UIView()
@@ -198,7 +199,6 @@ extension SideMenuViewController: CitiesTableViewControllerDelegate {
     func getCity(cityData: CityData) {
         guard let cityName = cityData.name else { return }
         self.secondLabel = cityName
-//        delegate.closeButton()
         tableView.reloadData()
     }
 }

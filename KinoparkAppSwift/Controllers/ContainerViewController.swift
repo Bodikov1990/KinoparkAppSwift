@@ -15,6 +15,8 @@ class ContainerViewController: UIViewController, UINavigationControllerDelegate 
         case opened
     }
     
+    var  cityData: CityData!
+    
     private var menuState: MenuState = .closed
     
     let mainViewController = MainViewController()
@@ -46,6 +48,7 @@ class ContainerViewController: UIViewController, UINavigationControllerDelegate 
         
         mainViewController.delegate = self
         sideMenuViewController.delegate = self
+        print(cityData.uuid ?? "")
         sideMenuVC.delegate = self
         addChildVCs()
         tapGesture()
@@ -174,6 +177,6 @@ extension ContainerViewController: CitiesTableViewControllerDelegate {
 
 extension ContainerViewController: StartTableViewControllerDelegate {
     func cityData(cityData: CityData) {
-        print("PRIIIINT")
+        print(cityData.name ?? "")
     }
 }

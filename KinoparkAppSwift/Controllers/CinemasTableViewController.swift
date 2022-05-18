@@ -17,15 +17,17 @@ class CinemasTableViewController: UITableViewController {
     
     private let idetifier = "cinemas"
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: idetifier)
         tableView.isScrollEnabled = false
-        fetchCinemas()
     }
     
+    
     override func viewWillLayoutSubviews() {
-        
         preferredContentSize = CGSize(width: 250, height: tableView.contentSize.height)
     }
     
@@ -34,7 +36,6 @@ class CinemasTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         cinemas.count
     }
-    
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: idetifier, for: indexPath)
@@ -45,15 +46,25 @@ class CinemasTableViewController: UITableViewController {
         return cell
     }
     
+    override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+        if tableView.indexPathForSelectedRow == indexPath {
+            tableView.deselectRow(at:indexPath, animated:false)
+            return nil
+        }
+        return indexPath
+    }
+    
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+
         let cinemasData = cinemas[indexPath.row]
+        print(cinemasData.uuid ?? "")
         delegate?.getCinema(cinemasData: cinemasData)
         dismiss(animated: true)
     }
     
     private func fetchCinemas() {
-        let url = "http://afisha.api.kinopark.kz/api/city/905c5db9-1e7b-4ea5-bf72-2bfd694da4a3/cinemas?page=1&per_page=15&sort=name:asc&dial_timeout=5s&request_timeout=5s&retries=1"
+        let url = "http://afisha.api.kinopark.kz/api/city/905c5db9-1e7b-4ea5-bf72-2bfd694da4a3/cinemas"
         NetworkManager.shared.fetchWithBearerToken(dataType: CinemasModel.self, from: url, convertFromSnakeCase: true) { result in
             switch result {
             case .success(let cinemas):

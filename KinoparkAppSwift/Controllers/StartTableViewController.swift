@@ -52,7 +52,7 @@ class StartTableViewController: UITableViewController {
         delegate?.cityData(cityData: city)
         
         let containerViewController = ContainerViewController()
-        
+        containerViewController.cityData = city
         containerViewController.modalPresentationStyle = .fullScreen
         present(containerViewController, animated: true)
         

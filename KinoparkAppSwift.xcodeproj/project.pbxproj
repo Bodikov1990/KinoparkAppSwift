@@ -122,14 +122,14 @@
 		129B2E1227E787120066D52E /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				129B2E0027E785650066D52E /* CitiesTableViewController.swift */,
-				1265180227E9D689004027E0 /* MainViewController.swift */,
-				12328E4A27EF274C005BB074 /* SideMenuViewController.swift */,
-				12328E4C27EF2E1E005BB074 /* ContainerViewController.swift */,
-				122FCFBB2812C69700FFAC4F /* HallMapViewController.swift */,
-				125662DE28314DAC00E1FA2A /* TestViewController.swift */,
 				12B9A66E2832652B00FBB961 /* StartTableViewController.swift */,
+				12328E4C27EF2E1E005BB074 /* ContainerViewController.swift */,
+				1265180227E9D689004027E0 /* MainViewController.swift */,
 				12B9A6702832AE5900FBB961 /* CinemasTableViewController.swift */,
+				12328E4A27EF274C005BB074 /* SideMenuViewController.swift */,
+				129B2E0027E785650066D52E /* CitiesTableViewController.swift */,
+				125662DE28314DAC00E1FA2A /* TestViewController.swift */,
+				122FCFBB2812C69700FFAC4F /* HallMapViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
