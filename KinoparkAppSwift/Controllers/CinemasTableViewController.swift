@@ -58,7 +58,6 @@ class CinemasTableViewController: UITableViewController {
         tableView.deselectRow(at: indexPath, animated: true)
 
         let cinemasData = cinemas[indexPath.row]
-        print(cinemasData.uuid ?? "")
         delegate?.getCinema(cinemasData: cinemasData)
         dismiss(animated: true)
     }

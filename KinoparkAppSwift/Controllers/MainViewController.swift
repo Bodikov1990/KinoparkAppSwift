@@ -160,8 +160,8 @@ class MainViewController: UIViewController {
     
     private lazy var filterButton: UIButton = {
         let button = UIButton()
-            button.setBackgroundImage(UIImage(systemName: "slider.horizontal.3"), for: .normal)
-            button.tintColor = #colorLiteral(red: 0.7646051049, green: 0.1110634878, blue: 0.1571588814, alpha: 1)
+        button.setBackgroundImage(UIImage(systemName: "slider.horizontal.3"), for: .normal)
+        button.tintColor = #colorLiteral(red: 0.7646051049, green: 0.1110634878, blue: 0.1571588814, alpha: 1)
         button.addTarget(self, action: #selector(filterAction), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
@@ -170,23 +170,14 @@ class MainViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-
-        fetchCinemas()
-        cinemasVC.cinemas = self.cinemas
         
-//        let indexPath = IndexPath(row: 0, section: 0)
-//        cinemasVC.tableView.selectRow(at: .init(row: 0, section: 0), animated: false, scrollPosition: .none)
-//        let select = cinemasVC.cinemas[indexPath.row]
-//        cinemasVC.delegate?.getCinema(cinemasData: select)
-//
-//        cinemasVC.viewDidLoad()
     }
     
     //MARK: - ViewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
-        
+        fetchCinemas()
         configureSubview(subviews: cinemasView, filterView, collectionView)
         setupNavBar()
         addLogoToNav()
@@ -232,7 +223,7 @@ class MainViewController: UIViewController {
     }
     
     private func setupCinemaFilterButton() {
-        cinemasButton.setTitle(cinamasName ?? "TEST Cinema", for: .normal)
+        cinemasButton.setTitle(cinamasName ?? "Загрузка...", for: .normal)
         cinemasButton.setTitleColor(
             UIColor(named: "textColor"),
             for: .normal)
@@ -245,8 +236,6 @@ class MainViewController: UIViewController {
     @objc private func filterAction() {
         
         cinemasVC.modalPresentationStyle = .popover
-//        cinemasVC.cinemas = self.cinemas
-//        cinemasVC.viewDidLoad()
         
         let popOverCitiesVC = cinemasVC.popoverPresentationController
         popOverCitiesVC?.delegate = self
@@ -258,8 +247,6 @@ class MainViewController: UIViewController {
     }
     
     private func fetchCinemas() {
-//        cinemasVC.viewDidLoad()
-        
         let url = "http://afisha.api.kinopark.kz/api/city/905c5db9-1e7b-4ea5-bf72-2bfd694da4a3/cinemas"
         NetworkManager.shared.fetchWithBearerToken(dataType: CinemasModel.self, from: url, convertFromSnakeCase: true) { result in
             switch result {
@@ -269,8 +256,10 @@ class MainViewController: UIViewController {
                 let indexPath = IndexPath(row: 0, section: 0)
                 self.cinemasVC.tableView.selectRow(at: .init(row: 0, section: 0), animated: false, scrollPosition: .none)
                 let select = cinemas[indexPath.row]
-                self.cinemasVC.delegate?.getCinema(cinemasData: select)
                 self.cinemasVC.cinemas = cinemas
+                self.cinamasName = select.name ?? ""
+                self.cinemasVC.delegate?.getCinema(cinemasData: select)
+                
             case .failure(let error):
                 print(error)
             }
@@ -329,13 +318,13 @@ extension MainViewController: UICollectionViewDataSource, UICollectionViewDelega
 extension MainViewController {
     
     private func setupNavBar() {
-            navigationItem.rightBarButtonItem = UIBarButtonItem(
-                image: UIImage(systemName: "line.3.horizontal"),
-                style: .plain,
-                target: self,
-                action: #selector(sideMenu)
-            )
-            navigationController?.navigationBar.tintColor = #colorLiteral(red: 0.7646051049, green: 0.1110634878, blue: 0.1571588814, alpha: 1)
+        navigationItem.rightBarButtonItem = UIBarButtonItem(
+            image: UIImage(systemName: "line.3.horizontal"),
+            style: .plain,
+            target: self,
+            action: #selector(sideMenu)
+        )
+        navigationController?.navigationBar.tintColor = #colorLiteral(red: 0.7646051049, green: 0.1110634878, blue: 0.1571588814, alpha: 1)
     }
     
     @objc private func sideMenu(){
