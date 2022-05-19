@@ -102,10 +102,10 @@ class MainTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure(movie: TestModel) {
-        configureMovieButton(for: movie.image)
-        configureLabel(name: movie.name)
-        testModel2 = movie.testModel2
+    func configure(movie: SeancesData) {
+//        configureMovieButton(for: movie)
+        configureLabel(seance: movie)
+        testModel2
     }
     
     private func configureSubview(subviews: UIView...) {
@@ -136,8 +136,8 @@ class MainTableViewCell: UITableViewCell {
         print("tap")
     }
     
-    private func configureLabel(name: String) {
-        movieNameLabel.text = name
+    private func configureLabel(seance: SeancesData) {
+        movieNameLabel.text = seance.movieName
         movieNameLabel.numberOfLines = 1
         movieNameLabel.font = .boldSystemFont(ofSize: 12)
         
@@ -146,7 +146,7 @@ class MainTableViewCell: UITableViewCell {
         genreLabel.textColor = .lightGray
         genreLabel.font = .systemFont(ofSize: 12)
         
-        durationLabel.text = "Продолжительность: 100 минут"
+        durationLabel.text = String(seance.duration ?? 0)
         durationLabel.font = .systemFont(ofSize: 12)
         
         pgLabel.text = "16+"

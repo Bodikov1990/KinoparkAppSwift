@@ -33,30 +33,21 @@ struct CinemasModel: Decodable {
 
 // MARK: - CinemasData
 struct CinemasData: Decodable {
-    let uuid, name, code: String?
+    let uuid: String
+    let name: String
+    let code: String?
     let datumDescription: String?
     let sortOrder: Int?
-    let isActive: Bool?
+    let isActive: Bool
     let address: String?
     let phones: [String]?
     let url: String?
     let longitude, latitude: Double?
     let images: Images?
     let features: [String]?
-    let openingDate: Date?
+    let openingDate: String?
     let shortName: String?
 }
-
-// MARK: - Images
-struct Images: Decodable {
-    let vertical, horizontal: String?
-}
-
-struct URLParams: Decodable {
-    let timezone, lang: String?
-}
-
-
 
 // MARK: - SeancesModel
 struct SeancesModel: Decodable {
@@ -64,7 +55,7 @@ struct SeancesModel: Decodable {
     let currPageURL, nextPageURL: String?
     let prevPageURL: String?
     let urlParams: URLParams?
-    let data: [SeancesData]?
+    let data: [SeancesData]
 }
 
 // MARK: - SeancesData
@@ -75,9 +66,9 @@ struct SeancesData: Decodable {
     let movieUUID: String?
     let seanceUUID: String?
     let basePrice: Int?
-    let startDate: Date?
-    let startTime: Date?
-    let endTime: Date?
+    let startDate: String?
+    let startTime: String?
+    let endTime: String?
     let duration: Int?
     let sortOrder: Int?
     let discounts: [Discount]?
@@ -88,7 +79,7 @@ struct SeancesData: Decodable {
     let cinemaName: String?
     let hallName: String?
     let hallFormat: [String]?
-    let hallMenu: HallMenu?
+    let hallMenu: HallMenu
     let movieName: String?
     let movieFormat: [String]?
 }
@@ -99,11 +90,20 @@ struct Discount: Decodable {
     let name: String?
     let code: String?
     let sortOrder: Int?
-    let isActive, isShow: Bool?
+    let isActive, isShow: Bool
     let value: Int?
     let type: String?
 }
 
 struct HallMenu: Decodable {
     let ancestorUUID: String?
+}
+
+// MARK: - Images
+struct Images: Decodable {
+    let vertical, horizontal: String?
+}
+
+struct URLParams: Decodable {
+    let timezone, lang: String?
 }

@@ -42,11 +42,6 @@ class ContainerViewController: UIViewController, UINavigationControllerDelegate 
     
     private lazy var tabBarVC = setupTabBar(viewControllers: mainVC, citiesVC)
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        mainViewController.fetchCinemas(cityData: cityData)
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground

@@ -133,7 +133,7 @@ class MainViewController: UIViewController {
                 TestModel2(text: "Миссия невыполнимых: Последствия"),
             ])
     ]
-    
+    var seances: [SeancesData] = []
     var cityData: CityData!
     
     private let cinemasVC = CinemasTableViewController()
@@ -184,7 +184,8 @@ class MainViewController: UIViewController {
         collectionView.delegate = self
         cinemasVC.delegate = self
         fetchCinemas(cityData: cityData)
-
+        print(cityData.uuid ?? "")
+        fetchSeance()
     }
     
     //MARK: - ViewDidLayoutSubviews
@@ -204,12 +205,13 @@ class MainViewController: UIViewController {
         NetworkManager.shared.fetchWithBearerToken(dataType: CinemasModel.self, from: url, convertFromSnakeCase: true) { result in
             switch result {
             case .success(let cinemas):
+                print(cinemas)
                 guard let cinemas = cinemas.data else { return }
                 
                 let indexPath = IndexPath(row: 0, section: 0)
                 let selectedCinema = cinemas[indexPath.row]
                 self.cinemasVC.cinemas = cinemas
-                self.cinamasName = selectedCinema.name ?? ""
+                self.cinamasName = selectedCinema.name 
                 self.cinemasVC.delegate?.getCinema(cinemasData: selectedCinema)
                 
             case .failure(let error):
@@ -220,18 +222,13 @@ class MainViewController: UIViewController {
     
 //    let seancesURL = "https://afisha.api.kinopark.kz//api/city/905c5db9-1e7b-4ea5-bf72-2bfd694da4a3/seances?sort=seance.start_time&cinema=ccb66815-2070-4307-9cb5-9af97a154e73"
     
-    func fetchSeance(cityData: CityData) {
-        let url = "http://afisha.api.kinopark.kz//api/city/\(cityData.uuid ?? "")/cinemas"
-        NetworkManager.shared.fetchWithBearerToken(dataType: CinemasModel.self, from: url, convertFromSnakeCase: true) { result in
+    func fetchSeance() {
+        let url = "https://afisha.api.kinopark.kz//api/city/905c5db9-1e7b-4ea5-bf72-2bfd694da4a3/seances?sort=seance.start_time&cinema=ccb66815-2070-4307-9cb5-9af97a154e73"
+        NetworkManager.shared.fetchWithBearerToken(dataType: SeancesModel.self, from: url, convertFromSnakeCase: true) { result in
             switch result {
-            case .success(let cinemas):
-                guard let cinemas = cinemas.data else { return }
-                
-                let indexPath = IndexPath(row: 0, section: 0)
-                let selectedCinema = cinemas[indexPath.row]
-                self.cinemasVC.cinemas = cinemas
-                self.cinamasName = selectedCinema.name ?? ""
-                self.cinemasVC.delegate?.getCinema(cinemasData: selectedCinema)
+            case .success(let seances):
+                self.seances = seances.data
+                self.mainTableView.reloadData()
                 
             case .failure(let error):
                 print(error)
@@ -289,12 +286,12 @@ class MainViewController: UIViewController {
 // MARK: - Setup TableView
 extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        movies.count
+        seances.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: MainTableViewCell.identifier, for: indexPath) as! MainTableViewCell
-        let movies = movies[indexPath.row]
+        let movies = seances[indexPath.row]
         cell.selectionStyle = .none
         cell.configure(movie: movies)
         cell.frame = tableView.bounds
