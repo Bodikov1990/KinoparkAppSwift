@@ -61,17 +61,4 @@ class CinemasTableViewController: UITableViewController {
         delegate?.getCinema(cinemasData: cinemasData)
         dismiss(animated: true)
     }
-    
-    private func fetchCinemas() {
-        let url = "http://afisha.api.kinopark.kz/api/city/905c5db9-1e7b-4ea5-bf72-2bfd694da4a3/cinemas"
-        NetworkManager.shared.fetchWithBearerToken(dataType: CinemasModel.self, from: url, convertFromSnakeCase: true) { result in
-            switch result {
-            case .success(let cinemas):
-                self.cinemas = cinemas.data ?? []
-                self.tableView.reloadData()
-            case .failure(let error):
-                print(error)
-            }
-        }
-    }
 }

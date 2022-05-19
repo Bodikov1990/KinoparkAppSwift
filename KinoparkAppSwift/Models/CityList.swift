@@ -28,7 +28,7 @@ struct CinemasModel: Decodable {
     let currPageURL: String?
     let nextPageURL, prevPageURL: String?
     let urlParams: URLParams?
-    let data: [CinemasData]?
+    let data: [CinemasData]
 }
 
 // MARK: - CinemasData
