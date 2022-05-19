@@ -16,7 +16,7 @@ enum NetworkError: Error {
 class NetworkManager {
     static var shared = NetworkManager()
     let startingUrl = "http://afisha.api.kinopark.kz/api/city"
-    let token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzcC5raW5vcGFyayIsInN1YiI6ImZyb250LnByb2QiLCJuYW1lIjoiYWZpc2hhLWFwaS5wcm9kIn0.IBScyJ7iIRrxh6nqLMCwHz1z4P0r0Epmsf6hA2abEjU"
+    private let token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzcC5raW5vcGFyayIsInN1YiI6ImZyb250LnByb2QiLCJuYW1lIjoiYWZpc2hhLWFwaS5wcm9kIn0.IBScyJ7iIRrxh6nqLMCwHz1z4P0r0Epmsf6hA2abEjU"
     private init() {}
     
     func fetchImage(from url: String?, completion: @escaping(Result<Data, NetworkError>) -> Void) {

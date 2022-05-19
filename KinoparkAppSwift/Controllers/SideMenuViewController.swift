@@ -44,7 +44,7 @@ class SideMenuViewController: UIViewController, UITableViewDelegate, UITableView
     
     var delegate: SideMenuViewControllerDelegate?
     
-    private var secondLabel: String?
+    var secondLabel: String?
     private let headerView = UIView()
     private let footerView = UIView()
     private let personImageView: UIImageView = {
@@ -107,7 +107,7 @@ class SideMenuViewController: UIViewController, UITableViewDelegate, UITableView
         case .city:
             cell.configure(option: menuOptions.rawValue, image: menuOptions.imageName)
             cell.secondLabel.isHidden = false
-            cell.secondLabel.text = self.secondLabel ?? ""
+            cell.secondLabel.text = secondLabel ?? ""
         case .language:
             cell.configure(option: menuOptions.rawValue, image: menuOptions.imageName)
             cell.secondLabel.text = "Язык"

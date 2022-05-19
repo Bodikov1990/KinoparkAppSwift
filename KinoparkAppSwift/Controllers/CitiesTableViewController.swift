@@ -15,14 +15,15 @@ class CitiesTableViewController: UIViewController, UITableViewDelegate, UITableV
 
     weak var delegate: CitiesTableViewControllerDelegate?
     
-    private var cityList: [CityData] = []
+    var cityData: [CityData] = []
     private let startingUrl = NetworkManager.shared.startingUrl
+    private let identifier = "showCities"
     
     let tableView = UITableView()
     override func viewDidLoad() {
         super.viewDidLoad()
         view.addSubview(tableView)
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "showCities")
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: identifier)
         
         tableView.delegate = self
         tableView.dataSource = self
@@ -35,12 +36,12 @@ class CitiesTableViewController: UIViewController, UITableViewDelegate, UITableV
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        cityList.count
+        cityData.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "showCities", for: indexPath)
-        let city = cityList[indexPath.row]
+        let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)
+        let city = cityData[indexPath.row]
         
         if #available(iOS 14.0, *) {
             var content = cell.defaultContentConfiguration()
@@ -57,7 +58,7 @@ class CitiesTableViewController: UIViewController, UITableViewDelegate, UITableV
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false)
         
-        let city = cityList[indexPath.row]
+        let city = cityData[indexPath.row]
         delegate?.getCity(cityData: city)
          
         dismiss(animated: true)
@@ -67,7 +68,7 @@ class CitiesTableViewController: UIViewController, UITableViewDelegate, UITableV
         NetworkManager.shared.fetchWithBearerToken(dataType: CityList.self, from: startingUrl) { result in
             switch result {
             case .success(let cities):
-                self.cityList = cities.data ?? []
+                self.cityData = cities.data ?? []
                 self.tableView.reloadData()
             case .failure(let error):
                 print(error)

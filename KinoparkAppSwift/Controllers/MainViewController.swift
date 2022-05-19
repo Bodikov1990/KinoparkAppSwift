@@ -116,7 +116,7 @@ class MainViewController: UIViewController {
                 TestModel2(text: "Миссия невыполнимых: Последствия"),
             ])
     ]
-    var cinemas: [CinemasData] = []
+    var cityData: CityData!
     
     private var cinamasName: String!
     
@@ -167,17 +167,11 @@ class MainViewController: UIViewController {
         return button
     }()
     
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-    }
-    
     //MARK: - ViewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
-        fetchCinemas()
+        fetchCinemas(cityData: cityData)
         configureSubview(subviews: cinemasView, filterView, collectionView)
         setupNavBar()
         addLogoToNav()
@@ -186,7 +180,7 @@ class MainViewController: UIViewController {
         collectionView.dataSource = self
         collectionView.delegate = self
         cinemasVC.delegate = self
-        
+        print(cityData.uuid ?? "Oh nil")
     }
     
     //MARK: - ViewDidLayoutSubviews
@@ -201,6 +195,27 @@ class MainViewController: UIViewController {
         
     }
     
+    func fetchCinemas(cityData: CityData) {
+        let url = "http://afisha.api.kinopark.kz/api/city/\(cityData.uuid ?? "")/cinemas"
+        NetworkManager.shared.fetchWithBearerToken(dataType: CinemasModel.self, from: url, convertFromSnakeCase: true) { result in
+            switch result {
+            case .success(let cinemas):
+                guard let cinemas = cinemas.data else { return }
+                
+                let indexPath = IndexPath(row: 0, section: 0)
+                let selectedCinema = cinemas[indexPath.row]
+                self.cinemasVC.cinemas = cinemas
+                self.cinamasName = selectedCinema.name ?? ""
+                self.cinemasVC.delegate?.getCinema(cinemasData: selectedCinema)
+                
+            case .failure(let error):
+                print(error)
+            }
+        }
+    }
+    
+    
+    //MARK: - Private funcs
     private func setupTableView() {
         mainTableView.tableHeaderView = headerView
         view.addSubview(mainTableView)
@@ -244,26 +259,6 @@ class MainViewController: UIViewController {
         cinemasVC.preferredContentSize = CGSize(width: self.view.frame.size.width - 50, height: self.view.frame.size.height - 50)
         
         self.present(cinemasVC, animated: true)
-    }
-    
-    private func fetchCinemas() {
-        let url = "http://afisha.api.kinopark.kz/api/city/905c5db9-1e7b-4ea5-bf72-2bfd694da4a3/cinemas"
-        NetworkManager.shared.fetchWithBearerToken(dataType: CinemasModel.self, from: url, convertFromSnakeCase: true) { result in
-            switch result {
-            case .success(let cinemas):
-                guard let cinemas = cinemas.data else { return }
-                
-                let indexPath = IndexPath(row: 0, section: 0)
-                self.cinemasVC.tableView.selectRow(at: .init(row: 0, section: 0), animated: false, scrollPosition: .none)
-                let select = cinemas[indexPath.row]
-                self.cinemasVC.cinemas = cinemas
-                self.cinamasName = select.name ?? ""
-                self.cinemasVC.delegate?.getCinema(cinemasData: select)
-                
-            case .failure(let error):
-                print(error)
-            }
-        }
     }
 }
 

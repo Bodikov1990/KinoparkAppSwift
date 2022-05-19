@@ -15,7 +15,7 @@ class ContainerViewController: UIViewController, UINavigationControllerDelegate 
         case opened
     }
     
-    var  cityData: CityData!
+    var cityData: CityData!
     
     private var menuState: MenuState = .closed
     
@@ -42,14 +42,23 @@ class ContainerViewController: UIViewController, UINavigationControllerDelegate 
     
     private lazy var tabBarVC = setupTabBar(viewControllers: mainVC, citiesVC)
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        mainViewController.fetchCinemas(cityData: self.cityData)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         
         mainViewController.delegate = self
+        
+        mainViewController.cityData = self.cityData
         sideMenuViewController.delegate = self
+        
+        print(cityData.name ?? "")
         print(cityData.uuid ?? "")
-        sideMenuVC.delegate = self
+        
         addChildVCs()
         tapGesture()
         swipeGesture()
@@ -164,19 +173,5 @@ extension ContainerViewController: MainViewControllerDelegate {
 extension ContainerViewController: SideMenuViewControllerDelegate {
     func closeButton() {
         animateView()
-    }
-}
-
-extension ContainerViewController: CitiesTableViewControllerDelegate {
-    func getCity(cityData: CityData) {
-        guard let cityName = cityData.name else { return }
-        print(cityName)
-        print("main")
-    }
-}
-
-extension ContainerViewController: StartTableViewControllerDelegate {
-    func cityData(cityData: CityData) {
-        print(cityData.name ?? "")
     }
 }
