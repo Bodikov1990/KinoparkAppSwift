@@ -44,7 +44,7 @@ class ContainerViewController: UIViewController, UINavigationControllerDelegate 
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        mainViewController.fetchCinemas(cityData: self.cityData)
+        mainViewController.fetchCinemas(cityData: cityData)
     }
     
     override func viewDidLoad() {
@@ -52,12 +52,11 @@ class ContainerViewController: UIViewController, UINavigationControllerDelegate 
         view.backgroundColor = .systemBackground
         
         mainViewController.delegate = self
-        
-        mainViewController.cityData = self.cityData
+        mainViewController.fetchCinemas(cityData: cityData)
+        mainViewController.cityData = cityData
         sideMenuViewController.delegate = self
         
         print(cityData.name ?? "")
-        print(cityData.uuid ?? "")
         
         addChildVCs()
         tapGesture()

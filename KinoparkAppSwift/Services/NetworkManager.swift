@@ -41,10 +41,11 @@ class NetworkManager {
             completion(.failure(.invalidURL))
             return
         }
-        var request = URLRequest(url: url)
+        var request = URLRequest(url: url, timeoutInterval: Double.infinity)
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         request.addValue("Asia/Almaty", forHTTPHeaderField: "TimeZone")
         request.addValue("ru-RU", forHTTPHeaderField: "Accept-Language")
+        
         
         URLSession.shared.dataTask(with: request) { data, _, error in
             guard let data = data else {

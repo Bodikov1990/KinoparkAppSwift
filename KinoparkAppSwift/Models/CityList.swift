@@ -15,34 +15,23 @@ struct CityList: Decodable {
     let data: [CityData]?
 }
 
-// MARK: - Datum
+// MARK: - CityData
 struct CityData: Decodable {
     let uuid, name, code, datumDescription: String?
     let sortOrder: Int?
     let location: String?
 }
 
+// MARK: - CinemasModel
 struct CinemasModel: Decodable {
     let total, perPage, currentPage, lastPage: Int?
     let currPageURL: String?
     let nextPageURL, prevPageURL: String?
     let urlParams: URLParams?
     let data: [CinemasData]?
-
-    enum CodingKeys: String, CodingKey {
-        case total
-        case perPage = "per_page"
-        case currentPage = "current_page"
-        case lastPage = "last_page"
-        case currPageURL = "curr_page_url"
-        case nextPageURL = "next_page_url"
-        case prevPageURL = "prev_page_url"
-        case urlParams = "url_params"
-        case data
-    }
 }
 
-// MARK: - Datum
+// MARK: - CinemasData
 struct CinemasData: Decodable {
     let uuid, name, code: String?
     let datumDescription: String?
@@ -56,16 +45,6 @@ struct CinemasData: Decodable {
     let features: [String]?
     let openingDate: Date?
     let shortName: String?
-
-    enum CodingKeys: String, CodingKey {
-        case uuid, name, code
-        case datumDescription = "description"
-        case sortOrder = "sort_order"
-        case isActive = "is_active"
-        case address, phones, url, longitude, latitude, images, features
-        case openingDate = "opening_date"
-        case shortName = "short_name"
-    }
 }
 
 // MARK: - Images
@@ -77,3 +56,54 @@ struct URLParams: Decodable {
     let timezone, lang: String?
 }
 
+
+
+// MARK: - SeancesModel
+struct SeancesModel: Decodable {
+    let total, perPage, currentPage, lastPage: Int?
+    let currPageURL, nextPageURL: String?
+    let prevPageURL: String?
+    let urlParams: URLParams?
+    let data: [SeancesData]?
+}
+
+// MARK: - SeancesData
+struct SeancesData: Decodable {
+    let cityUUID: String?
+    let cinemaUUID: String?
+    let hallUUID: String?
+    let movieUUID: String?
+    let seanceUUID: String?
+    let basePrice: Int?
+    let startDate: Date?
+    let startTime: Date?
+    let endTime: Date?
+    let duration: Int?
+    let sortOrder: Int?
+    let discounts: [Discount]?
+    let format: [String]?
+    let languauge: String?
+    let isActive: Bool
+    let cityName: String?
+    let cinemaName: String?
+    let hallName: String?
+    let hallFormat: [String]?
+    let hallMenu: HallMenu?
+    let movieName: String?
+    let movieFormat: [String]?
+}
+
+// MARK: - Discount
+struct Discount: Decodable {
+    let uuid: String?
+    let name: String?
+    let code: String?
+    let sortOrder: Int?
+    let isActive, isShow: Bool?
+    let value: Int?
+    let type: String?
+}
+
+struct HallMenu: Decodable {
+    let ancestorUUID: String?
+}

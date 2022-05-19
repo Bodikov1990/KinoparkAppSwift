@@ -14,7 +14,24 @@ protocol MainViewControllerDelegate: AnyObject {
 class MainViewController: UIViewController {
     
     weak var delegate: MainViewControllerDelegate?
-    private let cinemasVC = CinemasTableViewController()
+    
+    let mainTableView: UITableView = {
+        let tableView = UITableView()
+        tableView.register(MainTableViewCell.self, forCellReuseIdentifier: MainTableViewCell.identifier)
+        tableView.separatorStyle = .none
+        return tableView
+    }()
+    
+    let collectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "movieItem")
+        collectionView.showsHorizontalScrollIndicator = false
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        return collectionView
+    }()
+    
     
     var movies: [TestModel] = [
         TestModel(
@@ -116,26 +133,13 @@ class MainViewController: UIViewController {
                 TestModel2(text: "Миссия невыполнимых: Последствия"),
             ])
     ]
+    
     var cityData: CityData!
     
+    private let cinemasVC = CinemasTableViewController()
     private var cinamasName: String!
     
-    let mainTableView: UITableView = {
-        let tableView = UITableView()
-        tableView.register(MainTableViewCell.self, forCellReuseIdentifier: MainTableViewCell.identifier)
-        tableView.separatorStyle = .none
-        return tableView
-    }()
-    
-    let collectionView: UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .horizontal
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "movieItem")
-        collectionView.showsHorizontalScrollIndicator = false
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        return collectionView
-    }()
+
     
     private let headerView = UIView()
     private let cinemasView: UIView = {
@@ -171,7 +175,6 @@ class MainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
-        fetchCinemas(cityData: cityData)
         configureSubview(subviews: cinemasView, filterView, collectionView)
         setupNavBar()
         addLogoToNav()
@@ -180,7 +183,8 @@ class MainViewController: UIViewController {
         collectionView.dataSource = self
         collectionView.delegate = self
         cinemasVC.delegate = self
-        print(cityData.uuid ?? "Oh nil")
+        fetchCinemas(cityData: cityData)
+
     }
     
     //MARK: - ViewDidLayoutSubviews
@@ -196,7 +200,7 @@ class MainViewController: UIViewController {
     }
     
     func fetchCinemas(cityData: CityData) {
-        let url = "http://afisha.api.kinopark.kz/api/city/\(cityData.uuid ?? "")/cinemas"
+        let url = "http://afisha.api.kinopark.kz//api/city/\(cityData.uuid ?? "")/cinemas"
         NetworkManager.shared.fetchWithBearerToken(dataType: CinemasModel.self, from: url, convertFromSnakeCase: true) { result in
             switch result {
             case .success(let cinemas):
@@ -214,6 +218,26 @@ class MainViewController: UIViewController {
         }
     }
     
+//    let seancesURL = "https://afisha.api.kinopark.kz//api/city/905c5db9-1e7b-4ea5-bf72-2bfd694da4a3/seances?sort=seance.start_time&cinema=ccb66815-2070-4307-9cb5-9af97a154e73"
+    
+    func fetchSeance(cityData: CityData) {
+        let url = "http://afisha.api.kinopark.kz//api/city/\(cityData.uuid ?? "")/cinemas"
+        NetworkManager.shared.fetchWithBearerToken(dataType: CinemasModel.self, from: url, convertFromSnakeCase: true) { result in
+            switch result {
+            case .success(let cinemas):
+                guard let cinemas = cinemas.data else { return }
+                
+                let indexPath = IndexPath(row: 0, section: 0)
+                let selectedCinema = cinemas[indexPath.row]
+                self.cinemasVC.cinemas = cinemas
+                self.cinamasName = selectedCinema.name ?? ""
+                self.cinemasVC.delegate?.getCinema(cinemasData: selectedCinema)
+                
+            case .failure(let error):
+                print(error)
+            }
+        }
+    }
     
     //MARK: - Private funcs
     private func setupTableView() {
