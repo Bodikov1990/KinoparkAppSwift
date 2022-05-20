@@ -45,14 +45,17 @@ class NetworkManager {
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         request.addValue("Asia/Almaty", forHTTPHeaderField: "TimeZone")
         request.addValue("ru-RU", forHTTPHeaderField: "Accept-Language")
-        
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         
         URLSession.shared.dataTask(with: request) { data, _, error in
             guard let data = data else {
+                
                 completion(.failure(.noData))
                 print(error?.localizedDescription ?? "No error description")
                 return
             }
+            
+            print(String(data: data, encoding: .utf8)!)
             
             do {
                 let decoder = JSONDecoder()
@@ -70,4 +73,41 @@ class NetworkManager {
         }.resume()
     }
     
+    func fetch<T: Decodable>(dataType: T.Type, from url: String, convertFromSnakeCase: Bool = true, completion: @escaping(Result<T, NetworkError>) -> Void) {
+        guard let url = URL(string: url) else {
+            completion(.failure(.invalidURL))
+            return
+        }
+        
+        var request = URLRequest(url: url, timeoutInterval: Double.infinity)
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        request.addValue("Asia/Almaty", forHTTPHeaderField: "TimeZone")
+        request.addValue("ru-RU", forHTTPHeaderField: "Accept-Language")
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        URLSession.shared.dataTask(with: request) { data, _, error in
+            guard let data = data else {
+                
+                completion(.failure(.noData))
+                print(error?.localizedDescription ?? "No error description")
+                return
+            }
+            
+            print(String(data: data, encoding: .utf8)!)
+            
+            do {
+                let decoder = JSONDecoder()
+                if convertFromSnakeCase {
+                    decoder.keyDecodingStrategy = .convertFromSnakeCase
+                }
+                
+                let type = try decoder.decode(T.self, from: data)
+                DispatchQueue.main.async {
+                    completion(.success(type))
+                }
+            } catch {
+                completion(.failure(.decodingError))
+            }
+        }.resume()
+    }
 }

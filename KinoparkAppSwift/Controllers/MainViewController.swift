@@ -183,7 +183,7 @@ class MainViewController: UIViewController {
         collectionView.dataSource = self
         collectionView.delegate = self
         cinemasVC.delegate = self
-        fetchCinemas(cityData: cityData)
+
         print(cityData.uuid ?? "")
         
     }
@@ -378,39 +378,42 @@ extension MainViewController {
     
     func fetchCinemas(cityData: CityData) {
         guard let cityUUID = cityData.uuid else { return }
-        let url = "http://afisha.api.kinopark.kz//api/city/\(cityUUID)/cinemas"
-        NetworkManager.shared.fetchWithBearerToken(dataType: CinemasModel.self, from: url, convertFromSnakeCase: true) { result in
+        let url = "http://afisha.api.kinopark.kz/api/cinema?city=\(cityUUID)"
+        NetworkManager.shared.fetch(dataType: CinemasModel.self, from: url, convertFromSnakeCase: true) { result in
             switch result {
             case .success(let cinemas):
-                print(cinemas)
+//                print(cinemas)
                 let cinemas = cinemas.data
                 self.cinemasVC.cinemas = cinemas
                 
                 let indexPath = IndexPath(row: 0, section: 0)
                 let selectedCinema = cinemas[indexPath.row]
-                self.fetchSeance(cityUUID: cityUUID, cinemaUUID: selectedCinema)
                 self.cinemasVC.delegate?.getCinema(cinemasData: selectedCinema)
+                self.fetchSeance(cityUUID: cityUUID, cinemaUUID: selectedCinema.uuid)
             case .failure(let error):
                 print(error)
             }
         }
     }
-    
-    private func fetchSeance(cityUUID: String, cinemaUUID: CinemasData) {
+//    https://afisha.api.kinopark.kz//api/seance?sort=seance.start_time&city=4f8a4da2-0f66-4e9f-b634-cd07b4f684f3&cinema=c436efa3-a22a-4157-90a5-ceb9abd6f2c9"
+    private func fetchSeance(cityUUID: String, cinemaUUID: String) {
         
-        let url = "https://afisha.api.kinopark.kz//api/city/\(cityUUID)/seances?sort=seance.start_time&cinema=\(cinemaUUID.uuid)"
-        print(url)
-        NetworkManager.shared.fetchWithBearerToken(dataType: SeancesModel.self, from: url, convertFromSnakeCase: true) { result in
+        let url = "https://afisha.api.kinopark.kz//api/seance?sort=seance.start_time&city=\(cityUUID)&cinema=\(cinemaUUID)"
+        print("URL SEANCE \(url)")
+        NetworkManager.shared.fetch(dataType: SeancesModel.self, from: url, convertFromSnakeCase: false) { result in
             switch result {
+                
             case .success(let seances):
+                print(seances)
                 self.seances = seances.data
                 self.mainTableView.reloadData()
-                
             case .failure(let error):
                 print(error)
             }
         }
+        
     }
+    
 }
 
 extension MainViewController: UIPopoverPresentationControllerDelegate {
