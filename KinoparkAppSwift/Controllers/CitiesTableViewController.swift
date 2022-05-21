@@ -8,14 +8,14 @@
 import UIKit
 
 protocol CitiesTableViewControllerDelegate: AnyObject {
-    func getCity(cityData: CityData)
+    func getCity(cityData: CitiesData)
 }
 
 class CitiesTableViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     weak var delegate: CitiesTableViewControllerDelegate?
     
-    var cityData: [CityData] = []
+    var cityData: [CitiesData] = []
     private let startingUrl = NetworkManager.shared.startingUrl
     private let identifier = "showCities"
     
@@ -68,7 +68,7 @@ class CitiesTableViewController: UIViewController, UITableViewDelegate, UITableV
         NetworkManager.shared.fetchWithBearerToken(dataType: CityList.self, from: startingUrl) { result in
             switch result {
             case .success(let cities):
-                self.cityData = cities.data ?? []
+                self.cityData = cities.data
                 self.tableView.reloadData()
             case .failure(let error):
                 print(error)

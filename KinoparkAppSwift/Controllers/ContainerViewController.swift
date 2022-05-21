@@ -15,7 +15,7 @@ class ContainerViewController: UIViewController, UINavigationControllerDelegate 
         case opened
     }
     
-    var cityData: CityData!
+    var cityData: CitiesData!
     
     private var menuState: MenuState = .closed
     

@@ -10,7 +10,7 @@ import UIKit
 class StartTableViewController: UITableViewController {
     
     private let identifier = "showCities"
-    private var cityList: [CityData] = []
+    private var cityList: [CitiesData] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -59,7 +59,7 @@ class StartTableViewController: UITableViewController {
             convertFromSnakeCase: true) { result in
                 switch result {
                 case .success(let cities):
-                    self.cityList = cities.data ?? []
+                    self.cityList = cities.data
                     self.tableView.reloadData()
                 case .failure(let error):
                     print(error)

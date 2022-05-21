@@ -134,7 +134,7 @@ class MainViewController: UIViewController {
             ])
     ]
     var seances: [SeancesData] = []
-    var cityData: CityData!
+    var cityData: CitiesData!
     
     private let cinemasVC = CinemasTableViewController()
     private var cinamasName: String!
@@ -376,10 +376,11 @@ extension MainViewController {
         
     }
     
-    func fetchCinemas(cityData: CityData) {
+    func fetchCinemas(cityData: CitiesData) {
         guard let cityUUID = cityData.uuid else { return }
         let url = "http://afisha.api.kinopark.kz/api/cinema?city=\(cityUUID)"
-        NetworkManager.shared.fetch(dataType: CinemasModel.self, from: url, convertFromSnakeCase: true) { result in
+        
+        NetworkManager.shared.fetchWithBearerToken(dataType: CinemasModel.self, from: url, convertFromSnakeCase: false) { result in
             switch result {
             case .success(let cinemas):
 //                print(cinemas)
@@ -395,12 +396,12 @@ extension MainViewController {
             }
         }
     }
-//    https://afisha.api.kinopark.kz//api/seance?sort=seance.start_time&city=4f8a4da2-0f66-4e9f-b634-cd07b4f684f3&cinema=c436efa3-a22a-4157-90a5-ceb9abd6f2c9"
+
     private func fetchSeance(cityUUID: String, cinemaUUID: String) {
         
-        let url = "https://afisha.api.kinopark.kz//api/seance?sort=seance.start_time&city=\(cityUUID)&cinema=\(cinemaUUID)"
+        let url = "https://afisha.api.kinopark.kz//api/seance?date_from=2022-05-22&sort=seance.start_time&city=\(cityUUID)&cinema=\(cinemaUUID)"
         print("URL SEANCE \(url)")
-        NetworkManager.shared.fetch(dataType: SeancesModel.self, from: url, convertFromSnakeCase: false) { result in
+        NetworkManager.shared.fetchWithBearerToken(dataType: SeancesModel.self, from: url, convertFromSnakeCase: false) { result in
             switch result {
                 
             case .success(let seances):
@@ -425,6 +426,7 @@ extension MainViewController: UIPopoverPresentationControllerDelegate {
 extension MainViewController: CinemasTableViewControllerDelegate {
     func getCinema(cinemasData: CinemasData) {
         cinemasButton.setTitle(cinemasData.name, for: .normal)
-        print(cinemasData.uuid)
+        guard let cityUUID = cityData.uuid else { return }
+        fetchSeance(cityUUID: cityUUID, cinemaUUID: cinemasData.uuid)
     }
 }

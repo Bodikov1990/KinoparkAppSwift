@@ -196,7 +196,7 @@ extension SideMenuViewController {
 }
 
 extension SideMenuViewController: CitiesTableViewControllerDelegate {
-    func getCity(cityData: CityData) {
+    func getCity(cityData: CitiesData) {
         guard let cityName = cityData.name else { return }
         self.secondLabel = cityName
         tableView.reloadData()
