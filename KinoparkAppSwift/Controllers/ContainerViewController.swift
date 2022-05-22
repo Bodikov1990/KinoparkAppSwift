@@ -7,7 +7,6 @@
 
 import UIKit
 
-
 class ContainerViewController: UIViewController, UINavigationControllerDelegate {
     
     enum MenuState {
@@ -21,6 +20,7 @@ class ContainerViewController: UIViewController, UINavigationControllerDelegate 
     
     let mainViewController = MainViewController()
     let sideMenuViewController = SideMenuViewController()
+    private let citiesVC = CitiesTableViewController()
     private let testViewController = TestViewController()
 
     private var visualEffectView = UIVisualEffectView()
@@ -32,7 +32,7 @@ class ContainerViewController: UIViewController, UINavigationControllerDelegate 
         image: "list.and.film",
         navBarIsHidden: false)
     
-    private lazy var citiesVC = generateNavController(
+    private lazy var moviesVC = generateNavController(
         rootViewcontroller: testViewController,
         title: "Фильмы",
         image: "film",
@@ -40,16 +40,17 @@ class ContainerViewController: UIViewController, UINavigationControllerDelegate 
     
     private lazy var sideMenuVC = UINavigationController(rootViewController: sideMenuViewController)
     
-    private lazy var tabBarVC = setupTabBar(viewControllers: mainVC, citiesVC)
+    private lazy var tabBarVC = setupTabBar(viewControllers: mainVC, moviesVC)
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
-        
         mainViewController.delegate = self
         mainViewController.fetchCinemas(cityData: cityData)
         mainViewController.cityData = cityData
+        
         sideMenuViewController.delegate = self
+        sideMenuViewController.cityData = cityData
         
         print(cityData.name ?? "")
         
@@ -70,7 +71,6 @@ class ContainerViewController: UIViewController, UINavigationControllerDelegate 
         view.addSubview(tabBarVC.view)
         tabBarVC.didMove(toParent: self)
         view.bringSubviewToFront(sideMenuVC.view)
-
     }
     
     private func setupTabBar(viewControllers: UIViewController...) -> UITabBarController {

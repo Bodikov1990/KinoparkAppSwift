@@ -11,7 +11,7 @@ protocol SideMenuViewControllerDelegate: AnyObject {
     func closeButton()
 }
 
-class SideMenuViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class SideMenuViewController: UIViewController {
     
     enum MenuOptions: String, CaseIterable {
         case city = "Город"
@@ -45,6 +45,8 @@ class SideMenuViewController: UIViewController, UITableViewDelegate, UITableView
     var delegate: SideMenuViewControllerDelegate?
     
     var secondLabel: String?
+    var cityData: CitiesData!
+    
     private let headerView = UIView()
     private let footerView = UIView()
     private let personImageView: UIImageView = {
@@ -92,7 +94,9 @@ class SideMenuViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
 
-    
+}
+
+extension SideMenuViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         MenuOptions.allCases.count
     }
@@ -107,7 +111,8 @@ class SideMenuViewController: UIViewController, UITableViewDelegate, UITableView
         case .city:
             cell.configure(option: menuOptions.rawValue, image: menuOptions.imageName)
             cell.secondLabel.isHidden = false
-            cell.secondLabel.text = secondLabel ?? ""
+            
+            cell.secondLabel.text = cityData.name
         case .language:
             cell.configure(option: menuOptions.rawValue, image: menuOptions.imageName)
             cell.secondLabel.text = "Язык"
@@ -197,8 +202,7 @@ extension SideMenuViewController {
 
 extension SideMenuViewController: CitiesTableViewControllerDelegate {
     func getCity(cityData: CitiesData) {
-        guard let cityName = cityData.name else { return }
-        self.secondLabel = cityName
+        self.cityData = cityData
         tableView.reloadData()
     }
 }

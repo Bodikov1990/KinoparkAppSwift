@@ -60,7 +60,6 @@ class CitiesTableViewController: UIViewController, UITableViewDelegate, UITableV
         
         let city = cityData[indexPath.row]
         delegate?.getCity(cityData: city)
-         
         dismiss(animated: true)
     }
     

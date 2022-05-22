@@ -32,114 +32,9 @@ class MainViewController: UIViewController {
         return collectionView
     }()
     
-    
-    var movies: [TestModel] = [
-        TestModel(
-            image: "600x900",
-            name: "Миссия невыполнимых: Последствия",
-            testModel2: [
-                TestModel2(text: "Миссия невыполнимых: Последствия"),
-                
-            ]),
-        TestModel(
-            image: "600x900",
-            name: "Миссия невыполнимых: Последствия",
-            testModel2: [
-                TestModel2(text: "Миссия невыполнимых: Последствия"),
-                TestModel2(text: "Миссия невыполнимых: Последствия"),
-                
-            ]),
-        TestModel(
-            image: "600x900",
-            name: "Миссия невыполнимых: Последствия",
-            testModel2: [
-                TestModel2(text: "Миссия невыполнимых: Племя изгоев"),
-                TestModel2(text: "Миссия невыполнимых: Племя изгоев"),
-                TestModel2(text: "Миссия невыполнимых: Племя изгоев"),
-            ]),
-        TestModel(
-            image: "600x900",
-            name: "Миссия невыполнимых: Последствия",
-            testModel2: [
-                TestModel2(text: "Миссия невыполнимых: Последствия"),
-                TestModel2(text: "Миссия невыполнимых: Последствия"),
-                TestModel2(text: "Миссия невыполнимых: Последствия"),
-                TestModel2(text: "Миссия невыполнимых: Последствия"),
-                TestModel2(text: "Миссия невыполнимых: Последствия"),
-            ]),
-        TestModel(
-            image: "600x900",
-            name: "Миссия невыполнимых: Последствия",
-            testModel2: [
-                TestModel2(text: "Миссия невыполнимых: Последствия"),
-                TestModel2(text: "Миссия невыполнимых: Последствия"),
-                TestModel2(text: "Миссия невыполнимых: Последствия"),
-                TestModel2(text: "Миссия невыполнимых: Последствия"),
-                TestModel2(text: "Миссия невыполнимых: Последствия"),
-                TestModel2(text: "Миссия невыполнимых: Последствия"),
-            ]),
-        TestModel(
-            image: "600x900",
-            name: "Миссия невыполнимых: Последствия",
-            testModel2: [
-                TestModel2(text: "Миссия невыполнимых: Последствия"),
-                TestModel2(text: "Миссия невыполнимых: Последствия"),
-                TestModel2(text: "Миссия невыполнимых: Последствия"),
-                TestModel2(text: "Миссия невыполнимых: Последствия"),
-                TestModel2(text: "Миссия невыполнимых: Последствия"),
-                TestModel2(text: "Миссия невыполнимых: Последствия"),
-                TestModel2(text: "Миссия невыполнимых: Последствия"),
-            ]),
-        TestModel(
-            image: "600x900",
-            name: "Миссия невыполнимых: Последствия",
-            testModel2: [
-                TestModel2(text: "Миссия невыполнимых: Последствия"),
-                TestModel2(text: "Миссия невыполнимых: Последствия"),
-                TestModel2(text: "Миссия невыполнимых: Последствия"),
-                TestModel2(text: "Миссия невыполнимых: Последствия"),
-                TestModel2(text: "Миссия невыполнимых: Последствия"),
-                TestModel2(text: "Миссия невыполнимых: Последствия"),
-                TestModel2(text: "Миссия невыполнимых: Последствия"),
-                TestModel2(text: "Миссия невыполнимых: Последствия"),
-            ]),
-        TestModel(
-            image: "600x900",
-            name: "Миссия невыполнимых: Последствия",
-            testModel2: [
-                TestModel2(text: "Миссия невыполнимых: Последствия"),
-                TestModel2(text: "Миссия невыполнимых: Последствия"),
-                TestModel2(text: "Миссия невыполнимых: Последствия"),
-                TestModel2(text: "Миссия невыполнимых: Последствия"),
-                TestModel2(text: "Миссия невыполнимых: Последствия"),
-                TestModel2(text: "Миссия невыполнимых: Последствия"),
-                TestModel2(text: "Миссия невыполнимых: Последствия"),
-                TestModel2(text: "Миссия невыполнимых: Последствия"),
-                TestModel2(text: "Миссия невыполнимых: Последствия"),
-            ]),
-        TestModel(
-            image: "600x900",
-            name: "Миссия невыполнимых: Последствия",
-            testModel2: [
-                TestModel2(text: "Миссия невыполнимых: Последствия"),
-                TestModel2(text: "Миссия невыполнимых: Последствия"),
-                TestModel2(text: "Миссия невыполнимых: Последствия"),
-                TestModel2(text: "Миссия невыполнимых: Последствия"),
-                TestModel2(text: "Миссия невыполнимых: Последствия"),
-                TestModel2(text: "Миссия невыполнимых: Последствия"),
-                TestModel2(text: "Миссия невыполнимых: Последствия"),
-                TestModel2(text: "Миссия невыполнимых: Последствия"),
-                TestModel2(text: "Миссия невыполнимых: Последствия"),
-                TestModel2(text: "Миссия невыполнимых: Последствия"),
-            ])
-    ]
-    var seances: [SeancesData] = []
     var cityData: CitiesData!
-    
+    private var seances: [SeancesData] = []
     private let cinemasVC = CinemasTableViewController()
-    private var cinamasName: String!
-    
-
     
     private let headerView = UIView()
     private let cinemasView: UIView = {
@@ -183,9 +78,6 @@ class MainViewController: UIViewController {
         collectionView.dataSource = self
         collectionView.delegate = self
         cinemasVC.delegate = self
-
-        print(cityData.uuid ?? "")
-        
     }
     
     //MARK: - ViewDidLayoutSubviews
@@ -198,6 +90,27 @@ class MainViewController: UIViewController {
         setupViews(views: cinemasView, filterView)
         setConstraints()
         
+    }
+    
+    func fetchCinemas(cityData: CitiesData) {
+        guard let cityUUID = cityData.uuid else { return }
+        let url = "http://afisha.api.kinopark.kz/api/cinema?city=\(cityUUID)"
+        
+        NetworkManager.shared.fetchWithBearerToken(dataType: CinemasModel.self, from: url, convertFromSnakeCase: false) { result in
+            switch result {
+            case .success(let cinemas):
+//                print(cinemas)
+                let cinemas = cinemas.data
+                self.cinemasVC.cinemas = cinemas
+                
+                let indexPath = IndexPath(row: 0, section: 0)
+                let selectedCinema = cinemas[indexPath.row]
+                self.cinemasVC.delegate?.getCinema(cinemasData: selectedCinema)
+                self.fetchSeance(cityUUID: cityUUID, cinemaUUID: selectedCinema.uuid)
+            case .failure(let error):
+                print(error)
+            }
+        }
     }
     
     //MARK: - Private funcs
@@ -223,7 +136,7 @@ class MainViewController: UIViewController {
     }
     
     private func setupCinemaFilterButton() {
-        cinemasButton.setTitle(cinamasName ?? "Загрузка...", for: .normal)
+        cinemasButton.setTitle("Загрузка...", for: .normal)
         cinemasButton.setTitleColor(
             UIColor(named: "textColor"),
             for: .normal)
@@ -239,8 +152,8 @@ class MainViewController: UIViewController {
         
         let popOverCitiesVC = cinemasVC.popoverPresentationController
         popOverCitiesVC?.delegate = self
-        popOverCitiesVC?.sourceView = self.cinemasView
-        popOverCitiesVC?.sourceRect = CGRect(x: self.cinemasView.bounds.maxY, y: self.cinemasView.bounds.midY, width: 0, height: 0)
+        popOverCitiesVC?.sourceView = cinemasView
+        popOverCitiesVC?.sourceRect = CGRect(x: cinemasView.bounds.maxY, y: cinemasView.bounds.midY, width: 0, height: 0)
         cinemasVC.preferredContentSize = CGSize(width: self.view.frame.size.width - 50, height: self.view.frame.size.height - 50)
         
         self.present(cinemasVC, animated: true)
@@ -267,9 +180,6 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         return cell
     }
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
-    }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableView.automaticDimension
@@ -376,45 +286,22 @@ extension MainViewController {
         
     }
     
-    func fetchCinemas(cityData: CitiesData) {
-        guard let cityUUID = cityData.uuid else { return }
-        let url = "http://afisha.api.kinopark.kz/api/cinema?city=\(cityUUID)"
-        
-        NetworkManager.shared.fetchWithBearerToken(dataType: CinemasModel.self, from: url, convertFromSnakeCase: false) { result in
-            switch result {
-            case .success(let cinemas):
-//                print(cinemas)
-                let cinemas = cinemas.data
-                self.cinemasVC.cinemas = cinemas
-                
-                let indexPath = IndexPath(row: 0, section: 0)
-                let selectedCinema = cinemas[indexPath.row]
-                self.cinemasVC.delegate?.getCinema(cinemasData: selectedCinema)
-                self.fetchSeance(cityUUID: cityUUID, cinemaUUID: selectedCinema.uuid)
-            case .failure(let error):
-                print(error)
-            }
-        }
-    }
+
 
     private func fetchSeance(cityUUID: String, cinemaUUID: String) {
         
-        let url = "https://afisha.api.kinopark.kz//api/seance?date_from=2022-05-22&sort=seance.start_time&city=\(cityUUID)&cinema=\(cinemaUUID)"
+        let url = "https://afisha.api.kinopark.kz//api/seance?date_from=2022-05-23&sort=seance.start_time&city=\(cityUUID)&cinema=\(cinemaUUID)"
         print("URL SEANCE \(url)")
         NetworkManager.shared.fetchWithBearerToken(dataType: SeancesModel.self, from: url, convertFromSnakeCase: false) { result in
             switch result {
-                
             case .success(let seances):
-                print(seances)
                 self.seances = seances.data
                 self.mainTableView.reloadData()
             case .failure(let error):
                 print(error)
             }
         }
-        
     }
-    
 }
 
 extension MainViewController: UIPopoverPresentationControllerDelegate {
