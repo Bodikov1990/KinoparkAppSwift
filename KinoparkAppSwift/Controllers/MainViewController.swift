@@ -35,6 +35,7 @@ class MainViewController: UIViewController {
     var cityData: CitiesData!
     private var seances: [SeancesData] = []
     private let cinemasVC = CinemasTableViewController()
+    let citiesVC = CitiesViewController()
     
     private let headerView = UIView()
     private let cinemasView: UIView = {
@@ -78,6 +79,8 @@ class MainViewController: UIViewController {
         collectionView.dataSource = self
         collectionView.delegate = self
         cinemasVC.delegate = self
+        fetchCinemas(cityData: cityData)
+        print("Did Load")
     }
     
     //MARK: - ViewDidLayoutSubviews
@@ -89,28 +92,10 @@ class MainViewController: UIViewController {
         collectionView.frame = CGRect(x: 0, y: 0, width: view.frame.size.width, height: 30)
         setupViews(views: cinemasView, filterView)
         setConstraints()
-        
     }
     
-    func fetchCinemas(cityData: CitiesData) {
-        guard let cityUUID = cityData.uuid else { return }
-        let url = "http://afisha.api.kinopark.kz/api/cinema?city=\(cityUUID)"
-        
-        NetworkManager.shared.fetchWithBearerToken(dataType: CinemasModel.self, from: url, convertFromSnakeCase: false) { result in
-            switch result {
-            case .success(let cinemas):
-//                print(cinemas)
-                let cinemas = cinemas.data
-                self.cinemasVC.cinemas = cinemas
-                
-                let indexPath = IndexPath(row: 0, section: 0)
-                let selectedCinema = cinemas[indexPath.row]
-                self.cinemasVC.delegate?.getCinema(cinemasData: selectedCinema)
-                self.fetchSeance(cityUUID: cityUUID, cinemaUUID: selectedCinema.uuid)
-            case .failure(let error):
-                print(error)
-            }
-        }
+    override func viewDidAppear(_ animated: Bool) {
+        fetchCinemas(cityData: cityData)
     }
     
     //MARK: - Private funcs
@@ -286,21 +271,49 @@ extension MainViewController {
         
     }
     
+    func fetchCinemas(cityData: CitiesData) {
+        guard let cityUUID = cityData.uuid else { return }
 
-
+        let url = "http://afisha.api.kinopark.kz/api/cinema?city=\(cityUUID)"
+        
+        NetworkManager.shared.fetchWithBearerToken(dataType: CinemasModel.self, from: url, convertFromSnakeCase: false) { result in
+            switch result {
+            case .success(let cinemas):
+                let cinemas = cinemas.data
+                self.cinemasVC.cinemas = cinemas
+                
+                let indexPath = IndexPath(row: 0, section: 0)
+                let selectedCinema = cinemas[indexPath.row]
+                self.fetchSeance(cityUUID: cityUUID, cinemaUUID: selectedCinema.uuid)
+                self.getCinema(cityData: cityData, cinemasData: selectedCinema)
+            case .failure(let error):
+                print(error)
+            }
+        }
+    }
+    
+    
     private func fetchSeance(cityUUID: String, cinemaUUID: String) {
         
-        let url = "https://afisha.api.kinopark.kz//api/seance?date_from=2022-05-23&sort=seance.start_time&city=\(cityUUID)&cinema=\(cinemaUUID)"
+        let url = "https://afisha.api.kinopark.kz//api/seance?date_from=2022-05-24&sort=seance.start_time&city=\(cityUUID)&cinema=\(cinemaUUID)"
         print("URL SEANCE \(url)")
         NetworkManager.shared.fetchWithBearerToken(dataType: SeancesModel.self, from: url, convertFromSnakeCase: false) { result in
             switch result {
             case .success(let seances):
+//                print(seances)
                 self.seances = seances.data
                 self.mainTableView.reloadData()
             case .failure(let error):
                 print(error)
             }
         }
+    }
+    
+    private func getCinema(cityData: CitiesData, cinemasData: CinemasData) {
+        cinemasButton.setTitle(cinemasData.name, for: .normal)
+        guard let cityUUID = cityData.uuid else { return }
+        print("SECOND")
+        fetchSeance(cityUUID: cityUUID, cinemaUUID: cinemasData.uuid)
     }
 }
 
@@ -312,8 +325,6 @@ extension MainViewController: UIPopoverPresentationControllerDelegate {
 
 extension MainViewController: CinemasTableViewControllerDelegate {
     func getCinema(cinemasData: CinemasData) {
-        cinemasButton.setTitle(cinemasData.name, for: .normal)
-        guard let cityUUID = cityData.uuid else { return }
-        fetchSeance(cityUUID: cityUUID, cinemaUUID: cinemasData.uuid)
+        getCinema(cityData: cityData, cinemasData: cinemasData)
     }
 }

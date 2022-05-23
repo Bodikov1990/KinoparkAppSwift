@@ -7,19 +7,20 @@
 
 import UIKit
 
-protocol CitiesTableViewControllerDelegate: AnyObject {
+protocol CitiesViewControllerDelegate: AnyObject {
     func getCity(cityData: CitiesData)
 }
 
-class CitiesTableViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class CitiesViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
-    weak var delegate: CitiesTableViewControllerDelegate?
-    
+    weak var delegate: CitiesViewControllerDelegate?
+   
     var cityData: [CitiesData] = []
     private let startingUrl = NetworkManager.shared.startingUrl
     private let identifier = "showCities"
     
-    let tableView = UITableView()
+    private let tableView = UITableView()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.addSubview(tableView)
@@ -57,11 +58,12 @@ class CitiesTableViewController: UIViewController, UITableViewDelegate, UITableV
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false)
-        
         let city = cityData[indexPath.row]
+        
         delegate?.getCity(cityData: city)
         dismiss(animated: true)
     }
+    
     
     private func showCities() {
         NetworkManager.shared.fetchWithBearerToken(dataType: CityList.self, from: startingUrl) { result in

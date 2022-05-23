@@ -13,7 +13,7 @@ protocol CinemasTableViewControllerDelegate: AnyObject {
 class CinemasTableViewController: UITableViewController {
     
     var cinemas: [CinemasData] = []
-    weak var delegate: CinemasTableViewControllerDelegate?
+    var delegate: CinemasTableViewControllerDelegate?
     
     private let idetifier = "cinemas"
     
@@ -44,14 +44,6 @@ class CinemasTableViewController: UITableViewController {
         cell.textLabel?.text = cinemasData.name
         
         return cell
-    }
-    
-    override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-        if tableView.indexPathForSelectedRow == indexPath {
-            tableView.deselectRow(at:indexPath, animated:false)
-            return nil
-        }
-        return indexPath
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

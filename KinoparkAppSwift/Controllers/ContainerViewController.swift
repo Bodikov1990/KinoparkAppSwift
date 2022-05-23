@@ -8,6 +8,7 @@
 import UIKit
 
 class ContainerViewController: UIViewController, UINavigationControllerDelegate {
+
     
     enum MenuState {
         case closed
@@ -20,7 +21,6 @@ class ContainerViewController: UIViewController, UINavigationControllerDelegate 
     
     let mainViewController = MainViewController()
     let sideMenuViewController = SideMenuViewController()
-    private let citiesVC = CitiesTableViewController()
     private let testViewController = TestViewController()
 
     private var visualEffectView = UIVisualEffectView()
@@ -46,13 +46,10 @@ class ContainerViewController: UIViewController, UINavigationControllerDelegate 
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         mainViewController.delegate = self
-        mainViewController.fetchCinemas(cityData: cityData)
         mainViewController.cityData = cityData
         
         sideMenuViewController.delegate = self
         sideMenuViewController.cityData = cityData
-        
-        print(cityData.name ?? "")
         
         addChildVCs()
         tapGesture()
@@ -90,7 +87,6 @@ class ContainerViewController: UIViewController, UINavigationControllerDelegate 
         navigationVC.navigationBar.isHidden = navBarIsHidden
         return navigationVC
     }
-    
 }
 //MARK: - Private functions for animation
 extension ContainerViewController {
@@ -124,6 +120,7 @@ extension ContainerViewController {
         
         visualEffectView.frame = tabBarVC.view.frame
         visualEffectView.effect = UIBlurEffect(style: .systemChromeMaterial)
+//        visualEffectView.effect = nil
         tabBarVC.view.addSubview(visualEffectView)
     }
     
@@ -167,5 +164,17 @@ extension ContainerViewController: MainViewControllerDelegate {
 extension ContainerViewController: SideMenuViewControllerDelegate {
     func closeButton() {
         animateView()
+    }
+    
+    func getCities(cityData: CitiesData) {
+        self.cityData = cityData
+        mainViewController.fetchCinemas(cityData: cityData)
+        print(cityData)
+    }
+}
+
+extension ContainerViewController: CitiesViewControllerDelegate {
+    func getCity(cityData: CitiesData) {
+        print(cityData)
     }
 }

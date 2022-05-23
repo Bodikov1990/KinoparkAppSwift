@@ -9,6 +9,8 @@ import UIKit
 
 protocol SideMenuViewControllerDelegate: AnyObject {
     func closeButton()
+    
+    func getCities(cityData: CitiesData)
 }
 
 class SideMenuViewController: UIViewController {
@@ -86,14 +88,11 @@ class SideMenuViewController: UIViewController {
         nameLabel.text = "Kuat Bodikov"
     }
 
-    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         tableView.frame = view.bounds
         headerView.frame = CGRect(x: 0, y: 0, width: view.frame.size.width, height: 70)
     }
-    
-
 }
 
 extension SideMenuViewController: UITableViewDelegate, UITableViewDataSource {
@@ -111,7 +110,6 @@ extension SideMenuViewController: UITableViewDelegate, UITableViewDataSource {
         case .city:
             cell.configure(option: menuOptions.rawValue, image: menuOptions.imageName)
             cell.secondLabel.isHidden = false
-            
             cell.secondLabel.text = cityData.name
         case .language:
             cell.configure(option: menuOptions.rawValue, image: menuOptions.imageName)
@@ -133,7 +131,7 @@ extension SideMenuViewController: UITableViewDelegate, UITableViewDataSource {
         let options = MenuOptions.allCases[indexPath.row]
         switch options {
         case .city:
-            let option = CitiesTableViewController()
+            let option = CitiesViewController()
             option.delegate = self
             option.modalPresentationStyle = .overCurrentContext
             present(option, animated: true)
@@ -141,16 +139,16 @@ extension SideMenuViewController: UITableViewDelegate, UITableViewDataSource {
             let option = TestViewController()
             show(option, sender: nil)
         case .faq:
-            let option = CitiesTableViewController()
+            let option = CitiesViewController()
             show(option, sender: nil)
         case .rules:
-            let option = CitiesTableViewController()
+            let option = CitiesViewController()
             show(option, sender: nil)
         case .confidence:
-            let option = CitiesTableViewController()
+            let option = CitiesViewController()
             show(option, sender: nil)
         case .contacts:
-            let option = CitiesTableViewController()
+            let option = CitiesViewController()
             show(option, sender: nil)
         case .darkMode:
             break
@@ -172,6 +170,7 @@ extension SideMenuViewController {
     
     @objc private func sideMenu(){
         delegate?.closeButton()
+        delegate?.getCities(cityData: cityData)
     }
     
     private func configureSubview(subviews: UIView...) {
@@ -200,7 +199,7 @@ extension SideMenuViewController {
     }
 }
 
-extension SideMenuViewController: CitiesTableViewControllerDelegate {
+extension SideMenuViewController: CitiesViewControllerDelegate {
     func getCity(cityData: CitiesData) {
         self.cityData = cityData
         tableView.reloadData()
