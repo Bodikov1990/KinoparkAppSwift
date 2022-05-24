@@ -114,9 +114,9 @@ class MainViewController: UIViewController {
             view.frame = CGRect(x: 0, y: 0, width: headerView.frame.width, height: 36)
             view.backgroundColor = .systemBackground
             view.layer.shadowColor = UIColor.lightGray.cgColor
-            view.layer.shadowOpacity = 0.8
+            view.layer.shadowOpacity = 0.5
             view.layer.shadowOffset = CGSize(width: 1, height: 3)
-            view.layer.shadowRadius = 5
+            view.layer.shadowRadius = 3
         }
     }
     
@@ -180,7 +180,11 @@ extension MainViewController: UICollectionViewDataSource, UICollectionViewDelega
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: WeeklyCollectionViewCell.identifier, for: indexPath) as! WeeklyCollectionViewCell
         let dates = week[indexPath.item]
+//        Надо переделать с помощью enum
         
+        if indexPath.item == 0 {
+            cell.configure(date: "Сегодня")
+        }
         cell.configure(date: dates)
         return cell
     }
@@ -188,7 +192,6 @@ extension MainViewController: UICollectionViewDataSource, UICollectionViewDelega
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
                 
         if lastIndexActive != indexPath {
-            
             let cell1 = collectionView.cellForItem(at: indexPath) as! WeeklyCollectionViewCell
             cell1.dateLabel.textColor = .white
             cell1.backgroundCell.backgroundColor = #colorLiteral(red: 0.7646051049, green: 0.1110634878, blue: 0.1571588814, alpha: 1)

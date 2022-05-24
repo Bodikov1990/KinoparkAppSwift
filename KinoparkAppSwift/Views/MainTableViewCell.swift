@@ -26,9 +26,9 @@ class MainTableViewCell: UITableViewCell {
         view.backgroundColor = .systemBackground
         view.layer.shadowColor = UIColor.lightGray.cgColor
         view.layer.shadowOffset = CGSize(width: 1, height: 3)
-        view.layer.shadowOpacity = 0.8
+        view.layer.shadowOpacity = 0.5
         view.layer.masksToBounds = false
-        view.layer.shadowRadius = 5
+        view.layer.shadowRadius = 3
         view.layer.cornerRadius = 20
         return view
     }()
