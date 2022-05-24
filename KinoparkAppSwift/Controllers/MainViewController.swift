@@ -33,13 +33,11 @@ class MainViewController: UIViewController {
     }()
     
     var cityData: CitiesData!
-    
-    var lastIndexActive:IndexPath = [1 ,0]
-
     var week: [String] = []
     
     private var seances: [SeancesData] = []
     private let cinemasVC = CinemasTableViewController()
+    private var lastIndexActive:IndexPath = [1 ,0]
     
     private let headerView = UIView()
     private let cinemasView: UIView = {
@@ -191,17 +189,15 @@ extension MainViewController: UICollectionViewDataSource, UICollectionViewDelega
                 
         if lastIndexActive != indexPath {
             
-            let cell = collectionView.cellForItem(at: indexPath) as! WeeklyCollectionViewCell
-            cell.dateLabel.textColor = .white
-            cell.backgroundCell.backgroundColor = #colorLiteral(red: 0.7646051049, green: 0.1110634878, blue: 0.1571588814, alpha: 1)
-            
+            let cell1 = collectionView.cellForItem(at: indexPath) as! WeeklyCollectionViewCell
+            cell1.dateLabel.textColor = .white
+            cell1.backgroundCell.backgroundColor = #colorLiteral(red: 0.7646051049, green: 0.1110634878, blue: 0.1571588814, alpha: 1)
             
             let cell2 = collectionView.cellForItem(at: lastIndexActive) as? WeeklyCollectionViewCell
             cell2?.dateLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
             cell2?.backgroundCell.backgroundColor = #colorLiteral(red: 0.9490196078, green: 0.9490196078, blue: 0.968627451, alpha: 1)
             lastIndexActive = indexPath
         }
-        //        cell.selectedBackgroundView?.backgroundColor = #colorLiteral(red: 0.7646051049, green: 0.1110634878, blue: 0.1571588814, alpha: 1)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -257,7 +253,7 @@ extension MainViewController {
             let today = Date()
             guard let modifiedDate = Calendar.current.date(byAdding: .day, value: day, to: today) else { return }
             let formatter = DateFormatter()
-            formatter.dateFormat = "YY-mm-dd"
+            formatter.dateFormat = "E. d:MMM"
             let dates = formatter.string(from: modifiedDate as Date)
             week.append(dates)
         }
