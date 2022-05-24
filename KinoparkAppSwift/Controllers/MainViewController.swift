@@ -26,16 +26,20 @@ class MainViewController: UIViewController {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "movieItem")
+        collectionView.register(WeeklyCollectionViewCell.self, forCellWithReuseIdentifier: WeeklyCollectionViewCell.identifier)
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         return collectionView
     }()
     
     var cityData: CitiesData!
+    
+    var lastIndexActive:IndexPath = [1 ,0]
+
+    var week: [String] = []
+    
     private var seances: [SeancesData] = []
     private let cinemasVC = CinemasTableViewController()
-    let citiesVC = CitiesViewController()
     
     private let headerView = UIView()
     private let cinemasView: UIView = {
@@ -80,7 +84,9 @@ class MainViewController: UIViewController {
         collectionView.delegate = self
         cinemasVC.delegate = self
         fetchCinemas(cityData: cityData)
-        print("Did Load")
+        
+        getWeek()
+        print(week.count)
     }
     
     //MARK: - ViewDidLayoutSubviews
@@ -92,10 +98,6 @@ class MainViewController: UIViewController {
         collectionView.frame = CGRect(x: 0, y: 0, width: view.frame.size.width, height: 30)
         setupViews(views: cinemasView, filterView)
         setConstraints()
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        fetchCinemas(cityData: cityData)
     }
     
     //MARK: - Private funcs
@@ -174,14 +176,32 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
 // MARK: - Setup CollectionView
 extension MainViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        7
+        week.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "movieItem", for: indexPath)
-        cell.contentView.backgroundColor = #colorLiteral(red: 0.7646051049, green: 0.1110634878, blue: 0.1571588814, alpha: 1)
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: WeeklyCollectionViewCell.identifier, for: indexPath) as! WeeklyCollectionViewCell
+        let dates = week[indexPath.item]
         
+        cell.configure(date: dates)
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+                
+        if lastIndexActive != indexPath {
+            
+            let cell = collectionView.cellForItem(at: indexPath) as! WeeklyCollectionViewCell
+            cell.dateLabel.textColor = .white
+            cell.backgroundCell.backgroundColor = #colorLiteral(red: 0.7646051049, green: 0.1110634878, blue: 0.1571588814, alpha: 1)
+            
+            
+            let cell2 = collectionView.cellForItem(at: lastIndexActive) as? WeeklyCollectionViewCell
+            cell2?.dateLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            cell2?.backgroundCell.backgroundColor = #colorLiteral(red: 0.9490196078, green: 0.9490196078, blue: 0.968627451, alpha: 1)
+            lastIndexActive = indexPath
+        }
+        //        cell.selectedBackgroundView?.backgroundColor = #colorLiteral(red: 0.7646051049, green: 0.1110634878, blue: 0.1571588814, alpha: 1)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -232,6 +252,17 @@ extension MainViewController {
         }
     }
     
+    private func getWeek() {
+        for day in 1...5 {
+            let today = Date()
+            guard let modifiedDate = Calendar.current.date(byAdding: .day, value: day, to: today) else { return }
+            let formatter = DateFormatter()
+            formatter.dateFormat = "YY-mm-dd"
+            let dates = formatter.string(from: modifiedDate as Date)
+            week.append(dates)
+        }
+    }
+    
     private func setConstraints() {
         
         NSLayoutConstraint.activate([
@@ -273,7 +304,7 @@ extension MainViewController {
     
     func fetchCinemas(cityData: CitiesData) {
         guard let cityUUID = cityData.uuid else { return }
-
+        
         let url = "http://afisha.api.kinopark.kz/api/cinema?city=\(cityUUID)"
         
         NetworkManager.shared.fetchWithBearerToken(dataType: CinemasModel.self, from: url, convertFromSnakeCase: false) { result in
@@ -281,6 +312,7 @@ extension MainViewController {
             case .success(let cinemas):
                 let cinemas = cinemas.data
                 self.cinemasVC.cinemas = cinemas
+                self.cinemasVC.tableView.reloadData()
                 
                 let indexPath = IndexPath(row: 0, section: 0)
                 let selectedCinema = cinemas[indexPath.row]
@@ -296,11 +328,10 @@ extension MainViewController {
     private func fetchSeance(cityUUID: String, cinemaUUID: String) {
         
         let url = "https://afisha.api.kinopark.kz//api/seance?date_from=2022-05-24&sort=seance.start_time&city=\(cityUUID)&cinema=\(cinemaUUID)"
-        print("URL SEANCE \(url)")
+        
         NetworkManager.shared.fetchWithBearerToken(dataType: SeancesModel.self, from: url, convertFromSnakeCase: false) { result in
             switch result {
             case .success(let seances):
-//                print(seances)
                 self.seances = seances.data
                 self.mainTableView.reloadData()
             case .failure(let error):
@@ -312,7 +343,6 @@ extension MainViewController {
     private func getCinema(cityData: CitiesData, cinemasData: CinemasData) {
         cinemasButton.setTitle(cinemasData.name, for: .normal)
         guard let cityUUID = cityData.uuid else { return }
-        print("SECOND")
         fetchSeance(cityUUID: cityUUID, cinemaUUID: cinemasData.uuid)
     }
 }

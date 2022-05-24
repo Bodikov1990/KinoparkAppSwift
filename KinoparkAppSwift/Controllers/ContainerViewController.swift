@@ -167,9 +167,9 @@ extension ContainerViewController: SideMenuViewControllerDelegate {
     }
     
     func getCities(cityData: CitiesData) {
-        self.cityData = cityData
+        mainViewController.cityData = cityData
         mainViewController.fetchCinemas(cityData: cityData)
-        print(cityData)
+        self.cityData = cityData
     }
 }
 
