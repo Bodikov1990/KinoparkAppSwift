@@ -69,6 +69,11 @@ class MainViewController: UIViewController {
         return button
     }()
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+//        selectedCollectionViewCell()
+    }
+    
     //MARK: - ViewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -82,9 +87,8 @@ class MainViewController: UIViewController {
         collectionView.delegate = self
         cinemasVC.delegate = self
         fetchCinemas(cityData: cityData)
-        
         getWeek()
-        print(week.count)
+        selectedCollectionViewCell()
     }
     
     //MARK: - ViewDidLayoutSubviews
@@ -182,29 +186,47 @@ extension MainViewController: UICollectionViewDataSource, UICollectionViewDelega
         let dates = week[indexPath.item]
 //        Надо переделать с помощью enum
         
-        if indexPath.item == 0 {
-            cell.configure(date: "Сегодня")
-        }
         cell.configure(date: dates)
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-                
-        if lastIndexActive != indexPath {
-            let cell1 = collectionView.cellForItem(at: indexPath) as! WeeklyCollectionViewCell
-            cell1.dateLabel.textColor = .white
-            cell1.backgroundCell.backgroundColor = #colorLiteral(red: 0.7646051049, green: 0.1110634878, blue: 0.1571588814, alpha: 1)
-            
-            let cell2 = collectionView.cellForItem(at: lastIndexActive) as? WeeklyCollectionViewCell
-            cell2?.dateLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            cell2?.backgroundCell.backgroundColor = #colorLiteral(red: 0.9490196078, green: 0.9490196078, blue: 0.968627451, alpha: 1)
-            lastIndexActive = indexPath
-        }
+        
+//        if lastIndexActive != indexPath {
+//            let cell1 = collectionView.cellForItem(at: indexPath) as! WeeklyCollectionViewCell
+//            cell1.dateLabel.textColor = .white
+//            cell1.backgroundCell.backgroundColor = #colorLiteral(red: 0.7646051049, green: 0.1110634878, blue: 0.1571588814, alpha: 1)
+//            print(indexPath)
+//
+//            let cell2 = collectionView.cellForItem(at: lastIndexActive) as? WeeklyCollectionViewCell
+//            cell2?.dateLabel.textColor = UIColor(named: "textColor")
+//            cell2?.backgroundCell.backgroundColor = .systemBackground
+//            lastIndexActive = indexPath
+//            print(indexPath)
+//        }
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         CGSize(width: (view.frame.size.width / 4) - 2, height: 30)
+    }
+    
+    private func selectedCollectionViewCell() {
+        var indexPath = IndexPath(item: 0, section: 0)
+        
+        if lastIndexActive != indexPath {
+            collectionView(collectionView, didSelectItemAt: indexPath)
+            let cell1 = collectionView.cellForItem(at: indexPath) as! WeeklyCollectionViewCell
+            cell1.dateLabel.textColor = .white
+            cell1.backgroundCell.backgroundColor = #colorLiteral(red: 0.7646051049, green: 0.1110634878, blue: 0.1571588814, alpha: 1)
+            print(indexPath)
+
+            let cell2 = collectionView.cellForItem(at: lastIndexActive) as? WeeklyCollectionViewCell
+            cell2?.dateLabel.textColor = UIColor(named: "textColor")
+            cell2?.backgroundCell.backgroundColor = .systemBackground
+            lastIndexActive = indexPath
+            print(indexPath)
+        }
+        
     }
 }
 
@@ -326,7 +348,7 @@ extension MainViewController {
     
     private func fetchSeance(cityUUID: String, cinemaUUID: String) {
         
-        let url = "https://afisha.api.kinopark.kz//api/seance?date_from=2022-05-24&sort=seance.start_time&city=\(cityUUID)&cinema=\(cinemaUUID)"
+        let url = "https://afisha.api.kinopark.kz//api/seance?date_from=2022-05-25&sort=seance.start_time&city=\(cityUUID)&cinema=\(cinemaUUID)"
         
         NetworkManager.shared.fetchWithBearerToken(dataType: SeancesModel.self, from: url, convertFromSnakeCase: false) { result in
             switch result {
