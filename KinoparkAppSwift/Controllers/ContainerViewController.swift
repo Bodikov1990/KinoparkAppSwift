@@ -50,7 +50,7 @@ class ContainerViewController: UIViewController, UINavigationControllerDelegate 
         
         sideMenuViewController.delegate = self
         sideMenuViewController.cityData = cityData
-        
+
         addChildVCs()
         tapGesture()
         swipeGesture()

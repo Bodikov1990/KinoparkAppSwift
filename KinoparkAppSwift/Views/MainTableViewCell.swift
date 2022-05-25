@@ -106,6 +106,7 @@ class MainTableViewCell: UITableViewCell {
 //        configureMovieButton(for: movie)
         configureLabel(seance: movie)
         testModel2
+        movie
     }
     
     private func configureSubview(subviews: UIView...) {
@@ -146,8 +147,8 @@ class MainTableViewCell: UITableViewCell {
         genreLabel.textColor = .lightGray
         genreLabel.font = .systemFont(ofSize: 12)
         
-        durationLabel.text = String(seance.duration ?? 0)
-        durationLabel.font = .systemFont(ofSize: 12)
+        durationLabel.text = "Продолжительность: \(seance.duration ?? 0) минут"
+        durationLabel.font = .systemFont(ofSize: 10)
         
         pgLabel.text = "16+"
         pgLabel.textColor = .black

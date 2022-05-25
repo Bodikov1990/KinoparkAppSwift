@@ -28,6 +28,7 @@ class MainViewController: UIViewController {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.register(WeeklyCollectionViewCell.self, forCellWithReuseIdentifier: WeeklyCollectionViewCell.identifier)
         collectionView.showsHorizontalScrollIndicator = false
+        collectionView.insetsLayoutMarginsFromSafeArea = false
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         return collectionView
     }()
@@ -83,10 +84,8 @@ class MainViewController: UIViewController {
         collectionView.delegate = self
         cinemasVC.delegate = self
         fetchCinemas(cityData: cityData)
-        getWeek()
-//        selectedCollectionViewCell()
     }
-    
+
     //MARK: - ViewDidLayoutSubviews
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
@@ -96,6 +95,12 @@ class MainViewController: UIViewController {
         collectionView.frame = CGRect(x: 0, y: 0, width: view.frame.size.width, height: 30)
         setupViews(views: cinemasView, filterView)
         setConstraints()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        let indexPath = IndexPath(item: 0, section: 0)
+        collectionView.selectItem(at: indexPath, animated: false, scrollPosition: .left)
     }
     
     //MARK: - Private funcs
@@ -184,6 +189,7 @@ extension MainViewController: UICollectionViewDataSource, UICollectionViewDelega
         switch dates {
         case .today:
             cell.configure(date: dates.rawValue)
+            cell.didSelect()
         case .tomorrow:
             cell.configure(date: dates.rawValue)
         case .day3:
@@ -271,16 +277,6 @@ extension MainViewController {
         }
     }
     
-    private func getWeek() {
-        for day in 1...5 {
-            let today = Date()
-            guard let modifiedDate = Calendar.current.date(byAdding: .day, value: day, to: today) else { return }
-            let formatter = DateFormatter()
-            formatter.dateFormat = "E. d:MMM"
-            let dates = formatter.string(from: modifiedDate as Date)
-            week.append(dates)
-        }
-    }
     
     private func setConstraints() {
         
@@ -314,8 +310,8 @@ extension MainViewController {
         
         NSLayoutConstraint.activate([
             collectionView.topAnchor.constraint(equalTo: cinemasView.bottomAnchor, constant: 10),
-            collectionView.leftAnchor.constraint(equalTo: headerView.leftAnchor),
-            collectionView.rightAnchor.constraint(equalTo: headerView.rightAnchor),
+            collectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 10),
+            collectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             collectionView.bottomAnchor.constraint(equalTo: headerView.bottomAnchor)
         ])
         
@@ -344,9 +340,14 @@ extension MainViewController {
     }
     
     
-    private func fetchSeance(cityUUID: String, cinemaUUID: String) {
+    
+    private func fetchSeance(cityUUID: String = "", cinemaUUID: String = "", date: Date = Date()) {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        let dates = formatter.string(from: date as Date)
         
-        let url = "https://afisha.api.kinopark.kz//api/seance?date_from=2022-05-25&sort=seance.start_time&city=\(cityUUID)&cinema=\(cinemaUUID)"
+        let url = "https://afisha.api.kinopark.kz//api/seance?date_from=\(dates)&sort=seance.start_time&city=\(cityUUID)&cinema=\(cinemaUUID)"
+        print(url)
         
         NetworkManager.shared.fetchWithBearerToken(dataType: SeancesModel.self, from: url, convertFromSnakeCase: false) { result in
             switch result {
