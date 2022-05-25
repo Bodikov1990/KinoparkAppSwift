@@ -16,6 +16,7 @@
 		125662DF28314DAC00E1FA2A /* TestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 125662DE28314DAC00E1FA2A /* TestViewController.swift */; };
 		1256669D282D38FE005FEE04 /* SideMenuTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1256669C282D38FE005FEE04 /* SideMenuTableViewCell.swift */; };
 		126348822808A0C200484AC0 /* StorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 126348812808A0C200484AC0 /* StorageManager.swift */; };
+		12643984283E13C0004E36C9 /* Weekly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12643983283E13C0004E36C9 /* Weekly.swift */; };
 		1265180327E9D689004027E0 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1265180227E9D689004027E0 /* MainViewController.swift */; };
 		129B2DFD27E785650066D52E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 129B2DFC27E785650066D52E /* AppDelegate.swift */; };
 		129B2E0127E785650066D52E /* CitiesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 129B2E0027E785650066D52E /* CitiesViewController.swift */; };
@@ -24,7 +25,7 @@
 		129B2E1627E788660066D52E /* CityList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 129B2E1527E788660066D52E /* CityList.swift */; };
 		129B2E1927E78ED50066D52E /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 129B2E1827E78ED50066D52E /* NetworkManager.swift */; };
 		12B530CB283CF2080064989A /* WeeklyCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12B530CA283CF2080064989A /* WeeklyCollectionViewCell.swift */; };
-		12B530CD283CF3B50064989A /* MenuOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12B530CC283CF3B50064989A /* MenuOptions.swift */; };
+		12B530CD283CF3B50064989A /* SideMenuOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12B530CC283CF3B50064989A /* SideMenuOptions.swift */; };
 		12B9A66F2832652B00FBB961 /* StartTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12B9A66E2832652B00FBB961 /* StartTableViewController.swift */; };
 		12B9A6712832AE5900FBB961 /* CinemasTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12B9A6702832AE5900FBB961 /* CinemasTableViewController.swift */; };
 /* End PBXBuildFile section */
@@ -39,6 +40,7 @@
 		125662DE28314DAC00E1FA2A /* TestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestViewController.swift; sourceTree = "<group>"; };
 		1256669C282D38FE005FEE04 /* SideMenuTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuTableViewCell.swift; sourceTree = "<group>"; };
 		126348812808A0C200484AC0 /* StorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageManager.swift; sourceTree = "<group>"; };
+		12643983283E13C0004E36C9 /* Weekly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Weekly.swift; sourceTree = "<group>"; };
 		1265180227E9D689004027E0 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		129B2DF927E785650066D52E /* KinoparkAppSwift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KinoparkAppSwift.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		129B2DFC27E785650066D52E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -49,7 +51,7 @@
 		129B2E1527E788660066D52E /* CityList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CityList.swift; sourceTree = "<group>"; };
 		129B2E1827E78ED50066D52E /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		12B530CA283CF2080064989A /* WeeklyCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyCollectionViewCell.swift; sourceTree = "<group>"; };
-		12B530CC283CF3B50064989A /* MenuOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuOptions.swift; sourceTree = "<group>"; };
+		12B530CC283CF3B50064989A /* SideMenuOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuOptions.swift; sourceTree = "<group>"; };
 		12B530CE283D19250064989A /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		12B9A66E2832652B00FBB961 /* StartTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartTableViewController.swift; sourceTree = "<group>"; };
 		12B9A6702832AE5900FBB961 /* CinemasTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CinemasTableViewController.swift; sourceTree = "<group>"; };
@@ -143,7 +145,8 @@
 			children = (
 				129B2E1527E788660066D52E /* CityList.swift */,
 				122F7F85280B14E6008A9329 /* TestModel.swift */,
-				12B530CC283CF3B50064989A /* MenuOptions.swift */,
+				12B530CC283CF3B50064989A /* SideMenuOptions.swift */,
+				12643983283E13C0004E36C9 /* Weekly.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -238,6 +241,7 @@
 				126348822808A0C200484AC0 /* StorageManager.swift in Sources */,
 				12328E4B27EF274C005BB074 /* SideMenuViewController.swift in Sources */,
 				122F7F86280B14E6008A9329 /* TestModel.swift in Sources */,
+				12643984283E13C0004E36C9 /* Weekly.swift in Sources */,
 				122FCFBC2812C69700FFAC4F /* HallMapViewController.swift in Sources */,
 				125662DF28314DAC00E1FA2A /* TestViewController.swift in Sources */,
 				12B530CB283CF2080064989A /* WeeklyCollectionViewCell.swift in Sources */,
@@ -246,7 +250,7 @@
 				1256669D282D38FE005FEE04 /* SideMenuTableViewCell.swift in Sources */,
 				12B9A66F2832652B00FBB961 /* StartTableViewController.swift in Sources */,
 				123682722809EDB600CE851F /* MainTableViewCell.swift in Sources */,
-				12B530CD283CF3B50064989A /* MenuOptions.swift in Sources */,
+				12B530CD283CF3B50064989A /* SideMenuOptions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

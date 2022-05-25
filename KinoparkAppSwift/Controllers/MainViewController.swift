@@ -69,10 +69,6 @@ class MainViewController: UIViewController {
         return button
     }()
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-//        selectedCollectionViewCell()
-    }
     
     //MARK: - ViewDidLoad
     override func viewDidLoad() {
@@ -88,7 +84,7 @@ class MainViewController: UIViewController {
         cinemasVC.delegate = self
         fetchCinemas(cityData: cityData)
         getWeek()
-        selectedCollectionViewCell()
+//        selectedCollectionViewCell()
     }
     
     //MARK: - ViewDidLayoutSubviews
@@ -178,55 +174,57 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
 // MARK: - Setup CollectionView
 extension MainViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        week.count
+        Weekly.allCases.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: WeeklyCollectionViewCell.identifier, for: indexPath) as! WeeklyCollectionViewCell
-        let dates = week[indexPath.item]
-//        Надо переделать с помощью enum
-        
-        cell.configure(date: dates)
+        let dates = Weekly.allCases[indexPath.item]
+        let dateFormat = "E. d:MMM"
+        switch dates {
+        case .today:
+            cell.configure(date: dates.rawValue)
+        case .tomorrow:
+            cell.configure(date: dates.rawValue)
+        case .day3:
+            cell.configure(date: dates.dates(day: 2, dateFormat: dateFormat))
+        case .day4:
+            cell.configure(date: dates.dates(day: 3, dateFormat: dateFormat))
+        case .day5:
+            cell.configure(date: dates.dates(day: 4, dateFormat: dateFormat))
+        }
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let dates = Weekly.allCases[indexPath.item]
+        let dateFormat = "yyyy-MM-dd"
+        switch dates {
+        case .today:
+            print(dates.getDates(day: 0, dateFormat: dateFormat))
+        case .tomorrow:
+            print(dates.getDates(day: 1, dateFormat: dateFormat))
+        case .day3:
+            print(dates.dates(day: 2, dateFormat: dateFormat))
+        case .day4:
+            print(dates.dates(day: 3, dateFormat: dateFormat))
+        case .day5:
+            print(dates.dates(day: 4, dateFormat: dateFormat))
+        }
         
-//        if lastIndexActive != indexPath {
-//            let cell1 = collectionView.cellForItem(at: indexPath) as! WeeklyCollectionViewCell
-//            cell1.dateLabel.textColor = .white
-//            cell1.backgroundCell.backgroundColor = #colorLiteral(red: 0.7646051049, green: 0.1110634878, blue: 0.1571588814, alpha: 1)
-//            print(indexPath)
-//
-//            let cell2 = collectionView.cellForItem(at: lastIndexActive) as? WeeklyCollectionViewCell
-//            cell2?.dateLabel.textColor = UIColor(named: "textColor")
-//            cell2?.backgroundCell.backgroundColor = .systemBackground
-//            lastIndexActive = indexPath
-//            print(indexPath)
-//        }
+        if let cell = collectionView.cellForItem(at: indexPath) as? WeeklyCollectionViewCell {
+            cell.didSelect()
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+        if let cell = collectionView.cellForItem(at: indexPath) as? WeeklyCollectionViewCell {
+            cell.deSeslect()
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         CGSize(width: (view.frame.size.width / 4) - 2, height: 30)
-    }
-    
-    private func selectedCollectionViewCell() {
-        var indexPath = IndexPath(item: 0, section: 0)
-        
-        if lastIndexActive != indexPath {
-            collectionView(collectionView, didSelectItemAt: indexPath)
-            let cell1 = collectionView.cellForItem(at: indexPath) as! WeeklyCollectionViewCell
-            cell1.dateLabel.textColor = .white
-            cell1.backgroundCell.backgroundColor = #colorLiteral(red: 0.7646051049, green: 0.1110634878, blue: 0.1571588814, alpha: 1)
-            print(indexPath)
-
-            let cell2 = collectionView.cellForItem(at: lastIndexActive) as? WeeklyCollectionViewCell
-            cell2?.dateLabel.textColor = UIColor(named: "textColor")
-            cell2?.backgroundCell.backgroundColor = .systemBackground
-            lastIndexActive = indexPath
-            print(indexPath)
-        }
-        
     }
 }
 

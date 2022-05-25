@@ -68,12 +68,12 @@ class SideMenuViewController: UIViewController {
 
 extension SideMenuViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        MenuOptions.allCases.count
+        SideMenuOptions.allCases.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: SideMenuTableViewCell.identifier, for: indexPath) as! SideMenuTableViewCell
-        let menuOptions = MenuOptions.allCases[indexPath.row]
+        let menuOptions = SideMenuOptions.allCases[indexPath.row]
         
         cell.accessoryType = .disclosureIndicator
         
@@ -99,7 +99,7 @@ extension SideMenuViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let options = MenuOptions.allCases[indexPath.row]
+        let options = SideMenuOptions.allCases[indexPath.row]
         switch options {
         case .city:
             let option = CitiesViewController()

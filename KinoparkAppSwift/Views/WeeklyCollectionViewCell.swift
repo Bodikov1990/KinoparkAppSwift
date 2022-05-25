@@ -11,16 +11,15 @@ class WeeklyCollectionViewCell: UICollectionViewCell {
     
     static let identifier = "WeeklyCollectionViewCell"
     
-    let backgroundCell: UIView = {
+    let systemView: UIView = {
         let view = UIView(frame: CGRect(x: 0, y: 0, width: 15, height: 15))
-        view.backgroundColor = .systemBackground
+        view.backgroundColor = #colorLiteral(red: 0.7646051049, green: 0.1110634878, blue: 0.1571588814, alpha: 1)
         view.layer.shadowColor = UIColor.lightGray.cgColor
         view.layer.shadowOffset = CGSize(width: 1, height: 1)
         view.layer.shadowOpacity = 0.8
         view.layer.masksToBounds = false
         view.layer.cornerRadius = 4
         view.layer.shadowRadius = 3
-        
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -34,24 +33,35 @@ class WeeklyCollectionViewCell: UICollectionViewCell {
     
     func configure(date: String) {
         dateLabel.text = date
+        systemView.backgroundColor = .systemBackground
         setConstraints()
     }
     
+    func didSelect() {
+        systemView.backgroundColor = #colorLiteral(red: 0.7646051049, green: 0.1110634878, blue: 0.1571588814, alpha: 1)
+        dateLabel.textColor = .white
+    }
+    
+    func deSeslect() {
+        systemView.backgroundColor = .systemBackground
+        dateLabel.textColor = UIColor(named: "textColor")
+    }
+    
     private func setConstraints() {
-        contentView.addSubview(backgroundCell)
+        contentView.addSubview(systemView)
         
         NSLayoutConstraint.activate([
-            backgroundCell.topAnchor.constraint(equalTo: contentView.topAnchor),
-            backgroundCell.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            backgroundCell.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            backgroundCell.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
+            systemView.topAnchor.constraint(equalTo: contentView.topAnchor),
+            systemView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            systemView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            systemView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
         ])
         
-        backgroundCell.addSubview(dateLabel)
+        systemView.addSubview(dateLabel)
         
         NSLayoutConstraint.activate([
-            dateLabel.centerXAnchor.constraint(equalTo: backgroundCell.centerXAnchor),
-            dateLabel.centerYAnchor.constraint(equalTo: backgroundCell.centerYAnchor)
+            dateLabel.centerXAnchor.constraint(equalTo: systemView.centerXAnchor),
+            dateLabel.centerYAnchor.constraint(equalTo: systemView.centerYAnchor)
         ])
     }
 }

@@ -1,5 +1,5 @@
 //
-//  MenuOptions.swift
+//  SideMenuOptions.swift
 //  KinoparkAppSwift
 //
 //  Created by Kuat Bodikov on 24.05.2022.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum MenuOptions: String, CaseIterable {
+enum SideMenuOptions: String, CaseIterable {
     case city = "Город"
     case language = "Язык"
     case faq = "Часто задаваемые вопросы"
