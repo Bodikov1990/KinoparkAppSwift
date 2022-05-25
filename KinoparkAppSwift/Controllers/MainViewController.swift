@@ -36,7 +36,7 @@ class MainViewController: UIViewController {
     var cityData: CitiesData!
     var week: [String] = []
     
-    private var seances: [SeancesData] = []
+    private var seances: [MoviesData] = []
     private let cinemasVC = CinemasTableViewController()
     private var lastIndexActive:IndexPath = [1 ,0]
     
@@ -345,11 +345,11 @@ extension MainViewController {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
         let dates = formatter.string(from: date as Date)
-        
-        let url = "https://afisha.api.kinopark.kz//api/seance?date_from=\(dates)&sort=seance.start_time&city=\(cityUUID)&cinema=\(cinemaUUID)"
+//        let url = "https://afisha.api.kinopark.kz/api/movie/today?sort=seance.start_time&city=\(cityUUID)&cinema=\(cinemaUUID)"
+        let url = "https://afisha.api.kinopark.kz/api/movie/today?date_from=\(dates)&sort=seance.start_time&city=\(cityUUID)&cinema=\(cinemaUUID)"
         print(url)
         
-        NetworkManager.shared.fetchWithBearerToken(dataType: SeancesModel.self, from: url, convertFromSnakeCase: false) { result in
+        NetworkManager.shared.fetchWithBearerToken(dataType: MoviesModel.self, from: url, convertFromSnakeCase: false) { result in
             switch result {
             case .success(let seances):
                 self.seances = seances.data

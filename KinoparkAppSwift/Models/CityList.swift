@@ -114,8 +114,6 @@ struct CinemasData: Codable {
         case hall
         case shortName = "short_name"
     }
-    
-    
 }
 
 struct CityData: Codable {
@@ -142,6 +140,68 @@ struct CityData: Codable {
 struct Hall: Codable {
     let count: Int?
     let seat_count: Int?
+}
+
+struct MoviesModel: Codable {
+    let total: Int?
+    let perPage: Int?
+    let currentPage: Int?
+    let lastPage: Int?
+    let currPageURL: String?
+    let nextPageURL: String?
+    let prevPageURL: String?
+    let urlParams: URLParams?
+    let data: [MoviesData]
+    
+    enum CodingKeys: String, CodingKey {
+        case total
+        case perPage = "per_page"
+        case currentPage = "current_page"
+        case lastPage = "last_page"
+        case currPageURL = "curr_page_url"
+        case nextPageURL = "next_page_url"
+        case prevPageURL = "prev_page_url"
+        case urlParams = "url_params"
+        case data
+    }
+}
+
+struct MoviesData: Codable {
+    let movieUUID: String?
+    let movieName: String?
+    let movieCode: String?
+    let description: String?
+    let sortOrder: Int?
+    let isActive: Bool
+    let releaseDate: String?
+    let duration: Int?
+    let actors: [String]?
+    let directors: [String]?
+    let countries: [String]?
+    let genre: [String]?
+    let ageLimitationText: String?
+    let trailerLink: String?
+    let isNew: Bool
+    let tmdbID: Int?
+    let images: Images
+    let format: [String]?
+    let rating: [String]?
+    
+    enum CodingKeys: String, CodingKey {
+        case movieUUID = "uuid"
+        case movieName = "name"
+        case movieCode = "code"
+        case description = "description"
+        case sortOrder = "sort_order"
+        case isActive = "is_active"
+        case releaseDate = "release_date"
+        case duration, actors, directors, countries, genre
+        case ageLimitationText = "age_limitation_text"
+        case trailerLink = "trailer_link"
+        case isNew = "is_new"
+        case tmdbID = "tmdb_id"
+        case images, format, rating
+    }
 }
 
 // MARK: - SeancesModel

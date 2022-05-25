@@ -102,11 +102,10 @@ class MainTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure(movie: SeancesData) {
-//        configureMovieButton(for: movie)
+    func configure(movie: MoviesData) {
+        fetchImage(from: movie)
         configureLabel(seance: movie)
-        testModel2
-        movie
+
     }
     
     private func configureSubview(subviews: UIView...) {
@@ -118,8 +117,20 @@ class MainTableViewCell: UITableViewCell {
         playButton.addSubview(playImage)
     }
     
-    private func configureMovieButton(for image: String) {
-        movieButton.setBackgroundImage(UIImage(named: image), for: .normal)
+    private func fetchImage(from movie: MoviesData) {
+        NetworkManager.shared.fetchImage(from: movie.images.vertical) { result in
+            switch result {
+            case .success(let image):
+                self.configureMovieButton(for: image)
+            case .failure(let error):
+                print(error)
+            }
+        }
+        
+    }
+    
+    private func configureMovieButton(for image: Data) {
+        movieButton.setBackgroundImage(UIImage(data: image), for: .normal)
         movieButton.frame = CGRect(
             x: 0,
             y: 0,
@@ -137,12 +148,12 @@ class MainTableViewCell: UITableViewCell {
         print("tap")
     }
     
-    private func configureLabel(seance: SeancesData) {
-        movieNameLabel.text = seance.movieName
+    private func configureLabel(seance: MoviesData) {
+        movieNameLabel.text = seance.movieName ?? "Name"
         movieNameLabel.numberOfLines = 1
         movieNameLabel.font = .boldSystemFont(ofSize: 12)
         
-        genreLabel.text = "Боевик • Фантастика"
+        genreLabel.text = seance.genre?.joined(separator: ", ") ?? "загрузка..."
         genreLabel.numberOfLines = 1
         genreLabel.textColor = .lightGray
         genreLabel.font = .systemFont(ofSize: 12)
@@ -150,13 +161,13 @@ class MainTableViewCell: UITableViewCell {
         durationLabel.text = "Продолжительность: \(seance.duration ?? 0) минут"
         durationLabel.font = .systemFont(ofSize: 10)
         
-        pgLabel.text = "16+"
+        pgLabel.text = seance.ageLimitationText ?? "0"
         pgLabel.textColor = .black
         
         playLabel.text = "Смотреть трейлер"
         
         descriptionTextView.frame = CGRect(x: 0, y: 0, width: contentView.frame.size.width, height: 20)
-        descriptionTextView.text = "Кинопарк 7 Актобе, ул. Маметова 4, г. Актобе"
+        descriptionTextView.text = seance.description
         descriptionTextView.isScrollEnabled = false
         descriptionTextView.isEditable = false
         descriptionTextView.isSelectable = true
