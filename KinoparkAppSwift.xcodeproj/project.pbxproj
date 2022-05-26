@@ -28,6 +28,7 @@
 		12B530CD283CF3B50064989A /* SideMenuOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12B530CC283CF3B50064989A /* SideMenuOptions.swift */; };
 		12B9A66F2832652B00FBB961 /* StartTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12B9A66E2832652B00FBB961 /* StartTableViewController.swift */; };
 		12B9A6712832AE5900FBB961 /* CinemasTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12B9A6702832AE5900FBB961 /* CinemasTableViewController.swift */; };
+		12C63718283FBA51000182E5 /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12C63717283FBA50000182E5 /* ImageCache.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -55,6 +56,7 @@
 		12B530CE283D19250064989A /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		12B9A66E2832652B00FBB961 /* StartTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartTableViewController.swift; sourceTree = "<group>"; };
 		12B9A6702832AE5900FBB961 /* CinemasTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CinemasTableViewController.swift; sourceTree = "<group>"; };
+		12C63717283FBA50000182E5 /* ImageCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCache.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -157,6 +159,7 @@
 				129B2E1827E78ED50066D52E /* NetworkManager.swift */,
 				126348812808A0C200484AC0 /* StorageManager.swift */,
 				123D69DC282D9E0600EC05FE /* MTUserDefaults.swift */,
+				12C63717283FBA50000182E5 /* ImageCache.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -242,6 +245,7 @@
 				12328E4B27EF274C005BB074 /* SideMenuViewController.swift in Sources */,
 				122F7F86280B14E6008A9329 /* TestModel.swift in Sources */,
 				12643984283E13C0004E36C9 /* Weekly.swift in Sources */,
+				12C63718283FBA51000182E5 /* ImageCache.swift in Sources */,
 				122FCFBC2812C69700FFAC4F /* HallMapViewController.swift in Sources */,
 				125662DF28314DAC00E1FA2A /* TestViewController.swift in Sources */,
 				12B530CB283CF2080064989A /* WeeklyCollectionViewCell.swift in Sources */,

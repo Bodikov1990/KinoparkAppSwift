@@ -21,20 +21,17 @@ class NetworkManager {
     
     private init() {}
     
-    func fetchImage(imageUrl: String?, completion: @escaping(Result<Data, NetworkError>) -> Void) {
-        guard let url = URL(string: imageUrl ?? "") else {
-            completion(.failure(.invalidURL))
-            return
-        }
-        DispatchQueue.global().async {
-            guard let imageData = try? Data(contentsOf: url) else {
-                completion(.failure(.noData))
+    func fetchImage(from url: URL, completion: @escaping(Result<Data, NetworkError>) -> Void) {
+        URLSession.shared.dataTask(with: url) { data, _, error in
+            
+            guard let data = data else {
+                print(error?.localizedDescription ?? "No error description")
                 return
             }
             DispatchQueue.main.async {
-                completion(.success(imageData))
+                completion(.success(data))
             }
-        }
+        }.resume()
     }
     
     func fetchWithBearerToken<T: Decodable>(dataType: T.Type, from url: String, convertFromSnakeCase: Bool = true, completion: @escaping(Result<T, NetworkError>) -> Void) {

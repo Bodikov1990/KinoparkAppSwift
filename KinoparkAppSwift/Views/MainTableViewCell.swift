@@ -122,12 +122,33 @@ class MainTableViewCell: UITableViewCell {
     
     private func updateImage() {
         guard let imageUrl = imageUrl else { return }
-        DispatchQueue.global().async {
-            guard let imageData = try? Data(contentsOf: imageUrl) else { return }
-            DispatchQueue.main.async {
-                if imageUrl == self.imageUrl {
-                    self.buttonImageView.image = UIImage(data: imageData)
-                }
+        getImage(from: imageUrl) { result in
+            switch result {
+            case .success(let image):
+                self.buttonImageView.image = image
+            case .failure(let error):
+                print(error)
+            }
+        }
+    }
+    
+    private func getImage(from url: URL, comletion: @escaping(Result<UIImage, Error>) -> Void) {
+        // Get image from cache
+        if let cachedImage = ImageCache.shared.object(forKey: url.lastPathComponent as NSString) {
+            print("Image from cache: ", url.lastPathComponent)
+            comletion(.success(cachedImage))
+            return
+        }
+//        Download image from url
+        NetworkManager.shared.fetchImage(from: url) { result in
+            switch result {
+            case .success(let data):
+                guard let image = UIImage(data: data) else { return }
+                ImageCache.shared.setObject(image, forKey: url.lastPathComponent as NSString)
+                print("Image from network: ", url.lastPathComponent)
+                comletion(.success(image))
+            case .failure(let error):
+                comletion(.failure(error))
             }
         }
     }
