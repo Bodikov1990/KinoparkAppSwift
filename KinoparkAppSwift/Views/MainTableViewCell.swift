@@ -33,7 +33,6 @@ class MainTableViewCell: UITableViewCell {
         return view
     }()
     
-    private let movieButton = UIButton()
     private let movieNameLabel = UILabel()
     private let genreLabel = UILabel()
     private let pgLabel: UILabel = {
@@ -58,7 +57,7 @@ class MainTableViewCell: UITableViewCell {
     private lazy var playButton: UIButton = {
         let button = UIButton(frame: CGRect(x: 0, y: 0, width: 70, height: 30))
         button.backgroundColor = .clear
-        button.addTarget(self, action: #selector(sortCinemas), for: .touchUpInside)
+        button.addTarget(self, action: #selector(movieAction), for: .touchUpInside)
         return button
     }()
     
@@ -72,11 +71,23 @@ class MainTableViewCell: UITableViewCell {
         return imageView
     }()
     
+    private lazy var buttonImageView: UIImageView = {
+        let imageView = UIImageView(frame: CGRect(
+            x: 0,
+            y: 0,
+            width: contentView.frame.width,
+            height: contentView.frame.height))
+        imageView.clipsToBounds = true
+        imageView.layer.cornerRadius = 10
+        return imageView
+    }()
+    
     let descriptionTextView = UITextView()
     
     private var imageUrl: URL? {
         didSet {
-            movieButton.imageView?.image = nil
+            buttonImageView.image = nil
+            updateImage()
         }
     }
     
@@ -84,7 +95,7 @@ class MainTableViewCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         configureSubview(subviews:
                             backgroundCell,
-                         movieButton,
+                         buttonImageView,
                          movieNameLabel,
                          genreLabel,
                          pgView,
@@ -95,6 +106,7 @@ class MainTableViewCell: UITableViewCell {
         )
         configureCollectionView()
         setConstraints()
+        tapGesture()
     }
     
     
@@ -103,9 +115,37 @@ class MainTableViewCell: UITableViewCell {
     }
     
     func configure(movie: MoviesData) {
-        fetchImage(from: movie)
+        guard let url = movie.images.vertical else { return }
+        imageUrl = URL(string: url)
         configureLabel(seance: movie)
-
+    }
+    
+    private func updateImage() {
+        guard let imageUrl = imageUrl else { return }
+        DispatchQueue.global().async {
+            guard let imageData = try? Data(contentsOf: imageUrl) else { return }
+            DispatchQueue.main.async {
+                if imageUrl == self.imageUrl {
+                    self.buttonImageView.image = UIImage(data: imageData)
+                }
+            }
+        }
+    }
+    
+    private func tapGesture() {
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapedGesture(_:)))
+        tapGestureRecognizer.numberOfTapsRequired = 1
+        tapGestureRecognizer.numberOfTouchesRequired = 1
+        buttonImageView.addGestureRecognizer(tapGestureRecognizer)
+        buttonImageView.isUserInteractionEnabled = true
+    }
+    
+    @objc private func tapedGesture(_ gesture: UITapGestureRecognizer) {
+        print("TAPPED")
+    }
+    
+    @objc private func movieAction() {
+        print("tap")
     }
     
     private func configureSubview(subviews: UIView...) {
@@ -115,37 +155,6 @@ class MainTableViewCell: UITableViewCell {
         pgView.addSubview(pgLabel)
         playButton.addSubview(playLabel)
         playButton.addSubview(playImage)
-    }
-    
-    private func fetchImage(from movie: MoviesData) {
-        NetworkManager.shared.fetchImage(from: movie.images.vertical) { result in
-            switch result {
-            case .success(let image):
-                self.configureMovieButton(for: image)
-            case .failure(let error):
-                print(error)
-            }
-        }
-        
-    }
-    
-    private func configureMovieButton(for image: Data) {
-        movieButton.setBackgroundImage(UIImage(data: image), for: .normal)
-        movieButton.frame = CGRect(
-            x: 0,
-            y: 0,
-            width: contentView.frame.width,
-            height: contentView.frame.height)
-        movieButton.layer.cornerRadius = 10
-        movieButton.clipsToBounds = true
-        movieButton.addTarget(
-            self,
-            action: #selector(sortCinemas),
-            for: .touchUpInside)
-    }
-    
-    @objc private func sortCinemas() {
-        print("tap")
     }
     
     private func configureLabel(seance: MoviesData) {
@@ -197,20 +206,20 @@ class MainTableViewCell: UITableViewCell {
             backgroundCell.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8)
         ])
         
-        movieButton.translatesAutoresizingMaskIntoConstraints = false
+        buttonImageView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            movieButton.topAnchor.constraint(equalTo: backgroundCell.topAnchor, constant: 10),
-            movieButton.leadingAnchor.constraint(equalTo: backgroundCell.leadingAnchor, constant: 10),
-            movieButton.heightAnchor.constraint(equalToConstant: 130),
-            movieButton.widthAnchor.constraint(equalTo: movieButton.heightAnchor, multiplier: 10/16)
+            buttonImageView.topAnchor.constraint(equalTo: backgroundCell.topAnchor, constant: 10),
+            buttonImageView.leadingAnchor.constraint(equalTo: backgroundCell.leadingAnchor, constant: 10),
+            buttonImageView.heightAnchor.constraint(equalToConstant: 130),
+            buttonImageView.widthAnchor.constraint(equalTo: buttonImageView.heightAnchor, multiplier: 10/16)
         ])
         
         movieNameLabel.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            movieNameLabel.topAnchor.constraint(equalTo: movieButton.topAnchor),
-            movieNameLabel.leadingAnchor.constraint(equalTo: movieButton.trailingAnchor, constant: 10),
+            movieNameLabel.topAnchor.constraint(equalTo: buttonImageView.topAnchor),
+            movieNameLabel.leadingAnchor.constraint(equalTo: buttonImageView.trailingAnchor, constant: 10),
             movieNameLabel.heightAnchor.constraint(equalToConstant: 30),
             movieNameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
             movieNameLabel.trailingAnchor.constraint(lessThanOrEqualTo: contentView.trailingAnchor)
@@ -278,7 +287,7 @@ class MainTableViewCell: UITableViewCell {
         descriptionTextView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            descriptionTextView.topAnchor.constraint(equalTo: movieButton.bottomAnchor, constant: 10),
+            descriptionTextView.topAnchor.constraint(equalTo: buttonImageView.bottomAnchor, constant: 10),
             descriptionTextView.leadingAnchor.constraint(equalTo: backgroundCell.leadingAnchor, constant: 16),
             descriptionTextView.trailingAnchor.constraint(equalTo: backgroundCell.trailingAnchor),
             descriptionTextView.heightAnchor.constraint(equalToConstant: 30)
