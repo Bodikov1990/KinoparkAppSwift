@@ -254,8 +254,6 @@ struct SeancesData: Codable {
     let movieName: String?
     let movieFormat: [String]?
     
-    
-    
     enum CodingKeys: String, CodingKey {
         case cityUUID = "city_uuid"
         case cinemaUUID = "cinema_uuid"

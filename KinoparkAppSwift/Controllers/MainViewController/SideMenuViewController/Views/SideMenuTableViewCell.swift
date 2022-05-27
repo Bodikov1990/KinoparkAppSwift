@@ -52,7 +52,7 @@ class SideMenuTableViewCell: UITableViewCell {
         return label
     }()
     
-    let segmentedControl: UISegmentedControl = {
+    lazy var segmentedControl: UISegmentedControl = {
         let segmentedControl = UISegmentedControl(items: ["Системный", "Светлый", "Темный"])
         segmentedControl.backgroundColor = #colorLiteral(red: 0.7646051049, green: 0.1110634878, blue: 0.1571588814, alpha: 1)
         segmentedControl.tintColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)

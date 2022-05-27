@@ -10,14 +10,16 @@ import UIKit
 class MainTableViewCell: UITableViewCell {
     
     static let identifier = "MainTableViewCell"
+    
     var testModel2: [TestModel2] = []
     
-    var collectionView: UICollectionView = {
+    let collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
         layout.minimumInteritemSpacing = 2
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.backgroundColor = .clear
+        collectionView.isScrollEnabled = false
         return collectionView
     }()
     
@@ -33,19 +35,36 @@ class MainTableViewCell: UITableViewCell {
         return view
     }()
     
-    private let movieNameLabel = UILabel()
-    private let genreLabel = UILabel()
-    private let pgLabel: UILabel = {
+    private let movieNameLabel: UILabel = {
+        let movieNameLabel = UILabel()
+        movieNameLabel.numberOfLines = 1
+        movieNameLabel.font = .boldSystemFont(ofSize: 12)
+        return movieNameLabel
+    }()
+    
+    private let genreLabel: UILabel = {
+        let label = UILabel()
+        label.numberOfLines = 1
+        label.textColor = .lightGray
+        label.font = .systemFont(ofSize: 12)
+        return label
+    }()
+    
+    private let ageLimitation: UILabel = {
         let label = UILabel(frame: CGRect(x: 0, y: 0, width: 15, height: 15))
         label.font = .systemFont(ofSize: 8)
+        label.textColor = .black
         label.transform = CGAffineTransform(rotationAngle: -95)
         return label
     }()
+    
     private let playLabel: UILabel = {
         let label = UILabel(frame: CGRect(x: 0, y: 0, width: 130, height: 30))
+        label.text = "Смотреть трейлер"
         label.font = .systemFont(ofSize: 10)
         return label
     }()
+    
     private let pgView: UIView = {
         let view = UIView(frame: CGRect(x: 0, y: 0, width: 15, height: 15))
         view.backgroundColor = .systemYellow
@@ -53,7 +72,13 @@ class MainTableViewCell: UITableViewCell {
         view.transform = CGAffineTransform(rotationAngle: 95)
         return view
     }()
-    private let durationLabel = UILabel()
+    
+    private let durationLabel: UILabel = {
+        let label = UILabel()
+        label.font = .systemFont(ofSize: 10)
+        return label
+    }()
+    
     private lazy var playButton: UIButton = {
         let button = UIButton(frame: CGRect(x: 0, y: 0, width: 70, height: 30))
         button.backgroundColor = .clear
@@ -61,7 +86,7 @@ class MainTableViewCell: UITableViewCell {
         return button
     }()
     
-    let playImage: UIImageView = {
+    private let playImage: UIImageView = {
         let imageName = "play.circle.fill"
         let image = UIImage(systemName: imageName)
         let imageView = UIImageView(image: image)
@@ -109,7 +134,6 @@ class MainTableViewCell: UITableViewCell {
         tapGesture()
     }
     
-    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -118,6 +142,7 @@ class MainTableViewCell: UITableViewCell {
         guard let url = movie.images.vertical else { return }
         imageUrl = URL(string: url)
         configureLabel(seance: movie)
+        
     }
     
     private func updateImage() {
@@ -139,7 +164,7 @@ class MainTableViewCell: UITableViewCell {
             comletion(.success(cachedImage))
             return
         }
-//        Download image from url
+        // Download image from url
         NetworkManager.shared.fetchImage(from: url) { result in
             switch result {
             case .success(let data):
@@ -169,32 +194,13 @@ class MainTableViewCell: UITableViewCell {
         print("tap")
     }
     
-    private func configureSubview(subviews: UIView...) {
-        subviews.forEach { subview in
-            contentView.addSubview(subview)
-        }
-        pgView.addSubview(pgLabel)
-        playButton.addSubview(playLabel)
-        playButton.addSubview(playImage)
-    }
+
     
     private func configureLabel(seance: MoviesData) {
         movieNameLabel.text = seance.movieName ?? "Name"
-        movieNameLabel.numberOfLines = 1
-        movieNameLabel.font = .boldSystemFont(ofSize: 12)
-        
         genreLabel.text = seance.genre?.joined(separator: ", ") ?? "загрузка..."
-        genreLabel.numberOfLines = 1
-        genreLabel.textColor = .lightGray
-        genreLabel.font = .systemFont(ofSize: 12)
-        
         durationLabel.text = "Продолжительность: \(seance.duration ?? 0) минут"
-        durationLabel.font = .systemFont(ofSize: 10)
-        
-        pgLabel.text = seance.ageLimitationText ?? "0"
-        pgLabel.textColor = .black
-        
-        playLabel.text = "Смотреть трейлер"
+        ageLimitation.text = seance.ageLimitationText ?? "0"
         
         descriptionTextView.frame = CGRect(x: 0, y: 0, width: contentView.frame.size.width, height: 20)
         descriptionTextView.text = seance.description
@@ -211,9 +217,40 @@ class MainTableViewCell: UITableViewCell {
             width: contentView.frame.size.width,
             height: contentView.frame.size.height)
         collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "seances")
-        collectionView.isScrollEnabled = false
         collectionView.delegate = self
         collectionView.dataSource = self
+    }
+}
+
+extension MainTableViewCell: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        testModel2.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "seances", for: indexPath)
+        
+        cell.clipsToBounds = true
+        cell.layer.cornerRadius = 8
+        cell.contentView.backgroundColor = #colorLiteral(red: 0.7646051049, green: 0.1110634878, blue: 0.1571588814, alpha: 1)
+        return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        
+        return CGSize(width: (collectionView.frame.size.width / 6) - 4 , height: 30)
+    }
+    
+}
+
+extension MainTableViewCell {
+    private func configureSubview(subviews: UIView...) {
+        subviews.forEach { subview in
+            contentView.addSubview(subview)
+        }
+        pgView.addSubview(ageLimitation)
+        playButton.addSubview(playLabel)
+        playButton.addSubview(playImage)
     }
     
     private func setConstraints() {
@@ -265,11 +302,11 @@ class MainTableViewCell: UITableViewCell {
             
         ])
         
-        pgLabel.translatesAutoresizingMaskIntoConstraints = false
+        ageLimitation.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            pgLabel.centerYAnchor.constraint(equalTo: pgView.centerYAnchor),
-            pgLabel.centerXAnchor.constraint(equalTo: pgView.centerXAnchor)
+            ageLimitation.centerYAnchor.constraint(equalTo: pgView.centerYAnchor),
+            ageLimitation.centerXAnchor.constraint(equalTo: pgView.centerXAnchor)
         ])
         
         durationLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -325,25 +362,4 @@ class MainTableViewCell: UITableViewCell {
             collectionView.bottomAnchor.constraint(equalTo: backgroundCell.bottomAnchor, constant: -10)
         ])
     }
-}
-
-extension MainTableViewCell: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        testModel2.count
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "seances", for: indexPath)
-        
-        cell.clipsToBounds = true
-        cell.layer.cornerRadius = 8
-        cell.contentView.backgroundColor = #colorLiteral(red: 0.7646051049, green: 0.1110634878, blue: 0.1571588814, alpha: 1)
-        return cell
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        
-        return CGSize(width: (collectionView.frame.size.width / 6) - 4 , height: 30)
-    }
-    
 }

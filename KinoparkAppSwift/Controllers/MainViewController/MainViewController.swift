@@ -34,11 +34,9 @@ class MainViewController: UIViewController {
     }()
     
     var cityData: CitiesData!
-    var week: [String] = []
     
-    private var seances: [MoviesData] = []
+    private var movies: [MoviesData] = []
     private let cinemasVC = CinemasTableViewController()
-    private var lastIndexActive:IndexPath = [1 ,0]
     
     private let headerView = UIView()
     private let cinemasView: UIView = {
@@ -85,7 +83,7 @@ class MainViewController: UIViewController {
         cinemasVC.delegate = self
         fetchCinemas(cityData: cityData)
     }
-
+    
     //MARK: - ViewDidLayoutSubviews
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
@@ -103,62 +101,64 @@ class MainViewController: UIViewController {
         collectionView.selectItem(at: indexPath, animated: false, scrollPosition: .left)
     }
     
-    //MARK: - Private funcs
-    private func setupTableView() {
-        mainTableView.tableHeaderView = headerView
-        view.addSubview(mainTableView)
-        mainTableView.estimatedRowHeight = 200
-        mainTableView.rowHeight = UITableView.automaticDimension
-        mainTableView.layer.cornerRadius = 10
-        mainTableView.delegate = self
-        mainTableView.dataSource = self
-    }
-    
-    private func setupViews(views: UIView...) {
-        views.forEach { view in
-            view.frame = CGRect(x: 0, y: 0, width: headerView.frame.width, height: 36)
-            view.backgroundColor = .systemBackground
-            view.layer.shadowColor = UIColor.lightGray.cgColor
-            view.layer.shadowOpacity = 0.5
-            view.layer.shadowOffset = CGSize(width: 1, height: 3)
-            view.layer.shadowRadius = 3
+    //    MARK: Fetch City and Cinemas
+    func fetchCinemas(cityData: CitiesData) {
+        guard let cityUUID = cityData.uuid else { return }
+        let url = "http://afisha.api.kinopark.kz/api/cinema?city=\(cityUUID)"
+        NetworkManager.shared.fetchWithBearerToken(dataType: CinemasModel.self, from: url, convertFromSnakeCase: false) { result in
+            switch result {
+            case .success(let cinemas):
+                let cinemas = cinemas.data
+                self.cinemasVC.cinemas = cinemas
+                self.cinemasVC.tableView.reloadData()
+                
+                let indexPath = IndexPath(row: 0, section: 0)
+                let selectedCinema = cinemas[indexPath.row]
+                self.fetchSeance(cityUUID: cityUUID, cinemaUUID: selectedCinema.uuid)
+                self.getCinema(cityData: cityData, cinemasData: selectedCinema)
+            case .failure(let error):
+                print(error)
+            }
         }
     }
     
-    private func setupCinemaFilterButton() {
-        cinemasButton.setTitle("Загрузка...", for: .normal)
-        cinemasButton.setTitleColor(
-            UIColor(named: "textColor"),
-            for: .normal)
-        cinemasButton.addTarget(
-            self,
-            action: #selector(filterAction),
-            for: .touchUpInside)
+    private func fetchSeance(cityUUID: String = "", cinemaUUID: String = "", date: Date = Date()) {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        let dates = formatter.string(from: date as Date)
+        let url = "https://afisha.api.kinopark.kz/api/movie/today?date_from=\(dates)&sort=seance.start_time&city=\(cityUUID)&cinema=\(cinemaUUID)"
+        print(url)
+        
+        NetworkManager.shared.fetchWithBearerToken(dataType: MoviesModel.self, from: url, convertFromSnakeCase: false) { result in
+            switch result {
+            case .success(let seances):
+                self.movies = seances.data
+                self.mainTableView.reloadData()
+            case .failure(let error):
+                print(error)
+            }
+        }
     }
     
-    @objc private func filterAction() {
-        
-        cinemasVC.modalPresentationStyle = .popover
-        
-        let popOverCitiesVC = cinemasVC.popoverPresentationController
-        popOverCitiesVC?.delegate = self
-        popOverCitiesVC?.sourceView = cinemasView
-        popOverCitiesVC?.sourceRect = CGRect(x: cinemasView.bounds.maxY, y: cinemasView.bounds.midY, width: 0, height: 0)
-        cinemasVC.preferredContentSize = CGSize(width: self.view.frame.size.width - 50, height: self.view.frame.size.height - 50)
-        
-        self.present(cinemasVC, animated: true)
+    private func getCinema(cityData: CitiesData, cinemasData: CinemasData) {
+        cinemasButton.setTitle(cinemasData.name, for: .normal)
+        guard let cityUUID = cityData.uuid else { return }
+        fetchSeance(cityUUID: cityUUID, cinemaUUID: cinemasData.uuid)
     }
+    
+    
 }
 
 // MARK: - Setup TableView
 extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        seances.count
+        movies.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: MainTableViewCell.identifier, for: indexPath) as! MainTableViewCell
-        let movies = seances[indexPath.row]
+        let movies = movies[indexPath.row]
+        
         cell.selectionStyle = .none
         cell.configure(movie: movies)
         cell.frame = tableView.bounds
@@ -169,7 +169,6 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         
         return cell
     }
-    
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableView.automaticDimension
@@ -270,13 +269,76 @@ extension MainViewController {
         }
     }
     
-    // MARK: - Contraints
+}
+
+extension MainViewController: UIPopoverPresentationControllerDelegate {
+    func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
+        .none
+    }
+}
+
+extension MainViewController: CinemasTableViewControllerDelegate {
+    func getCinema(cinemasData: CinemasData) {
+        getCinema(cityData: cityData, cinemasData: cinemasData)
+    }
+}
+
+//MARK: - Private funcs and Contraints
+extension MainViewController {
+    
+    private func setupTableView() {
+        mainTableView.tableHeaderView = headerView
+        view.addSubview(mainTableView)
+        mainTableView.estimatedRowHeight = 200
+        mainTableView.rowHeight = UITableView.automaticDimension
+        mainTableView.layer.cornerRadius = 10
+        mainTableView.delegate = self
+        mainTableView.dataSource = self
+    }
+    
+    private func setupViews(views: UIView...) {
+        views.forEach { view in
+            view.frame = CGRect(x: 0, y: 0, width: headerView.frame.width, height: 36)
+            view.backgroundColor = .systemBackground
+            view.layer.shadowColor = UIColor.lightGray.cgColor
+            view.layer.shadowOpacity = 0.5
+            view.layer.shadowOffset = CGSize(width: 1, height: 3)
+            view.layer.shadowRadius = 3
+        }
+    }
+    
     private func configureSubview(subviews: UIView...) {
         subviews.forEach { subview in
             headerView.addSubview(subview)
         }
     }
     
+    private func setupCinemaFilterButton() {
+        cinemasButton.setTitle("Загрузка...", for: .normal)
+        cinemasButton.setTitleColor(
+            UIColor(named: "textColor"),
+            for: .normal)
+        cinemasButton.addTarget(
+            self,
+            action: #selector(showCinemas),
+            for: .touchUpInside)
+    }
+    
+    @objc private func showCinemas() {
+        cinemasVC.modalPresentationStyle = .popover
+        
+        let popOverCitiesVC = cinemasVC.popoverPresentationController
+        popOverCitiesVC?.delegate = self
+        popOverCitiesVC?.sourceView = cinemasView
+        popOverCitiesVC?.sourceRect = CGRect(x: cinemasView.bounds.maxY, y: cinemasView.bounds.midY, width: 0, height: 0)
+        cinemasVC.preferredContentSize = CGSize(width: self.view.frame.size.width - 50, height: self.view.frame.size.height - 50)
+        
+        self.present(cinemasVC, animated: true)
+    }
+    
+    @objc private func filterAction() {
+        print("FilterButton")
+    }
     
     private func setConstraints() {
         
@@ -315,66 +377,5 @@ extension MainViewController {
             collectionView.bottomAnchor.constraint(equalTo: headerView.bottomAnchor)
         ])
         
-    }
-    
-    func fetchCinemas(cityData: CitiesData) {
-        guard let cityUUID = cityData.uuid else { return }
-        
-        let url = "http://afisha.api.kinopark.kz/api/cinema?city=\(cityUUID)"
-        
-        NetworkManager.shared.fetchWithBearerToken(dataType: CinemasModel.self, from: url, convertFromSnakeCase: false) { result in
-            switch result {
-            case .success(let cinemas):
-                let cinemas = cinemas.data
-                self.cinemasVC.cinemas = cinemas
-                self.cinemasVC.tableView.reloadData()
-                
-                let indexPath = IndexPath(row: 0, section: 0)
-                let selectedCinema = cinemas[indexPath.row]
-                self.fetchSeance(cityUUID: cityUUID, cinemaUUID: selectedCinema.uuid)
-                self.getCinema(cityData: cityData, cinemasData: selectedCinema)
-            case .failure(let error):
-                print(error)
-            }
-        }
-    }
-    
-    
-    
-    private func fetchSeance(cityUUID: String = "", cinemaUUID: String = "", date: Date = Date()) {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
-        let dates = formatter.string(from: date as Date)
-//        let url = "https://afisha.api.kinopark.kz/api/movie/today?sort=seance.start_time&city=\(cityUUID)&cinema=\(cinemaUUID)"
-        let url = "https://afisha.api.kinopark.kz/api/movie/today?date_from=\(dates)&sort=seance.start_time&city=\(cityUUID)&cinema=\(cinemaUUID)"
-        print(url)
-        
-        NetworkManager.shared.fetchWithBearerToken(dataType: MoviesModel.self, from: url, convertFromSnakeCase: false) { result in
-            switch result {
-            case .success(let seances):
-                self.seances = seances.data
-                self.mainTableView.reloadData()
-            case .failure(let error):
-                print(error)
-            }
-        }
-    }
-    
-    private func getCinema(cityData: CitiesData, cinemasData: CinemasData) {
-        cinemasButton.setTitle(cinemasData.name, for: .normal)
-        guard let cityUUID = cityData.uuid else { return }
-        fetchSeance(cityUUID: cityUUID, cinemaUUID: cinemasData.uuid)
-    }
-}
-
-extension MainViewController: UIPopoverPresentationControllerDelegate {
-    func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
-        .none
-    }
-}
-
-extension MainViewController: CinemasTableViewControllerDelegate {
-    func getCinema(cinemasData: CinemasData) {
-        getCinema(cityData: cityData, cinemasData: cinemasData)
     }
 }

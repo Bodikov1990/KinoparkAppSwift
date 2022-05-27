@@ -74,7 +74,6 @@
 			isa = PBXGroup;
 			children = (
 				123682712809EDB500CE851F /* MainTableViewCell.swift */,
-				1256669C282D38FE005FEE04 /* SideMenuTableViewCell.swift */,
 				12B530CA283CF2080064989A /* WeeklyCollectionViewCell.swift */,
 			);
 			path = Views;
@@ -86,6 +85,51 @@
 				129B2E0727E785690066D52E /* LaunchScreen.storyboard */,
 			);
 			path = Storyboards;
+			sourceTree = "<group>";
+		};
+		12315BFC2841470A002ACE02 /* StartViewCintroller */ = {
+			isa = PBXGroup;
+			children = (
+				12B9A66E2832652B00FBB961 /* StartTableViewController.swift */,
+			);
+			path = StartViewCintroller;
+			sourceTree = "<group>";
+		};
+		12315BFD28414722002ACE02 /* ContainaerViewController */ = {
+			isa = PBXGroup;
+			children = (
+				12328E4C27EF2E1E005BB074 /* ContainerViewController.swift */,
+			);
+			path = ContainaerViewController;
+			sourceTree = "<group>";
+		};
+		12315BFE28414739002ACE02 /* MainViewController */ = {
+			isa = PBXGroup;
+			children = (
+				1208125D27F2448000C9E241 /* Views */,
+				1265180227E9D689004027E0 /* MainViewController.swift */,
+				12B9A6702832AE5900FBB961 /* CinemasTableViewController.swift */,
+				12315C00284147DA002ACE02 /* SideMenuViewController */,
+			);
+			path = MainViewController;
+			sourceTree = "<group>";
+		};
+		12315C00284147DA002ACE02 /* SideMenuViewController */ = {
+			isa = PBXGroup;
+			children = (
+				12328E4A27EF274C005BB074 /* SideMenuViewController.swift */,
+				129B2E0027E785650066D52E /* CitiesViewController.swift */,
+				12315C0128414870002ACE02 /* Views */,
+			);
+			path = SideMenuViewController;
+			sourceTree = "<group>";
+		};
+		12315C0128414870002ACE02 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				1256669C282D38FE005FEE04 /* SideMenuTableViewCell.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 		129B2DF027E785640066D52E = {
@@ -111,7 +155,6 @@
 				129B2E1427E788450066D52E /* Models */,
 				120ED79B27E79345006E041D /* Storyboards */,
 				129B2E1227E787120066D52E /* Controllers */,
-				1208125D27F2448000C9E241 /* Views */,
 				129B2E1127E786980066D52E /* SupportFiles */,
 				129B2E0527E785690066D52E /* Assets.xcassets */,
 			);
@@ -130,12 +173,9 @@
 		129B2E1227E787120066D52E /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				12B9A66E2832652B00FBB961 /* StartTableViewController.swift */,
-				12328E4C27EF2E1E005BB074 /* ContainerViewController.swift */,
-				1265180227E9D689004027E0 /* MainViewController.swift */,
-				12B9A6702832AE5900FBB961 /* CinemasTableViewController.swift */,
-				12328E4A27EF274C005BB074 /* SideMenuViewController.swift */,
-				129B2E0027E785650066D52E /* CitiesViewController.swift */,
+				12315BFC2841470A002ACE02 /* StartViewCintroller */,
+				12315BFD28414722002ACE02 /* ContainaerViewController */,
+				12315BFE28414739002ACE02 /* MainViewController */,
 				125662DE28314DAC00E1FA2A /* TestViewController.swift */,
 				122FCFBB2812C69700FFAC4F /* HallMapViewController.swift */,
 			);
