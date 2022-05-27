@@ -136,10 +136,12 @@ extension ContainerViewController {
         tapGestureRecognizer.numberOfTouchesRequired = 1
         visualEffectView.addGestureRecognizer(tapGestureRecognizer)
         visualEffectView.isUserInteractionEnabled = true
+        
     }
     
     @objc private func tapedGesture(_ gesture: UITapGestureRecognizer) {
         animateView()
+        sideMenuViewController.delegate?.getCities(cityData: sideMenuViewController.cityData)
     }
     
     private func swipeGesture() {
@@ -152,6 +154,7 @@ extension ContainerViewController {
     
     @objc private func swipedGesture(_ gesture: UISwipeGestureRecognizer) {
         animateView()
+        sideMenuViewController.delegate?.getCities(cityData: sideMenuViewController.cityData)
     }
 }
 

@@ -34,6 +34,7 @@ class MainViewController: UIViewController {
     }()
     
     var cityData: CitiesData!
+    var cinemaData: CinemasData!
     
     private var movies: [MoviesData] = []
     private let cinemasVC = CinemasTableViewController()
@@ -114,7 +115,8 @@ class MainViewController: UIViewController {
                 
                 let indexPath = IndexPath(row: 0, section: 0)
                 let selectedCinema = cinemas[indexPath.row]
-                self.fetchSeance(cityUUID: cityUUID, cinemaUUID: selectedCinema.uuid)
+                self.cinemaData = selectedCinema
+                self.fetchMovie(cityUUID: cityUUID, cinemaUUID: selectedCinema.uuid)
                 self.getCinema(cityData: cityData, cinemasData: selectedCinema)
             case .failure(let error):
                 print(error)
@@ -122,12 +124,11 @@ class MainViewController: UIViewController {
         }
     }
     
-    private func fetchSeance(cityUUID: String = "", cinemaUUID: String = "", date: Date = Date()) {
+    private func fetchMovie(cityUUID: String = "", cinemaUUID: String = "", date: Date = Date()) {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
         let dates = formatter.string(from: date as Date)
         let url = "https://afisha.api.kinopark.kz/api/movie/today?date_from=\(dates)&sort=seance.start_time&city=\(cityUUID)&cinema=\(cinemaUUID)"
-        print(url)
         
         NetworkManager.shared.fetchWithBearerToken(dataType: MoviesModel.self, from: url, convertFromSnakeCase: false) { result in
             switch result {
@@ -143,7 +144,7 @@ class MainViewController: UIViewController {
     private func getCinema(cityData: CitiesData, cinemasData: CinemasData) {
         cinemasButton.setTitle(cinemasData.name, for: .normal)
         guard let cityUUID = cityData.uuid else { return }
-        fetchSeance(cityUUID: cityUUID, cinemaUUID: cinemasData.uuid)
+        fetchMovie(cityUUID: cityUUID, cinemaUUID: cinemasData.uuid)
     }
     
     
@@ -160,7 +161,8 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         let movies = movies[indexPath.row]
         
         cell.selectionStyle = .none
-        cell.configure(movie: movies)
+        cell.configure(cityData: cityData, cinemaData: cinemaData, movie: movies)
+        cell.fetchSeance(city: cityData.uuid ?? "", cinema: cinemaData.uuid, movie: movies.movieUUID)
         cell.frame = tableView.bounds
         cell.layoutIfNeeded()
         cell.collectionView.reloadData()

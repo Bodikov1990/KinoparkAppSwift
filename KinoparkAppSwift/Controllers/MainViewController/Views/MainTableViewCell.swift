@@ -11,7 +11,8 @@ class MainTableViewCell: UITableViewCell {
     
     static let identifier = "MainTableViewCell"
     
-    var testModel2: [TestModel2] = []
+    var testModel2 = ["wdwd", "efef", "efef"]
+    var seanceData: [SeancesData] = []
     
     let collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -138,10 +139,11 @@ class MainTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure(movie: MoviesData) {
+    func configure(cityData: CitiesData, cinemaData: CinemasData, movie: MoviesData) {
         guard let url = movie.images.vertical else { return }
         imageUrl = URL(string: url)
         configureLabel(seance: movie)
+        print(cityData.uuid ?? "", cinemaData.uuid, movie.movieUUID)
         
     }
     
@@ -178,6 +180,69 @@ class MainTableViewCell: UITableViewCell {
         }
     }
     
+    func fetchSeance(city: String, cinema: String, movie: String) {
+        let url = "https://afisha.api.kinopark.kz//api/seance?date_from=2022-05-28&sort=seance.start_time&city=\(city)&cinema=\(cinema)&movie=\(movie)"
+        print(url)
+        NetworkManager.shared.fetchWithBearerToken(dataType: SeancesModel.self, from: url, convertFromSnakeCase: false) { result in
+            switch result {
+            case .success(let movie):
+                print(movie.data.count)
+//                self.seanceData = movie.data
+                self.seanceData = [
+                SeancesData(
+                    cityUUID: "",
+                    cinemaUUID: "",
+                    hallUUID: "",
+                    movieUUID: "",
+                    seanceUUID: "",
+                    basePrice: 1,
+                    startDate: "",
+                    startTime: "",
+                    endTime: "",
+                    duration: 1,
+                    sortOrder: 1,
+                    discounts: [Discount(uuid: "", name: "", code: "", sortOrder: 1, isActive: true, isShow: true, value: 1, type: "")],
+                    format: [""],
+                    language: "",
+                    isActive: true,
+                    cityName: "",
+                    cinemaName: "",
+                    hallName: "",
+                    hallFormat: [""],
+                    hallMenu: HallMenu(ancestorUUID: ""),
+                    movieName: "",
+                    movieFormat: [""]),
+                SeancesData(
+                    cityUUID: "",
+                    cinemaUUID: "",
+                    hallUUID: "",
+                    movieUUID: "",
+                    seanceUUID: "",
+                    basePrice: 1,
+                    startDate: "",
+                    startTime: "",
+                    endTime: "",
+                    duration: 1,
+                    sortOrder: 1,
+                    discounts: [Discount(uuid: "", name: "", code: "", sortOrder: 1, isActive: true, isShow: true, value: 1, type: "")],
+                    format: [""],
+                    language: "",
+                    isActive: true,
+                    cityName: "",
+                    cinemaName: "",
+                    hallName: "",
+                    hallFormat: [""],
+                    hallMenu: HallMenu(ancestorUUID: ""),
+                    movieName: "",
+                    movieFormat: [""])
+                ]
+                self.collectionView.reloadData()
+            case .failure(let error):
+                print(error)
+            }
+        }
+    }
+    
     private func tapGesture() {
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapedGesture(_:)))
         tapGestureRecognizer.numberOfTapsRequired = 1
@@ -194,13 +259,20 @@ class MainTableViewCell: UITableViewCell {
         print("tap")
     }
     
-
-    
     private func configureLabel(seance: MoviesData) {
         movieNameLabel.text = seance.movieName ?? "Name"
-        genreLabel.text = seance.genre?.joined(separator: ", ") ?? "загрузка..."
+
+        genreLabel.text = seance.genre.joined(separator: ", ")
         durationLabel.text = "Продолжительность: \(seance.duration ?? 0) минут"
+        
+        if seance.ageLimitationText == "" {
+            pgView.isHidden = true
+        }
         ageLimitation.text = seance.ageLimitationText ?? "0"
+        
+        if seance.trailerLink == "" {
+            playButton.isHidden = true
+        }
         
         descriptionTextView.frame = CGRect(x: 0, y: 0, width: contentView.frame.size.width, height: 20)
         descriptionTextView.text = seance.description
@@ -224,12 +296,13 @@ class MainTableViewCell: UITableViewCell {
 
 extension MainTableViewCell: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        testModel2.count
+        seanceData.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "seances", for: indexPath)
-        
+        let seance = seanceData[indexPath.item]
+        print(seance.movieName ?? "")
         cell.clipsToBounds = true
         cell.layer.cornerRadius = 8
         cell.contentView.backgroundColor = #colorLiteral(red: 0.7646051049, green: 0.1110634878, blue: 0.1571588814, alpha: 1)

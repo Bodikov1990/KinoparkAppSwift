@@ -167,7 +167,7 @@ struct MoviesModel: Codable {
 }
 
 struct MoviesData: Codable {
-    let movieUUID: String?
+    let movieUUID: String
     let movieName: String?
     let movieCode: String?
     let description: String?
@@ -178,7 +178,7 @@ struct MoviesData: Codable {
     let actors: [String]?
     let directors: [String]?
     let countries: [String]?
-    let genre: [String]?
+    let genre: [String]
     let ageLimitationText: String?
     let trailerLink: String?
     let isNew: Bool

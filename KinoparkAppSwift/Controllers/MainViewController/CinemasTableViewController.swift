@@ -6,6 +6,7 @@
 //
 
 import UIKit
+
 protocol CinemasTableViewControllerDelegate: AnyObject {
     func getCinema(cinemasData: CinemasData)
 }
