@@ -11,16 +11,21 @@ class MainTableViewCell: UITableViewCell {
     
     static let identifier = "MainTableViewCell"
     
-    var testModel2 = ["wdwd", "efef", "efef"]
+    var cityData: CitiesData!
+    var cinameData: CinemasData!
     var seanceData: [SeancesData] = []
     
-    let collectionView: UICollectionView = {
+    var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
         layout.minimumInteritemSpacing = 2
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        let collectionView = UICollectionView(
+            frame: .zero,
+            collectionViewLayout: layout
+        )
         collectionView.backgroundColor = .clear
         collectionView.isScrollEnabled = false
+        
         return collectionView
     }()
     
@@ -119,16 +124,16 @@ class MainTableViewCell: UITableViewCell {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        configureSubview(subviews:
-                            backgroundCell,
-                         buttonImageView,
-                         movieNameLabel,
-                         genreLabel,
-                         pgView,
-                         durationLabel,
-                         playButton,
-                         descriptionTextView,
-                         collectionView
+        configureSubview(
+            subviews: backgroundCell,
+            buttonImageView,
+            movieNameLabel,
+            genreLabel,
+            pgView,
+            durationLabel,
+            playButton,
+            descriptionTextView,
+            collectionView
         )
         configureCollectionView()
         setConstraints()
@@ -139,12 +144,11 @@ class MainTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure(cityData: CitiesData, cinemaData: CinemasData, movie: MoviesData) {
+    func configure(movie: MoviesData) {
         guard let url = movie.images.vertical else { return }
         imageUrl = URL(string: url)
         configureLabel(seance: movie)
-        print(cityData.uuid ?? "", cinemaData.uuid, movie.movieUUID)
-        
+        print("countCELL", seanceData.count)
     }
     
     private func updateImage() {
@@ -180,68 +184,46 @@ class MainTableViewCell: UITableViewCell {
         }
     }
     
-    func fetchSeance(city: String, cinema: String, movie: String) {
-        let url = "https://afisha.api.kinopark.kz//api/seance?date_from=2022-05-28&sort=seance.start_time&city=\(city)&cinema=\(cinema)&movie=\(movie)"
-        print(url)
-        NetworkManager.shared.fetchWithBearerToken(dataType: SeancesModel.self, from: url, convertFromSnakeCase: false) { result in
+    private func fetchSeance(city: CitiesData, cinema: CinemasData, movie: MoviesData) {
+        let url = "https://afisha.api.kinopark.kz/api/seance?date_from=2022-06-02&sort=seance.start_time&city=\(city.uuid)&cinema=\(cinema.uuid)&movie=\(movie.movieUUID)"
+        print("countuUrl", url)
+    
+        NetworkManager.shared.fetchWithBearerToken(dataType: SeancesModel.self, from: url) { result in
             switch result {
-            case .success(let movie):
-                print(movie.data.count)
-//                self.seanceData = movie.data
-                self.seanceData = [
-                SeancesData(
-                    cityUUID: "",
-                    cinemaUUID: "",
-                    hallUUID: "",
-                    movieUUID: "",
-                    seanceUUID: "",
-                    basePrice: 1,
-                    startDate: "",
-                    startTime: "",
-                    endTime: "",
-                    duration: 1,
-                    sortOrder: 1,
-                    discounts: [Discount(uuid: "", name: "", code: "", sortOrder: 1, isActive: true, isShow: true, value: 1, type: "")],
-                    format: [""],
-                    language: "",
-                    isActive: true,
-                    cityName: "",
-                    cinemaName: "",
-                    hallName: "",
-                    hallFormat: [""],
-                    hallMenu: HallMenu(ancestorUUID: ""),
-                    movieName: "",
-                    movieFormat: [""]),
-                SeancesData(
-                    cityUUID: "",
-                    cinemaUUID: "",
-                    hallUUID: "",
-                    movieUUID: "",
-                    seanceUUID: "",
-                    basePrice: 1,
-                    startDate: "",
-                    startTime: "",
-                    endTime: "",
-                    duration: 1,
-                    sortOrder: 1,
-                    discounts: [Discount(uuid: "", name: "", code: "", sortOrder: 1, isActive: true, isShow: true, value: 1, type: "")],
-                    format: [""],
-                    language: "",
-                    isActive: true,
-                    cityName: "",
-                    cinemaName: "",
-                    hallName: "",
-                    hallFormat: [""],
-                    hallMenu: HallMenu(ancestorUUID: ""),
-                    movieName: "",
-                    movieFormat: [""])
-                ]
-                self.collectionView.reloadData()
+            case .success(let seance):
+  
+                // Количество элементов в массиве из JSON
+                print("countFETCH", seance.data.first?.movieName ?? "", seance.data.count)
+                self.seanceData = seance.data
+//                self.collectionView.reloadData()      
             case .failure(let error):
                 print(error)
             }
         }
     }
+}
+
+extension MainTableViewCell: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        seanceData.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "seances", for: indexPath)
+        let seance = seanceData[indexPath.item]
+//        print("startTime", seance.startTime ?? "")
+        cell.clipsToBounds = true
+        cell.layer.cornerRadius = 8
+        cell.contentView.backgroundColor = #colorLiteral(red: 0.7646051049, green: 0.1110634878, blue: 0.1571588814, alpha: 1)
+        return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: (collectionView.frame.size.width / 5) - 4 , height: 25)
+    }
+}
+
+extension MainTableViewCell {
     
     private func tapGesture() {
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapedGesture(_:)))
@@ -283,40 +265,16 @@ class MainTableViewCell: UITableViewCell {
     }
     
     private func configureCollectionView() {
-        collectionView.frame = CGRect(
-            x: 0,
-            y: 0,
-            width: contentView.frame.size.width,
-            height: contentView.frame.size.height)
+//        collectionView.frame = CGRect(
+//            x: 0,
+//            y: 0,
+//            width: contentView.frame.size.width,
+//            height: contentView.frame.size.height)
         collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "seances")
         collectionView.delegate = self
         collectionView.dataSource = self
     }
-}
-
-extension MainTableViewCell: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        seanceData.count
-    }
     
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "seances", for: indexPath)
-        let seance = seanceData[indexPath.item]
-        print(seance.movieName ?? "")
-        cell.clipsToBounds = true
-        cell.layer.cornerRadius = 8
-        cell.contentView.backgroundColor = #colorLiteral(red: 0.7646051049, green: 0.1110634878, blue: 0.1571588814, alpha: 1)
-        return cell
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        
-        return CGSize(width: (collectionView.frame.size.width / 6) - 4 , height: 30)
-    }
-    
-}
-
-extension MainTableViewCell {
     private func configureSubview(subviews: UIView...) {
         subviews.forEach { subview in
             contentView.addSubview(subview)
@@ -411,7 +369,7 @@ extension MainTableViewCell {
         NSLayoutConstraint.activate([
             playImage.centerYAnchor.constraint(equalTo: playButton.centerYAnchor),
             playImage.leadingAnchor.constraint(equalTo: playButton.leadingAnchor),
-            playImage.heightAnchor.constraint(equalToConstant: 24),
+//            playImage.heightAnchor.constraint(equalToConstant: 24),
             playImage.widthAnchor.constraint(equalTo: playImage.heightAnchor)
         ])
         
@@ -431,7 +389,7 @@ extension MainTableViewCell {
             collectionView.topAnchor.constraint(equalTo: descriptionTextView.bottomAnchor, constant: 10),
             collectionView.leadingAnchor.constraint(equalTo: backgroundCell.leadingAnchor, constant: 10),
             collectionView.trailingAnchor.constraint(equalTo: backgroundCell.trailingAnchor, constant: -10),
-            collectionView.heightAnchor.constraint(equalToConstant: 30),
+            collectionView.heightAnchor.constraint(equalToConstant: 70),
             collectionView.bottomAnchor.constraint(equalTo: backgroundCell.bottomAnchor, constant: -10)
         ])
     }

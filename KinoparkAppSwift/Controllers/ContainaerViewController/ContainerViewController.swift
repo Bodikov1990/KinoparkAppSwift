@@ -9,7 +9,6 @@ import UIKit
 
 class ContainerViewController: UIViewController, UINavigationControllerDelegate {
 
-    
     enum MenuState {
         case closed
         case opened
@@ -120,7 +119,6 @@ extension ContainerViewController {
         
         visualEffectView.frame = tabBarVC.view.frame
         visualEffectView.effect = UIBlurEffect(style: .systemChromeMaterial)
-//        visualEffectView.effect = nil
         tabBarVC.view.addSubview(visualEffectView)
     }
     
@@ -165,19 +163,10 @@ extension ContainerViewController: MainViewControllerDelegate {
 }
 
 extension ContainerViewController: SideMenuViewControllerDelegate {
-    func closeButton() {
-        animateView()
-    }
-    
     func getCities(cityData: CitiesData) {
         mainViewController.cityData = cityData
         mainViewController.fetchCinemas(cityData: cityData)
         self.cityData = cityData
-    }
-}
-
-extension ContainerViewController: CitiesViewControllerDelegate {
-    func getCity(cityData: CitiesData) {
-        print(cityData)
+        animateView()
     }
 }

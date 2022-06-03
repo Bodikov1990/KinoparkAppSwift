@@ -19,6 +19,7 @@ class MainViewController: UIViewController {
         let tableView = UITableView()
         tableView.register(MainTableViewCell.self, forCellReuseIdentifier: MainTableViewCell.identifier)
         tableView.separatorStyle = .none
+        tableView.showsVerticalScrollIndicator = false
         return tableView
     }()
     
@@ -37,6 +38,7 @@ class MainViewController: UIViewController {
     var cinemaData: CinemasData!
     
     private var movies: [MoviesData] = []
+    
     private let cinemasVC = CinemasTableViewController()
     
     private let headerView = UIView()
@@ -68,7 +70,6 @@ class MainViewController: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
-    
     
     //MARK: - ViewDidLoad
     override func viewDidLoad() {
@@ -104,9 +105,9 @@ class MainViewController: UIViewController {
     
     //    MARK: Fetch City and Cinemas
     func fetchCinemas(cityData: CitiesData) {
-        guard let cityUUID = cityData.uuid else { return }
+        let cityUUID = cityData.uuid
         let url = "http://afisha.api.kinopark.kz/api/cinema?city=\(cityUUID)"
-        NetworkManager.shared.fetchWithBearerToken(dataType: CinemasModel.self, from: url, convertFromSnakeCase: false) { result in
+        NetworkManager.shared.fetchWithBearerToken(dataType: CinemasModel.self, from: url) { result in
             switch result {
             case .success(let cinemas):
                 let cinemas = cinemas.data
@@ -130,10 +131,10 @@ class MainViewController: UIViewController {
         let dates = formatter.string(from: date as Date)
         let url = "https://afisha.api.kinopark.kz/api/movie/today?date_from=\(dates)&sort=seance.start_time&city=\(cityUUID)&cinema=\(cinemaUUID)"
         
-        NetworkManager.shared.fetchWithBearerToken(dataType: MoviesModel.self, from: url, convertFromSnakeCase: false) { result in
+        NetworkManager.shared.fetchWithBearerToken(dataType: MoviesModel.self, from: url) { result in
             switch result {
-            case .success(let seances):
-                self.movies = seances.data
+            case .success(let movies):
+                self.movies = movies.data
                 self.mainTableView.reloadData()
             case .failure(let error):
                 print(error)
@@ -141,13 +142,12 @@ class MainViewController: UIViewController {
         }
     }
     
+    
     private func getCinema(cityData: CitiesData, cinemasData: CinemasData) {
         cinemasButton.setTitle(cinemasData.name, for: .normal)
-        guard let cityUUID = cityData.uuid else { return }
+        let cityUUID = cityData.uuid
         fetchMovie(cityUUID: cityUUID, cinemaUUID: cinemasData.uuid)
     }
-    
-    
 }
 
 // MARK: - Setup TableView
@@ -158,22 +158,23 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: MainTableViewCell.identifier, for: indexPath) as! MainTableViewCell
-        let movies = movies[indexPath.row]
-        
         cell.selectionStyle = .none
-        cell.configure(cityData: cityData, cinemaData: cinemaData, movie: movies)
-        cell.fetchSeance(city: cityData.uuid ?? "", cinema: cinemaData.uuid, movie: movies.movieUUID)
+        
+        let movies = movies[indexPath.row]
+        cell.cityData = cityData
+        cell.cinameData = cinemaData
+        cell.configure(movie: movies)
+        
         cell.frame = tableView.bounds
         cell.layoutIfNeeded()
         cell.collectionView.reloadData()
-        let tableContenSize = cell.collectionView.collectionViewLayout.collectionViewContentSize.height
-        cell.collectionView.heightAnchor.constraint(equalToConstant: tableContenSize).isActive = true
         
+        let tableContenSize = cell.collectionView.collectionViewLayout.collectionViewContentSize.height
+        print("CGFloat", tableContenSize)
+        
+        //        cell.contentView.heightAnchor.constraint(equalToConstant: cell.contentView.frame.height).isActive = true
+        cell.collectionView.heightAnchor.constraint(equalToConstant: tableContenSize).isActive = true
         return cell
-    }
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return UITableView.automaticDimension
     }
 }
 
@@ -291,7 +292,7 @@ extension MainViewController {
     private func setupTableView() {
         mainTableView.tableHeaderView = headerView
         view.addSubview(mainTableView)
-        mainTableView.estimatedRowHeight = 200
+        mainTableView.estimatedRowHeight = 500
         mainTableView.rowHeight = UITableView.automaticDimension
         mainTableView.layer.cornerRadius = 10
         mainTableView.delegate = self

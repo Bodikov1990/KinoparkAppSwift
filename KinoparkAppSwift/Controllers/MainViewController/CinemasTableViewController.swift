@@ -18,9 +18,6 @@ class CinemasTableViewController: UITableViewController {
     
     private let idetifier = "cinemas"
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-    }
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: idetifier)

@@ -34,7 +34,7 @@ class NetworkManager {
         }.resume()
     }
     
-    func fetchWithBearerToken<T: Decodable>(dataType: T.Type, from url: String, convertFromSnakeCase: Bool = true, completion: @escaping(Result<T, NetworkError>) -> Void) {
+    func fetchWithBearerToken<T: Decodable>(dataType: T.Type, from url: String, completion: @escaping(Result<T, NetworkError>) -> Void) {
         
         guard let url = URL(string: url) else {
             completion(.failure(.invalidURL))
@@ -55,14 +55,9 @@ class NetworkManager {
                 print(error?.localizedDescription ?? "No error description")
                 return
             }
-//            Вывод на консоль, для проверки получил ли вообще data
-//            print("DATA" + String(data: data, encoding: .utf8)!)
-//            Decoding data
+
             do {
                 let decoder = JSONDecoder()
-                if convertFromSnakeCase {
-                    decoder.keyDecodingStrategy = .convertFromSnakeCase
-                }
 
                 let type = try decoder.decode(T.self, from: data)
                 DispatchQueue.main.async {
@@ -73,7 +68,41 @@ class NetworkManager {
                 completion(.failure(.decodingError))
             }
         }.resume()
-        
     }
+    
+    func fetchWithBearerToken<T: Decodable>(dataType: T.Type, from url: URL?, completion: @escaping(Result<T, NetworkError>) -> Void) {
+        
+        guard let url = url else {
+            completion(.failure(.invalidURL))
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "OPTIONS"
+        request.addValue("application/json; charset=utf-8", forHTTPHeaderField: "Accept")
+        request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        request.addValue("Asia/Almaty", forHTTPHeaderField: "TimeZone")
+        request.addValue("ru-RU", forHTTPHeaderField: "Accept-Language")
 
+        URLSession.shared.dataTask(with: request) { data, _, error in
+            guard let data = data else {
+                
+                completion(.failure(.noData))
+                print(error?.localizedDescription ?? "No error description")
+                return
+            }
+
+            do {
+                let decoder = JSONDecoder()
+
+                let type = try decoder.decode(T.self, from: data)
+                DispatchQueue.main.async {
+                    completion(.success(type))
+                }
+            
+            } catch {
+                completion(.failure(.decodingError))
+            }
+        }.resume()
+    }
 }

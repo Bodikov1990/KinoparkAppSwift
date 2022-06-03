@@ -8,7 +8,6 @@
 import UIKit
 
 protocol SideMenuViewControllerDelegate: AnyObject {
-    func closeButton()
     
     func getCities(cityData: CitiesData)
 }
@@ -140,7 +139,6 @@ extension SideMenuViewController {
     }
     
     @objc private func sideMenu(){
-        delegate?.closeButton()
         delegate?.getCities(cityData: cityData)
     }
     

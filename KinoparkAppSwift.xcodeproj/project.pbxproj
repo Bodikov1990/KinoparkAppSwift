@@ -153,9 +153,9 @@
 			children = (
 				129B2E1727E78EAB0066D52E /* Services */,
 				129B2E1427E788450066D52E /* Models */,
-				120ED79B27E79345006E041D /* Storyboards */,
 				129B2E1227E787120066D52E /* Controllers */,
 				129B2E1127E786980066D52E /* SupportFiles */,
+				120ED79B27E79345006E041D /* Storyboards */,
 				129B2E0527E785690066D52E /* Assets.xcassets */,
 			);
 			path = KinoparkAppSwift;

@@ -33,7 +33,7 @@ struct CityList: Codable {
 
 // MARK: - CityData
 struct CitiesData: Codable {
-    let uuid: String?
+    let uuid: String
     let name: String?
     let code: String?
     let description: String?
